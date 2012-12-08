@@ -21,7 +21,7 @@ describe Bashcov::Runner do
       result = @runner.result
 
       result.class.should == Hash
-      result.size.should == 9 # FIXME
+      result.size.should == 8 # FIXME
     end
   end
 end
