@@ -12,6 +12,8 @@
 
 This will create a directory named `coverage/` containing HTML files.
 
+Example output: [demo](http://infertux.github.com/bashcov/test_app/)
+
 ## Rationale
 
 I'm a big fan of both Ruby's _simplecov_ and Bash.
