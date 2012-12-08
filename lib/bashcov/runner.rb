@@ -10,13 +10,15 @@ module Bashcov
 
     def run
       # SHELLOPTS must be exported so we use Ruby's ENV variable
-      ENV['SHELLOPTS'] = 'braceexpand:hashall:interactive-comments:posix:verbose:xtrace'
+      ENV['SHELLOPTS'] = 'braceexpand:hashall:interactive-comments:posix:verbose:xtrace' # FIXME gross
 
       command = "PS4='#{Xtrace.ps4}' #{@filename}"
       _, _, @output = Open3.popen3(command)
     end
 
     def result
+      # FIXME complex method - split me
+
       # 1. Grab all bash files in project root and mark them uncovered
       @files = find_bash_files
 

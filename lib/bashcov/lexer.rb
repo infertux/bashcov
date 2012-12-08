@@ -18,7 +18,7 @@ module Bashcov
       line.strip!
       return true if line.empty?
       return true if start_with.any? { |token| line.start_with? token }
-      return true if is.any? { |keyword| line =~ /\A#{keyword}\Z/ }
+      return true if is.any? { |keyword| line == keyword }
       return true if line =~ /\A\w+\(\) {/ # function declared like this: "foo() {"
       false
     end
@@ -28,7 +28,7 @@ module Bashcov
       %w(esac fi then do done else { })
     end
 
-    # Lines starting with one of these keywords are irrelevant for coverage
+    # Lines starting with one of these tokens are irrelevant for coverage
     def start_with
       %w(# function)
     end
