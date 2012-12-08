@@ -16,7 +16,7 @@ describe Bashcov::Runner do
   end
 
   describe "#result" do
-    it "returns" do
+    it "returns a valid hash" do
       @runner.run
       result = @runner.result
 
