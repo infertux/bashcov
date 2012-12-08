@@ -1,8 +1,10 @@
-require 'simplecov'
-SimpleCov.start do
-  minimum_coverage 98
-  add_group "Sources", "lib"
-  add_group "Tests", "spec"
+unless RUBY_ENGINE == 'rbx' # coverage support is broken on rbx
+  require 'simplecov'
+  SimpleCov.start do
+    minimum_coverage 98
+    add_group "Sources", "lib"
+    add_group "Tests", "spec"
+  end
 end
 
 require 'bashcov'
