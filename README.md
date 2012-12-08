@@ -1,4 +1,4 @@
-# Bashcov
+# Bashcov [![Build Status](https://secure.travis-ci.org/infertux/bashcov.png?branch=master)](https://travis-ci.org/infertux/bashcov)
 
 [bashcov] is [simplecov] for Bash.
 
