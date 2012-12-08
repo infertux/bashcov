@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = Bashcov::VERSION
   gem.authors       = ["Cédric Félizard"]
   gem.email         = ["cedric@felizard.fr"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{Code coverage tool for Bash}
+  gem.summary       = gem.description
+  gem.homepage      = "https://github.com/infertux/bashcov"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
