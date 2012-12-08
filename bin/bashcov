@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'bashcov'
+
+if ARGV.size != 1
+  $stderr.puts "#{File.basename(__FILE__)} takes exactly one argument."
+  exit 1
+end
+
+filename = ARGV[0]
+
+runner = Bashcov::Runner.new filename
+runner.run
+coverage = runner.result
+
+require 'simplecov'
+
+SimpleCov.command_name Bashcov.link
+# SimpleCov.filters = [] # TODO make sure default filters are okay
+SimpleCov::Result.new(coverage).format!
+
