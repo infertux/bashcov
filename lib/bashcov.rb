@@ -16,7 +16,7 @@ module Bashcov
     end
 
     def link
-      '<a href="https://github.com/infertux/bashcov">bashcov</a>'
+      %Q|<a href="https://github.com/infertux/bashcov">bashcov</a> v#{VERSION}|
     end
   end
 end
