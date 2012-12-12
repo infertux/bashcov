@@ -9,8 +9,7 @@ module Bashcov
     end
 
     def run
-      # SHELLOPTS must be exported so we use Ruby's ENV variable
-      ENV['SHELLOPTS'] = 'braceexpand:hashall:interactive-comments:posix:verbose:xtrace' # FIXME gross
+      inject_shellopts_flags
 
       command = "PS4='#{Xtrace.ps4}' #{@filename}"
       _, _, @output = Open3.popen3(command)
@@ -56,5 +55,20 @@ module Bashcov
       files
     end
 
+  private
+
+    def inject_shellopts_flags
+      # SHELLOPTS must be exported so we use Ruby's ENV variable
+      existing_flags = (ENV['SHELLOPTS'] || '').split(shellopts_separator)
+      ENV['SHELLOPTS'] = (existing_flags | shellopts_flags).join(shellopts_separator)
+    end
+
+    def shellopts_flags
+      %w(verbose xtrace)
+    end
+
+    def shellopts_separator
+      ':'
+    end
   end
 end
