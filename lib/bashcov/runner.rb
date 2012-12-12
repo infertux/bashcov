@@ -16,36 +16,16 @@ module Bashcov
     end
 
     def result
-      # FIXME complex method - split me
-
-      # 1. Grab all bash files in project root and mark them uncovered
-      @files = find_bash_files
-
-      # 2. Add coverage information from run
-      xtraced_files = Xtrace.new(@output).files
-      xtraced_files.each do |file, lines|
-        next if file == @filename
-        lines.each_with_index do |line, index|
-          @files[file] ||= Bashcov.coverage_array(file) # non .sh files but executed though
-          @files[file][index] = line if line
-        end
-      end
-
-      # 3. Ignore irrelevant lines
-      @files.each do |filename, lines|
-        warn filename unless File.file?(filename)
-        next unless File.file?(filename)
-        lexer = Lexer.new(filename)
-        lexer.irrelevant_lines.each do |lineno|
-          @files[filename][lineno] = Bashcov::Line::IGNORED
-        end
-      end
+      files = find_bash_files "#{Bashcov.root_directory}/**/*.sh"
+      files = add_coverage_result files
+      files = ignore_irrelevant_lines files
     end
 
-    def find_bash_files
+    def find_bash_files directory
       files = {}
 
-      (Dir["#{Bashcov.root_directory}/**/*.sh"] - [@filename]).each do |file|
+      # grab all bash files in project root and mark them uncovered
+      (Dir[directory] - [@filename]).each do |file|
         absolute_path = File.expand_path(file)
         next unless File.file?(absolute_path)
 
@@ -53,6 +33,29 @@ module Bashcov
       end
 
       files
+    end
+
+    def add_coverage_result files
+      xtraced_files = Xtrace.new(@output).files
+      xtraced_files.delete @filename # drop the test suite file
+
+      xtraced_files.each do |file, lines|
+        lines.each_with_index do |line, index|
+          files[file] ||= Bashcov.coverage_array(file) # non .sh files but executed though
+          files[file][index] = line if line
+        end
+      end
+
+      files
+    end
+
+    def ignore_irrelevant_lines files
+      files.each do |filename, lines|
+        lexer = Lexer.new(filename)
+        lexer.irrelevant_lines.each do |lineno|
+          files[filename][lineno] = Bashcov::Line::IGNORED
+        end
+      end
     end
 
   private

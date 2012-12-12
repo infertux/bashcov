@@ -9,27 +9,5 @@ end
 
 require 'bashcov'
 
-def test_app
-  File.expand_path("../test_app", __FILE__)
-end
-
-def scripts
-  "#{test_app}/scripts"
-end
-
-def test_suite
-  "#{test_app}/test_suite.sh"
-end
-
-def executed_files
-  files_in("#{scripts}/**/*")
-end
-
-def all_files
-  files_in("#{test_app}/**/*") - [test_suite]
-end
-
-def files_in directory
-  Dir[directory].select { |file| File.file? file }
-end
+Dir["./spec/support/**/*.rb"].each { |file| require file }
 

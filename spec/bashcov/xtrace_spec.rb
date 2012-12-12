@@ -1,18 +1,20 @@
 require 'spec_helper'
 
 describe Bashcov::Xtrace do
-  before do
-    @runner ||= Bashcov::Runner.new test_suite
-    @runner.run
-
-    @xtrace ||= Bashcov::Xtrace.new @runner.output
-  end
+  let(:xtrace) {
+    runner = Bashcov::Runner.new test_suite
+    runner.run
+    Bashcov::Xtrace.new runner.output
+  }
 
   describe "#files" do
-    it "returns a list of executed files" do
-      files = @xtrace.files
-      files.class.should == Hash
-      files.keys.should =~ executed_files + [test_suite]
+    let(:files) { xtrace.files }
+    subject { files }
+
+    it { should be_a Hash }
+
+    it "contains expected files" do
+      subject.keys.should =~ executed_files | [test_suite]
     end
   end
 end

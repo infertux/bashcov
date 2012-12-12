@@ -2,6 +2,7 @@ module Bashcov
   class Lexer
     def initialize filename
       @filename = File.expand_path(filename)
+      raise "#{@filename} is not a file" unless File.file?(@filename)
     end
 
     def irrelevant_lines

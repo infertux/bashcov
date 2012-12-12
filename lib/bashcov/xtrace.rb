@@ -11,7 +11,8 @@ module Bashcov
         next unless match = line.match(Xtrace.line_regexp)
 
         filename = File.expand_path(match[:filename], Bashcov.root_directory)
-        next unless File.file? filename
+        next if File.directory? filename
+        raise "#{filename} is not a file" unless File.file? filename
 
         lineno = match[:lineno].to_i
         lineno -= 1 if lineno > 0
