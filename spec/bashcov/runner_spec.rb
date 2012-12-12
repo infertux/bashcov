@@ -21,7 +21,7 @@ describe Bashcov::Runner do
       result = @runner.result
 
       result.class.should == Hash
-      result.size.should == 8 # FIXME shouldn't be hardcoded
+      result.should have(all_files.size).items
     end
   end
 end

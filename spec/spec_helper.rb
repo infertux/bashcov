@@ -22,6 +22,14 @@ def test_suite
 end
 
 def executed_files
-  Dir["#{scripts}/**/*"].select { |file| File.file? file }
+  files_in("#{scripts}/**/*")
+end
+
+def all_files
+  files_in("#{test_app}/**/*") - [test_suite]
+end
+
+def files_in directory
+  Dir[directory].select { |file| File.file? file }
 end
 
