@@ -13,6 +13,7 @@ module Bashcov
 
       env = { 'PS4' => Xtrace.ps4 }
       stdin, stdout, stderr, wait_thr = Open3.popen3(env, @filename)
+      stdin.close
       exit_status = wait_thr.value # block until process returns
       @output = stderr.dup
     end

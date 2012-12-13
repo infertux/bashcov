@@ -35,7 +35,8 @@ def expected_coverage
     "#{test_app}/scripts/one_liner.sh" => [nil, nil, 2, nil, 1, nil, 0, nil, nil],
     "#{test_app}/scripts/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1, nil, nil],
     "#{test_app}/scripts/source.sh" => [nil, nil, 1, nil, 2, nil],
-    "#{test_app}/scripts/sourced.txt" => [nil, nil, 1, nil]
+    "#{test_app}/scripts/sourced.txt" => [nil, nil, 1, nil],
+    "#{test_app}/scripts/stdin.sh" => [nil, nil, 1, 1, 1, nil]
   }
 end
 
