@@ -4,6 +4,7 @@
 .bundle
 .config
 .yardoc
+.rbx/
 Gemfile.lock
 InstalledFiles
 _yardoc
