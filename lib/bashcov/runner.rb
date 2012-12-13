@@ -40,9 +40,9 @@ module Bashcov
       xtraced_files.delete @filename # drop the test suite file
 
       xtraced_files.each do |file, lines|
-        lines.each_with_index do |line, index|
+        lines.each_with_index do |line, lineno|
           files[file] ||= Bashcov.coverage_array(file) # non .sh files but executed though
-          files[file][index] = line if line
+          files[file][lineno] = line if line
         end
       end
 
