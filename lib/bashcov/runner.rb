@@ -11,8 +11,10 @@ module Bashcov
     def run
       inject_shellopts_flags
 
-      command = "PS4='#{Xtrace.ps4}' #{@filename}"
-      _, _, @output = Open3.popen3(command)
+      env = { 'PS4' => Xtrace.ps4 }
+      stdin, stdout, stderr, wait_thr = Open3.popen3(env, @filename)
+      exit_status = wait_thr.value # block until process returns
+      @output = stderr.dup
     end
 
     def result
