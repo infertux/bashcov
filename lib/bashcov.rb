@@ -6,6 +6,14 @@ require "bashcov/xtrace"
 
 module Bashcov
   class << self
+    def mute?
+      @mute ||= false
+    end
+
+    def mute= state
+      @mute = !!state
+    end
+
     def root_directory
       Dir.getwd
     end

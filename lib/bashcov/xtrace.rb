@@ -1,15 +1,19 @@
 module Bashcov
   class Xtrace
     def initialize output
-      @output = output
+      raise "#{output} must be an array" unless output.is_a? Array
+      @lines = output
+    end
+
+    def xtrace_output
+      @lines.select { |line| line =~ Xtrace.line_regexp }
     end
 
     def files
       files = {}
 
-      @output.readlines.each do |line|
-        next unless match = line.match(Xtrace.line_regexp)
-
+      xtrace_output.each do |line|
+        match = line.match(Xtrace.line_regexp)
         filename = File.expand_path(match[:filename], Bashcov.root_directory)
         next if File.directory? filename
         raise "#{filename} is not a file" unless File.file? filename

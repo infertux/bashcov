@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'simplecov'
+  gem.add_dependency 'open4'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'

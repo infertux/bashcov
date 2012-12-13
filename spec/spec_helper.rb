@@ -11,3 +11,9 @@ require 'bashcov'
 
 Dir["./spec/support/**/*.rb"].each { |file| require file }
 
+RSpec.configure do |config|
+  config.before(:each) do
+    Bashcov.mute = true # don't print testsuite output
+  end
+end
+

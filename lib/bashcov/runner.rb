@@ -1,21 +1,37 @@
-require 'open3'
+require 'open4'
 
 module Bashcov
   class Runner
-    attr_reader :output
+    attr_reader :stdout, :stderr
 
     def initialize filename
       @filename = File.expand_path(filename)
     end
 
     def run
-      inject_shellopts_flags
+      setup
 
-      env = { 'PS4' => Xtrace.ps4 }
-      stdin, stdout, stderr, wait_thr = Open3.popen3(env, @filename)
-      stdin.close
-      exit_status = wait_thr.value # block until process returns
-      @output = stderr.dup
+      Open4::popen4(@command) do |pid, stdin, stdout, stderr|
+        stdin = $stdin # bind stdin
+
+        [ # we need threads here to stream output in realtime
+          Thread.new { # stdout
+            stdout.each do |line|
+              $stdout.puts line unless Bashcov.mute?
+              @stdout << line
+            end
+          },
+          Thread.new { # stderr
+            stderr.each do |line|
+              unless Bashcov.mute?
+                xtrace = Xtrace.new [line]
+                $stderr.puts line if xtrace.xtrace_output.empty?
+              end
+              @stderr << line
+            end
+          }
+        ].map(&:join)
+      end
     end
 
     def result
@@ -39,7 +55,7 @@ module Bashcov
     end
 
     def add_coverage_result files
-      xtraced_files = Xtrace.new(@output).files
+      xtraced_files = Xtrace.new(@stderr).files
       xtraced_files.delete @filename # drop the test suite file
 
       xtraced_files.each do |file, lines|

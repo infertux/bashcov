@@ -1,5 +1,7 @@
 #!/bin/bash
 
 cd $(dirname $0)
-find scripts -name "*.sh" -exec "{}" \;
+
+# `date` is sent on stdin for each file
+date | find scripts -name "*.sh" -exec '{}' \;
 

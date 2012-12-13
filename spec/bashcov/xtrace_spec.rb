@@ -4,7 +4,7 @@ describe Bashcov::Xtrace do
   let(:xtrace) {
     runner = Bashcov::Runner.new test_suite
     runner.run
-    Bashcov::Xtrace.new runner.output
+    Bashcov::Xtrace.new runner.stderr
   }
 
   describe "#files" do

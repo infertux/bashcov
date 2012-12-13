@@ -2,5 +2,5 @@
 
 echo "What's your input?"
 read
-echo "All right ${REPLY}."
+echo "All right, you entered \`${REPLY}'."
 

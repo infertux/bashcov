@@ -77,5 +77,20 @@ describe Bashcov::Runner do
 
       runner.result.should == expected_coverage
     end
+
+    context "with Bashcov.mute = false" do
+      before do
+        Bashcov.mute = false
+      end
+
+      it "does not print xtrace output" do
+        $stderr.should_receive(:puts).at_least(:once) do |line|
+          line.should_not match Bashcov::Xtrace.line_regexp
+        end
+
+        runner.run
+      end
+    end
   end
 end
+
