@@ -2,6 +2,8 @@
 
 [bashcov] is [simplecov] for Bash.
 
+**[Demo](http://infertux.github.com/bashcov/test_app/)**
+
 ## Installation
 
 `$ gem install bashcov`
@@ -11,8 +13,6 @@
 `bashcov ./test_suite.sh`
 
 This will create a directory named `coverage/` containing HTML files.
-
-Example output: [demo](http://infertux.github.com/bashcov/test_app/)
 
 ## Rationale
 
