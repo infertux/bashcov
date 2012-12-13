@@ -63,18 +63,20 @@ module Bashcov
 
   private
 
-    def inject_shellopts_flags
+    def setup
+      inject_xtrace_flag
+
+      @stdout = []
+      @stderr = []
+
+      @command = "PS4='#{Xtrace.ps4}' #{@filename}"
+    end
+
+    def inject_xtrace_flag
       # SHELLOPTS must be exported so we use Ruby's ENV variable
-      existing_flags = (ENV['SHELLOPTS'] || '').split(shellopts_separator)
-      ENV['SHELLOPTS'] = (existing_flags | shellopts_flags).join(shellopts_separator)
-    end
-
-    def shellopts_flags
-      %w(verbose xtrace)
-    end
-
-    def shellopts_separator
-      ':'
+      existing_flags = (ENV['SHELLOPTS'] || '').split(':')
+      ENV['SHELLOPTS'] = (existing_flags | ['xtrace']).join(':')
     end
   end
 end
+

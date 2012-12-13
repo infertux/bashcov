@@ -12,18 +12,18 @@ describe Bashcov::Runner do
 
       it "adds the flags" do
         runner.run
-        ENV['SHELLOPTS'].should == 'verbose:xtrace'
+        ENV['SHELLOPTS'].should == 'xtrace'
       end
     end
 
     context "with an existing SHELLOPTS variable" do
       before do
-        ENV['SHELLOPTS'] = 'posix:verbose'
+        ENV['SHELLOPTS'] = 'posix'
       end
 
       it "merges the flags" do
         runner.run
-        ENV['SHELLOPTS'].should == 'posix:verbose:xtrace'
+        ENV['SHELLOPTS'].should == 'posix:xtrace'
       end
     end
   end
