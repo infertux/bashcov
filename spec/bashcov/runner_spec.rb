@@ -56,7 +56,7 @@ describe Bashcov::Runner do
     it { should be_a Hash }
 
     it "contains all files" do
-      subject.keys.should =~ all_files
+      subject.keys.should =~ bash_files | executed_files
     end
 
     it "adds correct coverage results" do

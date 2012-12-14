@@ -11,7 +11,7 @@ def test_suite
 end
 
 def executed_files
-  files_in("#{scripts}/**/*") | [test_suite]
+  bash_files + ["#{scripts}/sourced.txt"] - ["#{test_app}/never_called.sh"]
 end
 
 def bash_files
