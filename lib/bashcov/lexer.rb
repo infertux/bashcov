@@ -26,7 +26,7 @@ module Bashcov
 
     # Lines containing only one of these keywords are irrelevant for coverage
     def is
-      %w(esac fi then do done else { })
+      %w(esac fi then do done else { } ;;)
     end
 
     # Lines starting with one of these tokens are irrelevant for coverage
