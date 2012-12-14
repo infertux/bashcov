@@ -56,7 +56,6 @@ module Bashcov
 
     def add_coverage_result files
       xtraced_files = Xtrace.new(@stderr).files
-      xtraced_files.delete @filename # drop the test suite file
 
       xtraced_files.each do |file, lines|
         lines.each_with_index do |line, lineno|
