@@ -13,6 +13,7 @@ module Bashcov
     def set_default_options!
       @options ||= OpenStruct.new
       @options.skip_uncovered = false
+      @options.mute = false
     end
 
     def parse_options! args
@@ -25,6 +26,10 @@ module Bashcov
 
         opts.on("-s", "--skip-uncovered", "Do not report uncovered files") do |s|
           @options.skip_uncovered = s
+        end
+
+        opts.on("-m", "--mute", "Do not print script output") do |m|
+          @options.mute = m
         end
 
         opts.separator ""
@@ -46,14 +51,6 @@ module Bashcov
       else
         abort("You must give exactly one file to execute.")
       end
-    end
-
-    def mute?
-      @mute ||= false
-    end
-
-    def mute= state
-      @mute = !!state
     end
 
     def root_directory

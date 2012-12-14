@@ -31,8 +31,17 @@ describe Bashcov do
         before { @args << '--skip-uncovered' }
 
         it "sets it properly" do
-          Bashcov.parse_options! @args
+          subject
           Bashcov.options.skip_uncovered.should be_true
+        end
+      end
+
+      context "with the --mute flag" do
+        before { @args << '--mute' }
+
+        it "sets it properly" do
+          subject
+          Bashcov.options.mute.should be_true
         end
       end
 

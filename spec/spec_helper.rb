@@ -14,7 +14,7 @@ Dir["./spec/support/**/*.rb"].each { |file| require file }
 RSpec.configure do |config|
   config.before(:each) do
     Bashcov.set_default_options!
-    Bashcov.mute = true # don't print testsuite output
+    Bashcov.options.mute = true # don't print testsuite output
   end
 end
 

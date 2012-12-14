@@ -17,13 +17,13 @@ module Bashcov
         [ # we need threads here to stream output in realtime
           Thread.new { # stdout
             stdout.each do |line|
-              $stdout.puts line unless Bashcov.mute?
+              $stdout.puts line unless Bashcov.options.mute
               @stdout << line
             end
           },
           Thread.new { # stderr
             stderr.each do |line|
-              unless Bashcov.mute?
+              unless Bashcov.options.mute
                 xtrace = Xtrace.new [line]
                 $stderr.puts line if xtrace.xtrace_output.empty?
               end

@@ -89,9 +89,9 @@ describe Bashcov::Runner do
       end
     end
 
-    context "with Bashcov.mute = false" do
+    context "with options.mute = false" do
       before do
-        Bashcov.mute = false
+        Bashcov.options.mute = false
       end
 
       it "does not print xtrace output" do
