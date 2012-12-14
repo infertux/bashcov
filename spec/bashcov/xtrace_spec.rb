@@ -14,7 +14,7 @@ describe Bashcov::Xtrace do
     it { should be_a Hash }
 
     it "contains expected files" do
-      subject.keys.should =~ executed_files | [test_suite]
+      subject.keys.should =~ executed_files
     end
   end
 end

@@ -44,7 +44,7 @@ module Bashcov
       files = {}
 
       # grab all bash files in project root and mark them uncovered
-      (Dir[directory] - [@filename]).each do |file|
+      Dir[directory].each do |file|
         absolute_path = File.expand_path(file)
         next unless File.file?(absolute_path)
 

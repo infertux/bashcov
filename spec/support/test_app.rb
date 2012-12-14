@@ -11,15 +11,15 @@ def test_suite
 end
 
 def executed_files
-  files_in("#{scripts}/**/*")
+  files_in("#{scripts}/**/*") | [test_suite]
 end
 
 def bash_files
-  files_in("#{test_app}/**/*.sh") - [test_suite]
+  files_in("#{test_app}/**/*.sh")
 end
 
 def all_files
-  files_in("#{test_app}/**/*") - [test_suite]
+  files_in("#{test_app}/**/*")
 end
 
 def files_in directory
@@ -36,7 +36,8 @@ def expected_coverage
     "#{test_app}/scripts/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1, nil, nil],
     "#{test_app}/scripts/source.sh" => [nil, nil, 1, nil, 2, nil],
     "#{test_app}/scripts/sourced.txt" => [nil, nil, 1, nil],
-    "#{test_app}/scripts/stdin.sh" => [nil, nil, 1, 1, 1, nil]
+    "#{test_app}/scripts/stdin.sh" => [nil, nil, 1, 1, 1, nil],
+    "#{test_app}/test_suite.sh" => [nil, nil, 0, nil, nil, 0, nil]
   }
 end
 
