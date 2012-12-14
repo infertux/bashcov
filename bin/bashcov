@@ -5,14 +5,9 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'bashcov'
 
-if ARGV.size != 1
-  $stderr.puts "#{File.basename(__FILE__)} takes exactly one argument."
-  exit 1
-end
+Bashcov.parse_options! ARGV
 
-filename = ARGV[0]
-
-runner = Bashcov::Runner.new filename
+runner = Bashcov::Runner.new Bashcov.options.filename
 runner.run
 coverage = runner.result
 

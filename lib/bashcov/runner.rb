@@ -35,7 +35,12 @@ module Bashcov
     end
 
     def result
-      files = find_bash_files "#{Bashcov.root_directory}/**/*.sh"
+      if Bashcov.options.skip_uncovered
+        files = {}
+      else
+        files = find_bash_files "#{Bashcov.root_directory}/**/*.sh"
+      end
+
       files = add_coverage_result files
       files = ignore_irrelevant_lines files
     end
@@ -59,7 +64,7 @@ module Bashcov
 
       xtraced_files.each do |file, lines|
         lines.each_with_index do |line, lineno|
-          files[file] ||= Bashcov.coverage_array(file) # non .sh files but executed though
+          files[file] ||= Bashcov.coverage_array(file)
           files[file][lineno] = line if line
         end
       end

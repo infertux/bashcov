@@ -10,8 +10,12 @@ def test_suite
   "#{test_app}/test_suite.sh"
 end
 
+def uncovered_files
+  ["#{test_app}/never_called.sh"]
+end
+
 def executed_files
-  bash_files + ["#{scripts}/sourced.txt"] - ["#{test_app}/never_called.sh"]
+  bash_files - uncovered_files + ["#{scripts}/sourced.txt"]
 end
 
 def bash_files

@@ -78,6 +78,17 @@ describe Bashcov::Runner do
       runner.result.should == expected_coverage
     end
 
+    context "with options.skip_uncovered = true" do
+      before do
+        Bashcov.options.skip_uncovered = true
+      end
+
+      it "does not include uncovered files" do
+        runner.run
+        (runner.result.keys & uncovered_files).should be_empty
+      end
+    end
+
     context "with Bashcov.mute = false" do
       before do
         Bashcov.mute = false
