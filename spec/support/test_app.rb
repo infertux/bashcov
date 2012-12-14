@@ -18,10 +18,6 @@ def bash_files
   files_in("#{test_app}/**/*.sh")
 end
 
-def all_files
-  files_in("#{test_app}/**/*")
-end
-
 def files_in directory
   Dir[directory].select { |file| File.file? file }
 end
