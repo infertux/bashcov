@@ -2,7 +2,7 @@
 
 [bashcov] is [simplecov] for Bash.
 
-**[Demo](http://infertux.github.com/bashcov/test_app/)**
+Check out the **[demo](http://infertux.github.com/bashcov/test_app/)** - it's worth a thousand words.
 
 ## Installation
 
@@ -36,6 +36,12 @@ Unfortunately, Bash doesn't have such niceties but we can use the [xtrace featur
 After a bit of parsing, it sends results through _simplecov_ which generates an awesome HTML report.
 
 And of course, you can take the most of _simplecov_ by adding a `.simplecov` file in your project's root (like [this](https://github.com/infertux/bashcov/blob/master/spec/test_app/.simplecov)).
+
+## Todo
+
+- YARD doc
+- semver
+- see if we could implement some features of Gcov
 
 ## License
 
