@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Although I'm extension-less, I am an executable Bash script"
+

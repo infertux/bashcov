@@ -15,7 +15,7 @@ def uncovered_files
 end
 
 def executed_files
-  bash_files - uncovered_files + ["#{scripts}/sourced.txt"]
+  bash_files - uncovered_files + ["#{scripts}/sourced.txt", "#{scripts}/executable"]
 end
 
 def bash_files
@@ -38,6 +38,7 @@ def expected_coverage
     "#{test_app}/scripts/source.sh" => [nil, nil, 1, nil, 2, nil],
     "#{test_app}/scripts/sourced.txt" => [nil, nil, 1, nil],
     "#{test_app}/scripts/stdin.sh" => [nil, nil, 1, 1, 1, nil],
+    "#{test_app}/scripts/executable" => [nil, nil, 1, nil],
     "#{test_app}/test_suite.sh" => [nil, nil, 2, nil, nil, 2, nil]
   }
 end
