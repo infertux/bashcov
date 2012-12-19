@@ -39,9 +39,7 @@ And of course, you can take the most of _simplecov_ by adding a `.simplecov` fil
 
 ## Todo
 
-- YARD doc
 - semver
-- see if we could implement some features of Gcov
 
 ## License
 
