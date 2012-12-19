@@ -24,4 +24,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'guard-rspec'
   gem.add_development_dependency 'rb-inotify'
+  gem.add_development_dependency 'cane'
+  gem.add_development_dependency 'yard'
 end

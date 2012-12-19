@@ -1,20 +1,31 @@
 require 'open4'
 
 module Bashcov
+  # Runs a given command capturing output then computes code coverage.
   class Runner
-    attr_reader :stdout, :stderr
+    # @return [Array] +stdout+ from the last run
+    attr_reader :stdout
 
+    # @return [Array] +stderr+ from the last run
+    attr_reader :stderr
+
+    # @param [String] filename Command to run
     def initialize filename
       @filename = File.expand_path(filename)
     end
 
+    # Runs the command capturing +stdout+ and +stderr+.
+    # @note Binds Bashcov +stdin+ to the program executed.
+    # @note Uses two threads to stream +stdout+ and +stderr+ output in
+    #   realtime.
+    # @return [void]
     def run
       setup
 
       Open4::popen4(@command) do |pid, stdin, stdout, stderr|
         stdin = $stdin # bind stdin
 
-        [ # we need threads here to stream output in realtime
+        [
           Thread.new { # stdout
             stdout.each do |line|
               $stdout.puts line unless Bashcov.options.mute
@@ -34,6 +45,7 @@ module Bashcov
       end
     end
 
+    # @return [Hash] Coverage hash of the last run
     def result
       if Bashcov.options.skip_uncovered
         files = {}
@@ -45,10 +57,12 @@ module Bashcov
       files = ignore_irrelevant_lines files
     end
 
+    # @param [String] directory Directory to scan
+    # @return [Hash] Coverage hash of Bash files in the given +directory+. All
+    #   files are marked as uncovered.
     def find_bash_files directory
       files = {}
 
-      # grab all bash files in project root and mark them uncovered
       Dir[directory].each do |file|
         absolute_path = File.expand_path(file)
         next unless File.file?(absolute_path)
@@ -59,6 +73,9 @@ module Bashcov
       files
     end
 
+    # @param [Hash] files Initial coverage hash
+    # @return [Hash] Given hash including coverage result from {Xtrace}
+    # @see Xtrace
     def add_coverage_result files
       xtraced_files = Xtrace.new(@stderr).files
 
@@ -72,6 +89,9 @@ module Bashcov
       files
     end
 
+    # @param [Hash] files Initial coverage hash
+    # @return [Hash] Given hash ignoring irrelevant lines
+    # @see Lexer
     def ignore_irrelevant_lines files
       files.each do |filename, lines|
         lexer = Lexer.new(filename)

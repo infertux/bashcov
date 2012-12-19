@@ -1,14 +1,24 @@
 module Bashcov
+  # This class manages +xtrace+ output.
+  #
+  # @see Runner
   class Xtrace
+    # @param [Array] output Array of output lines.
+    # @raise [ArgumentError] if the given +output+ is not an array
     def initialize output
-      raise "#{output} must be an array" unless output.is_a? Array
+      raise ArgumentError "#{output} must be an array" unless output.is_a? Array
       @lines = output
     end
 
+    # Filters out non-xtrace lines.
+    # @return [Array] xtrace output
     def xtrace_output
       @lines.select { |line| line =~ Xtrace.line_regexp }
     end
 
+    # Parses xtrace output and computes coverage
+    # @raise [RuntimeError] on invalid files
+    # @return [Hash] Hash of executed files with coverage information
     def files
       files = {}
 
@@ -29,6 +39,8 @@ module Bashcov
       files
     end
 
+    # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
+    # @return [String] +PS4+ variable used for xtrace output
     def self.ps4
       # We use a forward slash as delimiter since it's the only forbidden
       # character in filenames on Unix and Windows.

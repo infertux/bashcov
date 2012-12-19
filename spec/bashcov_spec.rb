@@ -69,9 +69,9 @@ describe Bashcov do
     end
   end
 
-  describe ".link" do
+  describe ".name" do
     it "includes the version" do
-      Bashcov.link.should include Bashcov::VERSION
+      Bashcov.name.should include Bashcov::VERSION
     end
   end
 end

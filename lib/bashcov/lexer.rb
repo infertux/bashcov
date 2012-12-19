@@ -1,10 +1,15 @@
 module Bashcov
+  # Simple lexer which analyzes Bash files in order to get information for
+  # coverage
   class Lexer
+    # @param [String] filename File to analyze
+    # @raise [ArgumentError] if the given +filename+ is invalid.
     def initialize filename
       @filename = File.expand_path(filename)
-      raise "#{@filename} is not a file" unless File.file?(@filename)
+      raise ArgumentError "#{@filename} is not a file" unless File.file?(@filename)
     end
 
+    # @return [Array] Irrelevant lines
     def irrelevant_lines
       lines = []
       IO.readlines(@filename).each_with_index do |line, lineno|

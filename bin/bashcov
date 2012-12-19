@@ -13,7 +13,7 @@ coverage = runner.result
 
 require 'simplecov'
 
-SimpleCov.command_name Bashcov.link
+SimpleCov.command_name Bashcov.name
 # SimpleCov.filters = [] # TODO make sure default filters are okay
 SimpleCov::Result.new(coverage).format!
 
