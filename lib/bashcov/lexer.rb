@@ -6,7 +6,10 @@ module Bashcov
     # @raise [ArgumentError] if the given +filename+ is invalid.
     def initialize filename
       @filename = File.expand_path(filename)
-      raise ArgumentError "#{@filename} is not a file" unless File.file?(@filename)
+
+      unless File.file?(@filename)
+        raise ArgumentError "#{@filename} is not a file"
+      end
     end
 
     # @return [Array] Irrelevant lines
@@ -22,11 +25,11 @@ module Bashcov
 
     def is_irrevelant? line
       line.strip!
-      return true if line.empty?
-      return true if start_with.any? { |token| line.start_with? token }
-      return true if is.any? { |keyword| line == keyword }
-      return true if line =~ /\A\w+\(\) {/ # function declared like this: "foo() {"
-      false
+
+      line.empty? or
+      start_with.any? { |token| line.start_with? token } or
+      is.any? { |keyword| line == keyword } or
+      line =~ /\A\w+\(\) {/ # function declared like this: "foo() {"
     end
 
     # Lines containing only one of these keywords are irrelevant for coverage
