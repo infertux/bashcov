@@ -8,7 +8,7 @@ module Bashcov
       @filename = File.expand_path(filename)
 
       unless File.file?(@filename)
-        raise ArgumentError "#{@filename} is not a file"
+        raise ArgumentError, "#{@filename} is not a file"
       end
     end
 

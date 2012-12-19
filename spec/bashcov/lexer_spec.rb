@@ -15,6 +15,14 @@ shared_examples "a bash file" do
 end
 
 describe Bashcov::Lexer do
+  describe "#initialize" do
+    it "raises if the file is invalid" do
+      expect {
+        Bashcov::Lexer.new 'inexistent_file.exe'
+      }.to raise_error ArgumentError
+    end
+  end
+
   expected_coverage.keys.each do |filename|
     context filename do
       it_behaves_like "a bash file" do

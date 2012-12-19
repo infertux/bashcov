@@ -6,7 +6,7 @@ module Bashcov
     # @param [Array] output Array of output lines.
     # @raise [ArgumentError] if the given +output+ is not an array
     def initialize output
-      raise ArgumentError "#{output} must be an array" unless output.is_a? Array
+      raise ArgumentError, "#{output} must be an array" unless output.is_a? Array
       @lines = output
     end
 
