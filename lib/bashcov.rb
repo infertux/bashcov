@@ -21,7 +21,7 @@ module Bashcov
       @options.mute = false
     end
 
-    # Parses the given CLI arguments and sets {options}.
+    # Parses the given CLI arguments and sets +options+.
     # @param [Array] args list of arguments
     # @raise [SystemExit] if invalid arguments are given
     # @return [void]
@@ -30,8 +30,7 @@ module Bashcov
         opts.banner = "Usage: #{opts.program_name} [options] <filename>"
         opts.version = Bashcov::VERSION
 
-        opts.separator ""
-        opts.separator "Specific options:"
+        opts.separator "\nSpecific options:"
 
         opts.on("-s", "--skip-uncovered", "Do not report uncovered files") do |s|
           @options.skip_uncovered = s
@@ -41,8 +40,7 @@ module Bashcov
           @options.mute = m
         end
 
-        opts.separator ""
-        opts.separator "Common options:"
+        opts.separator "\nCommon options:"
 
         opts.on_tail("-h", "--help", "Show this message") do
           abort(opts.help)
@@ -67,6 +65,12 @@ module Bashcov
       Dir.getwd
     end
 
+    # Program name including version for easy consistent output
+    # @return [String]
+    def name
+      "bashcov v#{VERSION}"
+    end
+
     # Helper to get a pre-filled coverage array for a given file
     # @todo This is generic and should be moved in some helpers file.
     # @api private
@@ -78,12 +82,6 @@ module Bashcov
     def coverage_array(filename, fill = Line::UNCOVERED)
       lines = File.readlines(filename).size
       [fill] * lines
-    end
-
-    # Program name including version for easy consistent output
-    # @return [String]
-    def name
-      "bashcov v#{VERSION}"
     end
   end
 end

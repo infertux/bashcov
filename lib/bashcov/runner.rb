@@ -28,17 +28,16 @@ module Bashcov
         [
           Thread.new { # stdout
             stdout.each do |line|
-              $stdout.puts line unless Bashcov.options.mute
               @stdout << line
+              $stdout.puts line unless Bashcov.options.mute
             end
           },
           Thread.new { # stderr
             stderr.each do |line|
-              unless Bashcov.options.mute
-                xtrace = Xtrace.new [line]
-                $stderr.puts line if xtrace.xtrace_output.empty?
-              end
               @stderr << line
+              next if Bashcov.options.mute
+              xtrace = Xtrace.new [line]
+              $stderr.puts line if xtrace.xtrace_output.empty?
             end
           }
         ].map(&:join)
@@ -47,10 +46,10 @@ module Bashcov
 
     # @return [Hash] Coverage hash of the last run
     def result
-      if Bashcov.options.skip_uncovered
-        files = {}
+      files = if Bashcov.options.skip_uncovered
+        {}
       else
-        files = find_bash_files "#{Bashcov.root_directory}/**/*.sh"
+        find_bash_files "#{Bashcov.root_directory}/**/*.sh"
       end
 
       files = add_coverage_result files
@@ -61,16 +60,12 @@ module Bashcov
     # @return [Hash] Coverage hash of Bash files in the given +directory+. All
     #   files are marked as uncovered.
     def find_bash_files directory
-      files = {}
-
-      Dir[directory].each do |file|
+      Dir[directory].inject({}) do |files, file|
         absolute_path = File.expand_path(file)
         next unless File.file?(absolute_path)
 
-        files[absolute_path] = Bashcov.coverage_array(absolute_path)
+        files.merge!(absolute_path => Bashcov.coverage_array(absolute_path))
       end
-
-      files
     end
 
     # @param [Hash] files Initial coverage hash
