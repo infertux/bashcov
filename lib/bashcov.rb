@@ -27,8 +27,16 @@ module Bashcov
     # @return [void]
     def parse_options! args
       OptionParser.new do |opts|
-        opts.banner = "Usage: #{opts.program_name} [options] <filename>"
+        opts.program_name = 'bashcov'
         opts.version = Bashcov::VERSION
+        opts.banner = <<-HELP.gsub!(/^ +/, '').gsub!("\t", ' ' * 4)
+          Usage: #{opts.program_name} [options] -- <command> [options]
+          Examples:
+          \t#{opts.program_name} script.sh
+          \t#{opts.program_name} --skip-uncovered script.sh
+          \t#{opts.program_name} -- script.sh --some --flags
+          \t#{opts.program_name} --skip-uncovered -- script.sh --some --flags
+        HELP
 
         opts.separator "\nSpecific options:"
 
@@ -53,10 +61,10 @@ module Bashcov
 
       end.parse!(args)
 
-      if args.one?
-        @options.filename = args.shift
+      if args.empty?
+        abort("You must give exactly one command to execute.")
       else
-        abort("You must give exactly one file to execute.")
+        @options.command = args.join(' ')
       end
     end
 

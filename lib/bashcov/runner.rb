@@ -9,9 +9,9 @@ module Bashcov
     # @return [Array] +stderr+ from the last run
     attr_reader :stderr
 
-    # @param [String] filename Command to run
-    def initialize filename
-      @filename = File.expand_path(filename)
+    # @param [String] command Command to run
+    def initialize command
+      @command = File.expand_path(command)
     end
 
     # Runs the command capturing +stdout+ and +stderr+.
@@ -104,7 +104,7 @@ module Bashcov
       @stdout = []
       @stderr = []
 
-      @command = "PS4='#{Xtrace.ps4}' #{@filename}"
+      @command = "PS4='#{Xtrace.ps4}' #{@command}"
     end
 
     def inject_xtrace_flag
