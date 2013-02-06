@@ -5,6 +5,10 @@ describe Bashcov::Runner do
   let(:bash_files_glob) { "#{Bashcov.root_directory}/**/*.sh" }
 
   describe "#run" do
+    it "finds commands in $PATH" do
+      Bashcov::Runner.new('ls -l').run.should be_success
+    end
+
     context "without a SHELLOPTS variable" do
       before do
         ENV['SHELLOPTS'] = nil

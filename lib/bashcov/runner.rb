@@ -11,7 +11,7 @@ module Bashcov
 
     # @param [String] command Command to run
     def initialize command
-      @command = File.expand_path(command)
+      @command = command
     end
 
     # Runs the command capturing +stdout+ and +stderr+.
