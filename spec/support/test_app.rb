@@ -29,7 +29,7 @@ end
 def expected_coverage
   {
     "#{test_app}/never_called.sh" => [nil, nil, 0, nil],
-    "#{test_app}/scripts/case.sh" => [nil, nil, nil, 2, 1, nil, 0, 0, 1, nil, nil, nil, 1, 1, nil],
+    "#{test_app}/scripts/case.sh" => [nil, nil, nil, 6, 1, nil, 0, 0, 1, nil, nil, nil, 1, 1, nil],
     "#{test_app}/scripts/function.sh" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, 1, 1, nil],
     "#{test_app}/scripts/long_line.sh" => [nil, nil, 1, 1, 1, 0, nil],
     "#{test_app}/scripts/nested/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1, nil, nil],
@@ -37,10 +37,9 @@ def expected_coverage
     "#{test_app}/scripts/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1, nil, nil],
     "#{test_app}/scripts/source.sh" => [nil, nil, 1, nil, 2, nil],
     "#{test_app}/scripts/sourced.txt" => [nil, nil, 1, nil],
-    "#{test_app}/scripts/stdin.sh" => [nil, nil, 1, 1, 1, nil],
-    "#{test_app}/scripts/multiline.sh" => [nil, nil, 1, 2, 1, 1, 0, nil],
+    "#{test_app}/scripts/multiline.sh" => [nil, nil, 1, 2, 1, 1, 0, nil, nil, 0, 1, 2], # XXX the 3 last lines should be [1, 1, 1] - Bash bug
     "#{test_app}/scripts/executable" => [nil, nil, 1, nil],
-    "#{test_app}/test_suite.sh" => [nil, nil, 2, nil, nil, 2, nil]
+    "#{test_app}/test_suite.sh" => [nil, nil, 2, nil, 1, nil]
   }
 end
 
