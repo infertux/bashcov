@@ -6,3 +6,7 @@
   echo 'what?' || \
   echo 'no!'
 
+variable=($(
+  echo hi
+))
+echo after

@@ -28,6 +28,7 @@ module Bashcov
 
       line.empty? or
       start_with.any? { |token| line.start_with? token } or
+      end_with.any? { |token| line.end_with? token } or
       is.any? { |keyword| line == keyword } or
       line =~ /\A\w+\(\) {/ # function declared like this: "foo() {"
     end
@@ -40,6 +41,11 @@ module Bashcov
     # Lines starting with one of these tokens are irrelevant for coverage
     def start_with
       %w(# function)
+    end
+
+    # Lines ending with one of these tokens are irrelevant for coverage
+    def end_with
+      %w(\()
     end
   end
 end

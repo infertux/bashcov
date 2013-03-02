@@ -100,7 +100,7 @@ describe Bashcov::Runner do
 
       it "does not print xtrace output" do
         $stderr.should_receive(:puts).at_least(:once) do |line|
-          line.should_not match Bashcov::Xtrace.line_regexp
+          Bashcov::Xtrace.is_valid?(line).should be_false
         end
 
         runner.run

@@ -1,3 +1,5 @@
+require 'tempfile'
+
 module Bashcov
   # This class manages +xtrace+ output.
   #
@@ -5,15 +7,12 @@ module Bashcov
   class Xtrace
     # @param [Array] output Array of output lines.
     # @raise [ArgumentError] if the given +output+ is not an array
-    def initialize output
-      raise ArgumentError, "#{output} must be an array" unless output.is_a? Array
-      @lines = output
+    def initialize
+      @xtrace_file = Tempfile.new 'xtrace_output'
     end
 
-    # Filters out non-xtrace lines.
-    # @return [Array] xtrace output
-    def xtrace_output
-      @lines.select { |line| line =~ Xtrace.line_regexp }
+    def file_descriptor
+      @xtrace_file.to_i
     end
 
     # Parses xtrace output and computes coverage
@@ -22,8 +21,11 @@ module Bashcov
     def files
       files = {}
 
-      xtrace_output.each do |line|
-        match = line.match(Xtrace.line_regexp)
+      @xtrace_file.rewind
+      @xtrace_file.read.each_line do |line|
+        match = line.match(self.class.line_regexp)
+        next if match.nil? # multiline instruction
+
         filename = File.expand_path(match[:filename], Bashcov.root_directory)
         next if File.directory? filename
         raise "#{filename} is not a file" unless File.file? filename
@@ -35,8 +37,13 @@ module Bashcov
 
         files[filename][lineno] += 1
       end
+      @xtrace_file.close
 
       files
+    end
+
+    def self.is_valid? line
+      line =~ line_regexp
     end
 
     # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
@@ -46,7 +53,7 @@ module Bashcov
       # character in filenames on Unix and Windows.
 
       # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-      %Q{#{prefix}$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")/${LINENO} BASHCOV}
+      %Q{#{prefix}$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")/${LINENO} BASHCOV: }
     end
 
   private
@@ -62,7 +69,7 @@ module Bashcov
     end
 
     def self.line_regexp
-      /\A#{depth_character}+#{prefix[1..-1]}(?<filename>.+)\/(?<lineno>\d+) BASHCOV/
+      /\A#{depth_character}+#{prefix[1..-1]}(?<filename>.+)\/(?<lineno>\d+) BASHCOV: /
     end
   end
 end

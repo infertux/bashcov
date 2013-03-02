@@ -35,9 +35,7 @@ module Bashcov
           Thread.new { # stderr
             stderr.each do |line|
               @stderr << line
-              next if Bashcov.options.mute
-              xtrace = Xtrace.new [line]
-              $stderr.puts line if xtrace.xtrace_output.empty?
+              $stderr.puts line unless Bashcov.options.mute || Xtrace.is_valid?(line)
             end
           }
         ].map(&:join)
@@ -72,9 +70,7 @@ module Bashcov
     # @return [Hash] Given hash including coverage result from {Xtrace}
     # @see Xtrace
     def add_coverage_result files
-      xtraced_files = Xtrace.new(@stderr).files
-
-      xtraced_files.each do |file, lines|
+      @xtrace.files.each do |file, lines|
         lines.each_with_index do |line, lineno|
           files[file] ||= Bashcov.coverage_array(file)
           files[file][lineno] = line if line
@@ -101,10 +97,9 @@ module Bashcov
     def setup
       inject_xtrace_flag
 
-      @stdout = []
-      @stderr = []
-
-      @command = "PS4='#{Xtrace.ps4}' #{@command}"
+      @stdout, @stderr = [], []
+      @xtrace = Xtrace.new
+      @command = "PS4='#{Xtrace.ps4}' BASH_XTRACEFD=#{@xtrace.file_descriptor} #{@command}"
     end
 
     def inject_xtrace_flag
