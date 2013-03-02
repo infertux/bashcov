@@ -5,12 +5,12 @@ module Bashcov
   #
   # @see Runner
   class Xtrace
-    # @param [Array] output Array of output lines.
-    # @raise [ArgumentError] if the given +output+ is not an array
+    # Creates a temporary file for xtrace output
     def initialize
       @xtrace_file = Tempfile.new 'xtrace_output'
     end
 
+    # @return [Fixnum] File descriptor of the output file
     def file_descriptor
       @xtrace_file.to_i
     end
@@ -42,6 +42,8 @@ module Bashcov
       files
     end
 
+    # @param [String] line A string
+    # @return [boolean] Whether the given line is xtrace output
     def self.is_valid? line
       line =~ line_regexp
     end
