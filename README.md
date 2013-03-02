@@ -37,10 +37,6 @@ After a bit of parsing, it sends results through _simplecov_ which generates an 
 
 And of course, you can take the most of _simplecov_ by adding a `.simplecov` file in your project's root (like [this](https://github.com/infertux/bashcov/blob/master/spec/test_app/.simplecov)).
 
-## Todo
-
-- semver
-
 ## License
 
 MIT
