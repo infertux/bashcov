@@ -31,8 +31,7 @@ module Bashcov
         next if File.directory? filename
         raise "#{filename} is not a file" unless File.file? filename
 
-        lineno = match[:lineno].to_i
-        lineno -= 1 if lineno > 0
+        lineno = match[:lineno].to_i - 1
 
         files[filename] ||= Bashcov.coverage_array(filename)
 
