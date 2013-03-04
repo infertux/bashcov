@@ -93,14 +93,14 @@ describe Bashcov::Runner do
       end
     end
 
-    context "with options.mute = false" do
+    context "with options.mute = true" do
       before do
-        Bashcov.options.mute = false
+        Bashcov.options.mute = true
       end
 
-      it "does not print xtrace output" do
-        $stderr.should_receive(:puts).at_least(:once) do |line|
-          Bashcov::Xtrace.is_valid?(line).should be_false
+      it "does not print the command output" do
+        [$stdout, $stderr].each do |io|
+          io.should_not_receive :write
         end
 
         runner.run

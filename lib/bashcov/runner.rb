@@ -1,45 +1,27 @@
-require 'open4'
-
 module Bashcov
-  # Runs a given command capturing output then computes code coverage.
+  # Runs a given command with xtrace enabled then computes code coverage.
   class Runner
-    # @return [Array] +stdout+ from the last run
-    attr_reader :stdout
-
-    # @return [Array] +stderr+ from the last run
-    attr_reader :stderr
-
     # @param [String] command Command to run
     def initialize command
       @command = command
     end
 
-    # Runs the command capturing +stdout+ and +stderr+.
+    # Runs the command with appropriate xtrace settings.
     # @note Binds Bashcov +stdin+ to the program executed.
-    # @note Uses two threads to stream +stdout+ and +stderr+ output in
-    #   realtime.
-    # @return [void]
+    # @return [Process::Status] Status of the executed command
     def run
-      setup
+      inject_xtrace_flag!
 
-      Open4::popen4(@command) do |pid, stdin, stdout, stderr|
-        stdin = $stdin # bind stdin
+      @xtrace = Xtrace.new
+      fd = @xtrace.file_descriptor
+      @command = "BASH_XTRACEFD=#{fd} PS4='#{Xtrace.ps4}' #{@command}"
+      options = {:in => :in, fd => fd} # bind fds to the child process
+      options.merge!({out: '/dev/null', err: '/dev/null'}) if Bashcov.options.mute
 
-        [
-          Thread.new { # stdout
-            stdout.each do |line|
-              @stdout << line
-              $stdout.puts line unless Bashcov.options.mute
-            end
-          },
-          Thread.new { # stderr
-            stderr.each do |line|
-              @stderr << line
-              $stderr.puts line unless Bashcov.options.mute || Xtrace.is_valid?(line)
-            end
-          }
-        ].map(&:join)
-      end
+      pid = Process.spawn @command, options
+      Process.wait pid
+
+      $?
     end
 
     # @return [Hash] Coverage hash of the last run
@@ -94,15 +76,7 @@ module Bashcov
 
   private
 
-    def setup
-      inject_xtrace_flag
-
-      @stdout, @stderr = [], []
-      @xtrace = Xtrace.new
-      @command = "PS4='#{Xtrace.ps4}' BASH_XTRACEFD=#{@xtrace.file_descriptor} #{@command}"
-    end
-
-    def inject_xtrace_flag
+    def inject_xtrace_flag!
       # SHELLOPTS must be exported so we use Ruby's ENV variable
       existing_flags = (ENV['SHELLOPTS'] || '').split(':')
       ENV['SHELLOPTS'] = (existing_flags | ['xtrace']).join(':')

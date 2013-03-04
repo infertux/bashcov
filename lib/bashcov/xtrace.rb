@@ -8,11 +8,12 @@ module Bashcov
     # Creates a temporary file for xtrace output
     def initialize
       @xtrace_file = Tempfile.new 'xtrace_output'
+      @xtrace_file.unlink # unlink on create so other programs cannot access it
     end
 
     # @return [Fixnum] File descriptor of the output file
     def file_descriptor
-      @xtrace_file.to_i
+      @xtrace_file.fileno
     end
 
     # Parses xtrace output and computes coverage
@@ -37,15 +38,8 @@ module Bashcov
 
         files[filename][lineno] += 1
       end
-      @xtrace_file.close
 
       files
-    end
-
-    # @param [String] line A string
-    # @return [boolean] Whether the given line is xtrace output
-    def self.is_valid? line
-      line =~ line_regexp
     end
 
     # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
