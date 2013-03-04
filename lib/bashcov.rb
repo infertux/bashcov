@@ -26,6 +26,42 @@ module Bashcov
     # @raise [SystemExit] if invalid arguments are given
     # @return [void]
     def parse_options! args
+      option_parser.parse!(args)
+
+      if args.empty?
+        abort("You must give exactly one command to execute.")
+      else
+        @options.command = args.join(' ')
+      end
+    end
+
+    # @return [String] The project's root directory
+    def root_directory
+      Dir.getwd
+    end
+
+    # Program name including version for easy consistent output
+    # @return [String]
+    def name
+      "bashcov v#{VERSION}"
+    end
+
+    # Helper to get a pre-filled coverage array for a given file
+    # @todo This is generic and should be moved in some helpers file.
+    # @api private
+    # @param [String] filename The file to cover.
+    # @param [nil, Integer] fill Value to fill the array with.
+    # @return [Array] An array of the size of the given file.
+    # @example
+    #   coverage_array('file.rb') #=> [0, 0, 0] # assuming file.rb has 3 lines
+    def coverage_array(filename, fill = Line::UNCOVERED)
+      lines = File.readlines(filename).size
+      [fill] * lines
+    end
+
+  private
+
+    def option_parser
       OptionParser.new do |opts|
         opts.program_name = 'bashcov'
         opts.version = Bashcov::VERSION
@@ -58,38 +94,7 @@ module Bashcov
           puts opts.ver
           exit
         end
-
-      end.parse!(args)
-
-      if args.empty?
-        abort("You must give exactly one command to execute.")
-      else
-        @options.command = args.join(' ')
       end
-    end
-
-    # @return [String] The project's root directory
-    def root_directory
-      Dir.getwd
-    end
-
-    # Program name including version for easy consistent output
-    # @return [String]
-    def name
-      "bashcov v#{VERSION}"
-    end
-
-    # Helper to get a pre-filled coverage array for a given file
-    # @todo This is generic and should be moved in some helpers file.
-    # @api private
-    # @param [String] filename The file to cover.
-    # @param [nil, Integer] fill Value to fill the array with.
-    # @return [Array] An array of the size of the given file.
-    # @example
-    #   coverage_array('file.rb') #=> [0, 0, 0] # assuming file.rb has 3 lines
-    def coverage_array(filename, fill = Line::UNCOVERED)
-      lines = File.readlines(filename).size
-      [fill] * lines
     end
   end
 end
