@@ -30,6 +30,7 @@ def expected_coverage
   {
     "#{test_app}/never_called.sh" => [nil, nil, 0, nil],
     "#{test_app}/scripts/case.sh" => [nil, nil, nil, 6, 1, nil, 0, 0, 1, nil, nil, nil, 1, 1, nil],
+    "#{test_app}/scripts/delete.sh" => [nil, nil, 1, nil, 0, 0, nil, 1, 1],
     "#{test_app}/scripts/function.sh" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, 1, 1, nil],
     "#{test_app}/scripts/long_line.sh" => [nil, nil, 1, 1, 1, 0, nil],
     "#{test_app}/scripts/nested/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1, nil, nil],

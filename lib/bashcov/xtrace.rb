@@ -17,7 +17,6 @@ module Bashcov
     end
 
     # Parses xtrace output and computes coverage
-    # @raise [RuntimeError] on invalid files
     # @return [Hash] Hash of executed files with coverage information
     def files
       files = {}
@@ -29,7 +28,10 @@ module Bashcov
 
         filename = File.expand_path(match[:filename], Bashcov.root_directory)
         next if File.directory? filename
-        raise "#{filename} is not a file" unless File.file? filename
+        unless File.file? filename
+          warn "Warning: #{filename} was executed but has been deleted since then - skipping it."
+          next
+        end
 
         lineno = match[:lineno].to_i - 1
         files[filename] ||= Bashcov.coverage_array(filename)
