@@ -68,10 +68,10 @@ module Bashcov
         opts.banner = <<-HELP.gsub!(/^ +/, '').gsub!("\t", ' ' * 4)
           Usage: #{opts.program_name} [options] -- <command> [options]
           Examples:
-          \t#{opts.program_name} script.sh
-          \t#{opts.program_name} --skip-uncovered script.sh
-          \t#{opts.program_name} -- script.sh --some --flags
-          \t#{opts.program_name} --skip-uncovered -- script.sh --some --flags
+          \t#{opts.program_name} ./script.sh
+          \t#{opts.program_name} --skip-uncovered ./script.sh
+          \t#{opts.program_name} -- ./script.sh --some --flags
+          \t#{opts.program_name} --skip-uncovered -- ./script.sh --some --flags
         HELP
 
         opts.separator "\nSpecific options:"
