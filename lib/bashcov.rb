@@ -55,7 +55,7 @@ module Bashcov
     # @example
     #   coverage_array('file.rb') #=> [0, 0, 0] # assuming file.rb has 3 lines
     def coverage_array(filename, fill = Line::UNCOVERED)
-      lines = File.readlines(filename).size
+      lines = File.open(filename).read.count $/
       [fill] * lines
     end
 
