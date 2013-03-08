@@ -64,7 +64,7 @@ module Bashcov
     end
 
     def self.line_regexp
-      /\A#{depth_character}+#{prefix[1..-1]}(?<filename>.+)\/(?<lineno>\d+) BASHCOV: /
+      @line_regexp ||= /\A#{depth_character}+#{prefix[1..-1]}(?<filename>.+)\/(?<lineno>\d+) BASHCOV: /
     end
   end
 end

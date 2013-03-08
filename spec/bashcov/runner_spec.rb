@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'benchmark'
 
 describe Bashcov::Runner do
   let(:runner) { Bashcov::Runner.new test_suite }
@@ -7,6 +8,24 @@ describe Bashcov::Runner do
   describe "#run" do
     it "finds commands in $PATH" do
       Bashcov::Runner.new('ls -l').run.should be_success
+    end
+
+    it "is less than 3 times slower with Bashcov" do
+      ratio = 0
+
+      3.times do |iteration|
+        t0 = Benchmark.realtime { %x[#{test_suite} 2>&1] }
+        $?.should be_success
+
+        run = nil
+        t1 = Benchmark.realtime { run = Bashcov::Runner.new(test_suite).run }
+        run.should be_success
+
+        ratio = (ratio * iteration + t1 / t0) / (iteration + 1)
+      end
+
+      puts "#{ratio} times longer with Bashcov"
+      ratio.should be < 3
     end
 
     context "without a SHELLOPTS variable" do

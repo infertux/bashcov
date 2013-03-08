@@ -15,8 +15,10 @@ module Bashcov
     # @return [Array] Irrelevant lines
     def irrelevant_lines
       lines = []
-      IO.readlines(@filename).each_with_index do |line, lineno|
+      lineno = 0
+      File.foreach(@filename) do |line|
         lines << lineno if is_irrevelant? line
+        lineno +=1
       end
       lines
     end
@@ -27,25 +29,25 @@ module Bashcov
       line.strip!
 
       line.empty? or
-      start_with.any? { |token| line.start_with? token } or
-      end_with.any? { |token| line.end_with? token } or
-      is.any? { |keyword| line == keyword } or
-      line =~ /\A\w+\(\) {/ # function declared like this: "foo() {"
+      is_keywords.include? line or
+      line.start_with? *start_with_tokens or
+      line.end_with? *end_with_tokens or
+      line =~ /\A\w+\(\)\s*{/ # function declared like this: "foo() {"
     end
 
     # Lines containing only one of these keywords are irrelevant for coverage
-    def is
-      %w(esac fi then do done else { } ;;)
+    def is_keywords
+      %w|esac fi then do done else { } ;;|
     end
 
     # Lines starting with one of these tokens are irrelevant for coverage
-    def start_with
-      %w(# function)
+    def start_with_tokens
+      %w|# function|
     end
 
     # Lines ending with one of these tokens are irrelevant for coverage
-    def end_with
-      %w(\()
+    def end_with_tokens
+      %w|(|
     end
   end
 end
