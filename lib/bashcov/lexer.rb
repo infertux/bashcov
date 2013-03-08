@@ -30,8 +30,8 @@ module Bashcov
 
       line.empty? or
       is_keywords.include? line or
-      line.start_with? *start_with_tokens or
-      line.end_with? *end_with_tokens or
+      line.start_with?(*start_with_tokens) or
+      line.end_with?(*end_with_tokens) or
       line =~ /\A\w+\(\)\s*{/ # function declared like this: "foo() {"
     end
 
