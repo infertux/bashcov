@@ -9,7 +9,11 @@ require 'bashcov/xtrace'
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
+  # [String] The project's root directory
+  ROOT_DIRECTORY = Dir.getwd
+
   class << self
+
     # @return [OpenStruct] Bashcov settings
     attr_reader :options
 
@@ -35,28 +39,9 @@ module Bashcov
       end
     end
 
-    # @return [String] The project's root directory
-    def root_directory
-      Dir.getwd
-    end
-
-    # Program name including version for easy consistent output
-    # @return [String]
+    # @return [String] Program name including version for easy consistent output
     def name
       "bashcov v#{VERSION}"
-    end
-
-    # Helper to get a pre-filled coverage array for a given file
-    # @todo This is generic and should be moved in some helpers file.
-    # @api private
-    # @param [String] filename The file to cover.
-    # @param [nil, Integer] fill Value to fill the array with.
-    # @return [Array] An array of the size of the given file.
-    # @example
-    #   coverage_array('file.rb') #=> [0, 0, 0] # assuming file.rb has 3 lines
-    def coverage_array(filename, fill = Line::UNCOVERED)
-      lines = File.open(filename).read.count $/
-      [fill] * lines
     end
 
   private

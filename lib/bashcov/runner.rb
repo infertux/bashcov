@@ -7,79 +7,78 @@ module Bashcov
     end
 
     # Runs the command with appropriate xtrace settings.
-    # @note Binds Bashcov +stdin+ to the program executed.
+    # @note Binds Bashcov +stdin+ to the program being executed.
     # @return [Process::Status] Status of the executed command
     def run
       inject_xtrace_flag!
 
       @xtrace = Xtrace.new
       fd = @xtrace.file_descriptor
-      @command = "BASH_XTRACEFD=#{fd} PS4='#{Xtrace.ps4}' #{@command}"
+      @command = "BASH_XTRACEFD=#{fd} PS4='#{Xtrace::PS4}' #{@command}"
       options = {:in => :in, fd => fd} # bind fds to the child process
       options.merge!({out: '/dev/null', err: '/dev/null'}) if Bashcov.options.mute
 
-      pid = Process.spawn @command, options
-      Process.wait pid
+      command_pid = Process.spawn @command, options # spawn the command
+      xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
+
+      Process.wait command_pid
+      @xtrace.close
+
+      @coverage = xtrace_thread.value # wait for the thread to return
 
       $?
     end
 
     # @return [Hash] Coverage hash of the last run
+    # @note The result is memoized.
     def result
-      files = if Bashcov.options.skip_uncovered
-        {}
-      else
-        find_bash_files "#{Bashcov.root_directory}/**/*.sh"
-      end
+      @result ||= begin
+        find_bash_files!
+        expunge_invalid_files!
+        mark_relevant_lines!
 
-      files = add_coverage_result files
-      files = ignore_irrelevant_lines files
-    end
-
-    # @param [String] directory Directory to scan
-    # @return [Hash] Coverage hash of Bash files in the given +directory+. All
-    #   files are marked as uncovered.
-    def find_bash_files directory
-      Dir[directory].inject({}) do |files, file|
-        absolute_path = File.expand_path(file)
-        next unless File.file?(absolute_path)
-
-        files.merge!(absolute_path => Bashcov.coverage_array(absolute_path))
-      end
-    end
-
-    # @param [Hash] files Initial coverage hash
-    # @return [Hash] Given hash including coverage result from {Xtrace}
-    # @see Xtrace
-    def add_coverage_result files
-      @xtrace.files.each do |file, lines|
-        lines.each_with_index do |line, lineno|
-          files[file] ||= Bashcov.coverage_array(file)
-          files[file][lineno] = line if line
-        end
-      end
-
-      files
-    end
-
-    # @param [Hash] files Initial coverage hash
-    # @return [Hash] Given hash ignoring irrelevant lines
-    # @see Lexer
-    def ignore_irrelevant_lines files
-      files.each do |filename, lines|
-        lexer = Lexer.new(filename)
-        lexer.irrelevant_lines.each do |lineno|
-          files[filename][lineno] = Bashcov::Line::IGNORED
-        end
+        @coverage
       end
     end
 
   private
 
+    # @note +SHELLOPTS+ must be exported so we use Ruby's {ENV} variable
+    # @return [void]
     def inject_xtrace_flag!
-      # SHELLOPTS must be exported so we use Ruby's ENV variable
       existing_flags = (ENV['SHELLOPTS'] || '').split(':')
       ENV['SHELLOPTS'] = (existing_flags | ['xtrace']).join(':')
+    end
+
+    # Add files which have not been executed at all (i.e. with no coverage)
+    # @return [void]
+    def find_bash_files!
+      return if Bashcov.options.skip_uncovered
+
+      Dir["#{Bashcov::ROOT_DIRECTORY}/**/*.sh"].each do |file|
+        @coverage[file] ||= [] # empty coverage array
+      end
+    end
+
+    # @return [void]
+    def expunge_invalid_files!
+      @coverage.each_key do |file|
+        unless File.file? file
+          @coverage.delete file
+          warn "Warning: #{file} was executed but has been deleted since then - it won't be reported in coverage."
+        end
+      end
+    end
+
+    # @see Lexer
+    # @return [void]
+    def mark_relevant_lines!
+      @coverage.each do |filename, coverage|
+        lexer = Lexer.new(filename, coverage)
+        lexer.uncovered_relevant_lines do |lineno|
+          @coverage[filename][lineno] = Bashcov::Line::UNCOVERED
+        end
+      end
     end
   end
 end

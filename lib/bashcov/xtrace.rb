@@ -5,66 +5,59 @@ module Bashcov
   #
   # @see Runner
   class Xtrace
-    # Creates a temporary file for xtrace output
+    # Prefix used for PS4.
+    # @note The first caracter ('+') will be repeated to indicate the nesting
+    #   level.
+    PREFIX = '+BASHCOV> '
+
+    # [String] +PS4+ variable used for xtrace output
+    # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
+    # @see http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+    # @note We use a forward slash as delimiter since it's the only forbidden
+    #   character in filenames on Unix and Windows.
+    PS4 = %Q{#{PREFIX}$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")/${LINENO} BASHCOV: }
+
+    # Regexp to match xtrace elements.
+    LINE_REGEXP = /\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+) BASHCOV: /
+
+    # @return [Hash] Coverage of executed files
+    attr_reader :coverage
+
+    # Creates a temporary file for xtrace output.
+    # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
     def initialize
-      @xtrace_file = Tempfile.new 'xtrace_output'
-      @xtrace_file.unlink # unlink on create so other programs cannot access it
+      @read, @write = IO.pipe
     end
 
-    # @return [Fixnum] File descriptor of the output file
+    # @return [Fixnum] File descriptor of the write end of the pipe
     def file_descriptor
-      @xtrace_file.fileno
+      @write.fileno
     end
 
-    # Parses xtrace output and computes coverage
+    # Closes the pipe for writing.
+    # @return [void]
+    def close
+      @write.close
+    end
+
+    # Parses xtrace output and computes coverage.
     # @return [Hash] Hash of executed files with coverage information
-    def files
-      files = {}
+    def read
+      @files = {}
 
-      @xtrace_file.rewind
-      @xtrace_file.read.each_line do |line|
-        match = line.match(self.class.line_regexp)
-        next if match.nil? # multiline instruction
+      @read.each_line do |line|
+        match = line.match(LINE_REGEXP)
+        next if match.nil? # garbage line from multiline instruction
 
-        filename = File.expand_path(match[:filename], Bashcov.root_directory)
-        next if File.directory? filename
-        unless File.file? filename
-          warn "Warning: #{filename} was executed but has been deleted since then - skipping it."
-          next
-        end
+        filename = File.expand_path(match[:filename], Bashcov::ROOT_DIRECTORY)
 
         lineno = match[:lineno].to_i - 1
-        files[filename] ||= Bashcov.coverage_array(filename)
-        files[filename][lineno] += 1
+        @files[filename] ||= []
+        @files[filename][lineno] ||= 0
+        @files[filename][lineno] += 1
       end
 
-      files
-    end
-
-    # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
-    # @return [String] +PS4+ variable used for xtrace output
-    def self.ps4
-      # We use a forward slash as delimiter since it's the only forbidden
-      # character in filenames on Unix and Windows.
-
-      # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-      %Q{#{prefix}$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")/${LINENO} BASHCOV: }
-    end
-
-  private
-
-    def self.prefix
-      # Note that the first caracter (+) will be repeated to indicate the
-      # nesting level (see depth_character).
-      '+BASHCOV> '
-    end
-
-    def self.depth_character
-      Regexp.escape(prefix[0])
-    end
-
-    def self.line_regexp
-      @line_regexp ||= /\A#{depth_character}+#{prefix[1..-1]}(?<filename>.+)\/(?<lineno>\d+) BASHCOV: /
+      @files
     end
   end
 end
