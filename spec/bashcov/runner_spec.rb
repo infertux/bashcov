@@ -9,7 +9,7 @@ describe Bashcov::Runner do
       Bashcov::Runner.new('ls -l').run.should be_success
     end
 
-    it "is fast" do
+    it "is fast", speed: :slow do
       # XXX it's usually 2 to 3 times slower but can be up to 6 on Travis boxes
       # - not sure why :(
       ratio = 0
