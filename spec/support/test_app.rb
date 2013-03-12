@@ -29,3 +29,9 @@ def expected_coverage
   }
 end
 
+def correct_coverage
+  expected_coverage.merge!({
+    "#{test_app}/scripts/multiline.sh" => [nil, nil, 1, 2, 1, 1, 0, nil, nil, 1, 1, 1]
+  })
+end
+

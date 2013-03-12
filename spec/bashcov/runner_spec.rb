@@ -60,10 +60,17 @@ describe Bashcov::Runner do
   end
 
   describe "#result" do
-    it "returns a valid coverage hash" do
+    it "returns the expected coverage hash" do
+      runner.run
+      runner.result.should eq expected_coverage
+    end
+
+    it "returns the correct coverage hash" do
       runner.run
 
-      runner.result.should == expected_coverage
+      pending "need a context-aware lexer to parse multiline instructions" do
+        runner.result.should eq correct_coverage
+      end
     end
 
     context "with options.skip_uncovered = true" do
