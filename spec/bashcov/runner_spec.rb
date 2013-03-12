@@ -16,8 +16,6 @@ describe Bashcov::Runner do
     end
 
     it "is fast", speed: :slow do
-      # XXX it's usually 2 to 3 times slower but can be up to 6 on Travis boxes
-      # - not sure why :(
       ratio = 0
 
       3.times do |iteration|
@@ -35,7 +33,7 @@ describe Bashcov::Runner do
       end
 
       puts "#{ratio} times longer with Bashcov"
-      # XXX no proper assertion - just outputs the ratio
+      ratio.should be < 1.5
     end
 
     context "without a SHELLOPTS variable" do
