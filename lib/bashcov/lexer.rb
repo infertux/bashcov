@@ -28,7 +28,7 @@ module Bashcov
     # @return [void]
     def uncovered_relevant_lines
       lineno = 0
-      File.foreach(@filename) do |line|
+      File.open(@filename, 'rb').each_line do |line|
         if @coverage[lineno] == Bashcov::Line::IGNORED and is_revelant? line
           yield lineno
         end
