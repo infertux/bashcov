@@ -55,7 +55,7 @@ module Bashcov
     def find_bash_files!
       return if Bashcov.options.skip_uncovered
 
-      Dir["#{Bashcov::ROOT_DIRECTORY}/**/*.sh"].each do |file|
+      Dir["#{Bashcov.root_directory}/**/*.sh"].each do |file|
         @coverage[file] ||= [] # empty coverage array
       end
     end

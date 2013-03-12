@@ -9,13 +9,15 @@ require 'bashcov/xtrace'
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
-  # [String] The project's root directory
-  ROOT_DIRECTORY = Dir.getwd
-
   class << self
 
     # @return [OpenStruct] Bashcov settings
     attr_reader :options
+
+    # @return [String] The project's root directory inferred from the command
+    def root_directory
+      @root_directory ||= File.dirname @options.command
+    end
 
     # Sets default options overriding any existing ones.
     # @return [void]
