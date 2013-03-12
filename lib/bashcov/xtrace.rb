@@ -1,5 +1,3 @@
-require 'tempfile'
-
 module Bashcov
   # This class manages +xtrace+ output.
   #
