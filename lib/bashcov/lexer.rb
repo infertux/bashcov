@@ -45,7 +45,7 @@ module Bashcov
       !IGNORE_IS.include? line and
       !line.start_with?(*IGNORE_START_WITH) and
       !line.end_with?(*IGNORE_END_WITH) and
-      line !~ /\A\w+\(\)\s*{/ # function declared like this: "foo() {"
+      line !~ /\A\w+\(\)/ # function declared without the 'function' keyword
     end
   end
 end
