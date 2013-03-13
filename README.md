@@ -1,8 +1,27 @@
 # Bashcov [![Build Status](https://secure.travis-ci.org/infertux/bashcov.png?branch=master)](https://travis-ci.org/infertux/bashcov) [![Dependency Status](https://gemnasium.com/infertux/bashcov.png)](https://gemnasium.com/infertux/bashcov) [![Code Climate](https://codeclimate.com/github/infertux/bashcov.png)](https://codeclimate.com/github/infertux/bashcov)
 
-[bashcov] is [simplecov] for Bash.
+**Code coverage for Bash**
 
-Check out the **[demo](http://infertux.github.com/bashcov/test_app/)** - it's worth a thousand words.
+  * [Source Code]
+  * [Bug Tracker]
+  * [API Documentation]
+  * [Changelog]
+  * [Rubygem]
+  * [Continuous Integration]
+  * [Dependencies]
+  * [SimpleCov]
+
+[Source Code]: https://github.com/infertux/bashcov "Source Code on Github"
+[Bug Tracker]: https://github.com/infertux/bashcov/issues "Bug Tracker on Github"
+[API documentation]: http://rubydoc.info/gems/bashcov/frames "API Documentation on Rubydoc"
+[Changelog]: https://github.com/infertux/bashcov/blob/master/CHANGELOG.md "Project Changelog"
+[Rubygem]: https://rubygems.org/gems/bashcov "Bashcov on Rubygems"
+[Continuous Integration]: https://travis-ci.org/infertux/bashcov "Bashcov on Travis-CI"
+[Dependencies]: https://gemnasium.com/infertux/bashcov "Bashcov dependencies on Gemnasium"
+[Bashcov]: https://github.com/infertux/bashcov
+[SimpleCov]: https://github.com/colszowka/simplecov "Bashcov is backed by SimpleCov to generate awesome coverage report"
+
+You should check out the **[demo](http://infertux.github.com/bashcov/test_app/)** -- it's worth a thousand words.
 
 ## Installation
 
@@ -10,40 +29,31 @@ Check out the **[demo](http://infertux.github.com/bashcov/test_app/)** - it's wo
 
 ## Usage
 
-`bashcov ./test_suite.sh`
+`bashcov --help` prints all available options.
+Here are some examples:
 
-This will create a directory named `coverage/` containing HTML files.
+    bashcov ./script.sh
+    bashcov --skip-uncovered ./script.sh
+    bashcov -- ./script.sh --some --flags
+    bashcov --skip-uncovered -- ./script.sh --some --flags
 
-## Rationale
+`script.sh` can be a mere Bash script or typically your CI script.
+Bashcov will keep track of all executed scripts.
 
-I'm a big fan of both Ruby's _simplecov_ and Bash.
-_bashcov_ is my dream to have in Bash what _simplecov_ is to Ruby :).
+Then it will create a directory named `./coverage/` containing nice HTML files.
+Open `./coverage/index.html` to browse the coverage report.
 
-Oddly enough, I didn't find any coverage tool for Bash except [shcov] but as stated [there](http://stackoverflow.com/questions/7188081/code-coverage-tools-for-validating-the-scripts), _shcov_ is:
+### SimpleCov integration
 
-> somewhat simplistic and doesn't handle all possible cases very well (especially when we're talking about long and complex lines)
+You can take great advantage of [SimpleCov] by adding a `.simplecov` file in your project's root (like [this](https://github.com/infertux/bashcov/blob/master/spec/test_app/.simplecov)).
+See [SimpleCov README](https://github.com/colszowka/simplecov#readme) for more information.
 
-Indeed, it doesn't work very well for me.
-I have covered lines marked as uncovered and some files completely missed although executed through another script.
+## Contributing
 
-_bashcov_ aims to be a neat and working coverage tool backed by _simplecov_ and [simplecov-html].
-
-## How does it work?
-
-Ruby has a [coverage module](http://www.ruby-doc.org/stdlib-1.9.3/libdoc/coverage/rdoc/Coverage.html) which computes the coverage on demand.
-Unfortunately, Bash doesn't have such niceties but we can use the [xtrace feature](http://www.gnu.org/software/bash/manual/bashref.html#index-BASH_005fXTRACEFD-178) which prints every line executed using [PS4](http://www.gnu.org/software/bash/manual/bashref.html#index-PS4).
-
-After a bit of parsing, it sends results through _simplecov_ which generates an awesome HTML report.
-
-And of course, you can take the most of _simplecov_ by adding a `.simplecov` file in your project's root (like [this](https://github.com/infertux/bashcov/blob/master/spec/test_app/.simplecov)).
+Bug reports and patches are most welcome.
+See the [contribution guidelines](https://github.com/infertux/bashcov/blob/master/CONTRIBUTING.md).
 
 ## License
 
 MIT
-
-
-[bashcov]: https://github.com/infertux/bashcov
-[simplecov]: https://github.com/colszowka/simplecov
-[simplecov-html]: https://github.com/colszowka/simplecov-html
-[shcov]: http://code.google.com/p/shcov/source/browse/trunk/scripts/shcov
 
