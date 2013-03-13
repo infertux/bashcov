@@ -16,7 +16,7 @@ module Bashcov
 
     # @return [String] The project's root directory inferred from the command
     def root_directory
-      @root_directory ||= File.dirname @options.command
+      @root_directory ||= File.dirname(File.absolute_path(@options.command))
     end
 
     # Sets default options overriding any existing ones.
