@@ -2,7 +2,7 @@
 
   * TBD
 
-## v1.0.0, 2013-03-13 ([changes](https://github.com/infertux/bashcov/compare/v0.0.9...v1.0.0))
+## v1.0.0, 2013-03-16 ([changes](https://github.com/infertux/bashcov/compare/v0.0.9...v1.0.0))
 
   * First stable release. Enjoy!
 
