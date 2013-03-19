@@ -29,13 +29,13 @@ You should check out the **[demo](http://infertux.github.com/bashcov/test_app/)*
 
 ## Usage
 
-`bashcov --help` prints all available options.
+`$ bashcov --help` prints all available options.
 Here are some examples:
 
-    bashcov ./script.sh
-    bashcov --skip-uncovered ./script.sh
-    bashcov -- ./script.sh --some --flags
-    bashcov --skip-uncovered -- ./script.sh --some --flags
+    $ bashcov ./script.sh
+    $ bashcov --skip-uncovered ./script.sh
+    $ bashcov -- ./script.sh --some --flags
+    $ bashcov --skip-uncovered -- ./script.sh --some --flags
 
 `script.sh` can be a mere Bash script or typically your CI script.
 Bashcov will keep track of all executed scripts.
