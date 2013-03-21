@@ -21,7 +21,10 @@
 [Bashcov]: https://github.com/infertux/bashcov
 [SimpleCov]: https://github.com/colszowka/simplecov "Bashcov is backed by SimpleCov to generate awesome coverage report"
 
-You should check out the **[demo](http://infertux.github.com/bashcov/test_app/)** -- it's worth a thousand words.
+You should check out these coverage examples - it's worth a thousand words:
+
+  - [Test app demo](http://infertux.github.com/bashcov/test_app/ "Coverage for the bundled test application")
+  - [RVM demo](http://infertux.github.com/bashcov/rvm/ "Coverage for RVM")
 
 ## Installation
 
