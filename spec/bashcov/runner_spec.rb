@@ -4,10 +4,8 @@ require 'benchmark'
 describe Bashcov::Runner do
   let(:runner) { Bashcov::Runner.new test_suite }
 
-  before do
-    # 'Bashcov.options.command' is normally set through 'Bashcov.parse_options!'
-    # so we need to stub it
-    Bashcov.options.stub(:command).and_return(test_suite)
+  before :all do
+    Dir.chdir File.dirname(test_suite)
   end
 
   describe "#run" do

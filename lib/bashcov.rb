@@ -14,9 +14,9 @@ module Bashcov
     # @return [OpenStruct] Bashcov settings
     attr_reader :options
 
-    # @return [String] The project's root directory inferred from the command
+    # @return [String] The project's root directory
     def root_directory
-      @root_directory ||= File.dirname(File.absolute_path(@options.command))
+      @root_directory ||= Dir.pwd
     end
 
     # Sets default options overriding any existing ones.
