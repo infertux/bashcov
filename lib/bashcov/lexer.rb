@@ -9,7 +9,7 @@ module Bashcov
     IGNORE_END_WITH = %w|(|
 
     # Lines containing only one of these keywords are irrelevant for coverage
-    IGNORE_IS = %w|esac if then fi while do done else { } ;;|
+    IGNORE_IS = %w|esac if then else elif fi while do done { } ;;|
 
     # @param [String] filename File to analyze
     # @param [Hash] coverage Coverage with executed lines marked
