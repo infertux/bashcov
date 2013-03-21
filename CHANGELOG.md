@@ -1,6 +1,9 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.0.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.0.1...master))
 
   * TBD
+
+## v1.0.1, 2013-03-21 ([changes](https://github.com/infertux/bashcov/compare/v1.0.0...v1.0.1))
+
   * [BUGFIX] Allow to add SimpleCov filters.
   * [BUGFIX] Lines containing only `elif` should be ignored.
 
