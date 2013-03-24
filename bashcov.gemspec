@@ -26,4 +26,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rb-inotify'
   gem.add_development_dependency 'cane'
   gem.add_development_dependency 'yard'
+  gem.add_development_dependency 'coveralls'
 end
