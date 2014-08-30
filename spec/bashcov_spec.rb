@@ -2,14 +2,14 @@ require 'spec_helper'
 
 shared_examples "a fatal error" do
   it "outputs to stderr" do
-    $stderr.should_receive(:write).at_least(:once)
+    expect($stderr).to receive(:write).at_least(:once)
     ignore_exception { subject }
   end
 
   it "exits with non-zero" do
     expect { subject }.to raise_error { |error|
-      error.should be_a SystemExit
-      error.status.should_not == 0
+      expect(error).to be_a SystemExit
+      expect(error.status).not_to eq(0)
     }
   end
 end
@@ -32,7 +32,7 @@ describe Bashcov do
 
         it "sets it properly" do
           subject
-          Bashcov.options.skip_uncovered.should be_true
+          expect(Bashcov.options.skip_uncovered).to be true
         end
       end
 
@@ -41,7 +41,7 @@ describe Bashcov do
 
         it "sets it properly" do
           subject
-          Bashcov.options.mute.should be_true
+          expect(Bashcov.options.mute).to be true
         end
       end
 
@@ -55,14 +55,14 @@ describe Bashcov do
         before { @args << '--version' }
 
         it "outputs to stdout" do
-          $stdout.should_receive(:write).at_least(:once)
+          expect($stdout).to receive(:write).at_least(:once)
           ignore_exception { subject }
         end
 
         it "exits with zero" do
           expect { subject }.to raise_error { |error|
-            error.should be_a SystemExit
-            error.status.should == 0
+            expect(error).to be_a SystemExit
+            expect(error.status).to eq(0)
           }
         end
       end
@@ -71,7 +71,7 @@ describe Bashcov do
 
   describe ".name" do
     it "includes the version" do
-      Bashcov.name.should include Bashcov::VERSION
+      expect(Bashcov.name).to include Bashcov::VERSION
     end
   end
 end

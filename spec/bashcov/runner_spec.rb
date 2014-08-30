@@ -10,7 +10,7 @@ describe Bashcov::Runner do
 
   describe "#run" do
     it "finds commands in $PATH" do
-      Bashcov::Runner.new('ls -l').run.should be_success
+      expect(Bashcov::Runner.new('ls -l').run).to be_success
     end
 
     it "is fast", speed: :slow do
@@ -21,11 +21,11 @@ describe Bashcov::Runner do
           pid = Process.spawn test_suite, out: '/dev/null', err: '/dev/null'
           Process.wait pid
         }
-        $?.should be_success
+        expect($?).to be_success
 
         run = nil
         t1 = Benchmark.realtime { run = Bashcov::Runner.new(test_suite).run }
-        run.should be_success
+        expect(run).to be_success
 
         ratio = (ratio * iteration + t1 / t0) / (iteration + 1)
       end
@@ -41,7 +41,7 @@ describe Bashcov::Runner do
 
       it "adds the flags" do
         runner.run
-        ENV['SHELLOPTS'].should == 'xtrace'
+        expect(ENV['SHELLOPTS']).to eq('xtrace')
       end
     end
 
@@ -52,7 +52,7 @@ describe Bashcov::Runner do
 
       it "merges the flags" do
         runner.run
-        ENV['SHELLOPTS'].should == 'posix:xtrace'
+        expect(ENV['SHELLOPTS']).to eq('posix:xtrace')
       end
     end
   end
@@ -60,15 +60,14 @@ describe Bashcov::Runner do
   describe "#result" do
     it "returns the expected coverage hash" do
       runner.run
-      runner.result.should eq expected_coverage
+      expect(runner.result).to eq expected_coverage
     end
 
     it "returns the correct coverage hash" do
       runner.run
 
-      pending "need a context-aware lexer to parse multiline instructions" do
-        runner.result.should eq correct_coverage
-      end
+      pending # TODO: need a context-aware lexer to parse multiline instructions
+      expect(runner.result).to eq correct_coverage
     end
 
     context "with options.skip_uncovered = true" do
@@ -78,7 +77,7 @@ describe Bashcov::Runner do
 
       it "does not include uncovered files" do
         runner.run
-        (runner.result.keys & uncovered_files).should be_empty
+        expect(runner.result.keys & uncovered_files).to be_empty
       end
     end
 
@@ -89,7 +88,7 @@ describe Bashcov::Runner do
 
       it "does not print the command output" do
         [$stdout, $stderr].each do |io|
-          io.should_not_receive :write
+          expect(io).not_to receive :write
         end
 
         runner.run
