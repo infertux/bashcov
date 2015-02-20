@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.0.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.1.0...master))
 
   * TBD
+
+## v1.1.0, 2015-02-20 ([changes](https://github.com/infertux/bashcov/compare/v1.0.1...v1.1.0))
+
+  * [FEATURE] Upgrade dependencies
 
 ## v1.0.1, 2013-03-21 ([changes](https://github.com/infertux/bashcov/compare/v1.0.0...v1.0.1))
 
