@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'benchmark'
 
 describe Bashcov::Runner do
-  let(:runner) { Bashcov::Runner.new test_suite }
+  suite = test_suite
+  let(:runner) { Bashcov::Runner.new "bash #{suite}" }
 
   before :all do
     Dir.chdir File.dirname(test_suite)
