@@ -14,11 +14,13 @@ module Bashcov
 
       @xtrace = Xtrace.new
       fd = @xtrace.file_descriptor
-      @command = "BASH_XTRACEFD=#{fd} PS4='#{Xtrace::PS4}' #{@command}"
       options = {:in => :in, fd => fd} # bind fds to the child process
       options.merge!({out: '/dev/null', err: '/dev/null'}) if Bashcov.options.mute
 
-      command_pid = Process.spawn @command, options # spawn the command
+      env = {"BASH_XTRACEFD" => "#{fd}", "PS4" => "#{Xtrace::PS4}"}
+      env.merge!(ENV)
+
+      command_pid = Process.spawn env, @command, options # spawn the command
       xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
 
       Process.wait command_pid
