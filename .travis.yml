@@ -1,4 +1,5 @@
 language: ruby
+sudo: false
 after_script:
   - cane
   - yard stats --list-undoc
