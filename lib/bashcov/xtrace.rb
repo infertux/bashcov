@@ -1,3 +1,5 @@
+require 'mkmf'
+
 module Bashcov
   # This class manages +xtrace+ output.
   #
@@ -13,7 +15,10 @@ module Bashcov
     # @see http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
     # @note We use a forward slash as delimiter since it's the only forbidden
     #   character in filenames on Unix and Windows.
-    PS4 = %Q{#{PREFIX}${BASH_SOURCE[0]}/${LINENO}: }
+    _READLINK = find_executable('readlink')
+    _GREADLINK = find_executable('greadlink')
+    READLINK = _GREADLINK.nil? ? _READLINK : _GREADLINK
+    PS4 = %Q{#{PREFIX}$(#{READLINK} -f ${BASH_SOURCE[0]})/${LINENO}: }
 
     # Regexp to match xtrace elements.
     LINE_REGEXP = /\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): /

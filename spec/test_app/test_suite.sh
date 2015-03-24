@@ -2,5 +2,4 @@
 
 cd $(dirname $0)
 
-find scripts -type f -executable -exec '{}' \;
-
+find scripts -type f -perm -111 -exec bash '{}' \;
