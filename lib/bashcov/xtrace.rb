@@ -13,7 +13,9 @@ module Bashcov
     # @see http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
     # @note We use a forward slash as delimiter since it's the only forbidden
     #   character in filenames on Unix and Windows.
-    PS4 = %Q{#{PREFIX}${BASH_SOURCE[0]}/${LINENO}: }
+    GET_ABS_DIR = "$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"
+    GET_BASE = "$(basename ${BASH_SOURCE[0]})"
+    PS4 = %Q{#{PREFIX}#{GET_ABS_DIR}/#{GET_BASE}/${LINENO}: }
 
     # Regexp to match xtrace elements.
     LINE_REGEXP = /\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): /
