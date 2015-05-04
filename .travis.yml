@@ -8,11 +8,13 @@ rvm:
   - 2.1
   - 2.2
   - ruby-head
-  - rbx-19mode
+  - rbx
+  - rbx-head
 matrix:
   allow_failures:
     - rvm: ruby-head
-    - rvm: rbx-19mode
+    - rvm: rbx
+    - rvm: rbx-head
 notifications:
   email:
     on_success: always
