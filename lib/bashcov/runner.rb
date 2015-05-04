@@ -26,6 +26,10 @@ module Bashcov
 
       @coverage = xtrace_thread.value # wait for the thread to return
 
+      if $?.exitstatus != 0
+        exit $?.exitstatus
+      end
+
       $?
     end
 
