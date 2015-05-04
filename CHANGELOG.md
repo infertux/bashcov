@@ -1,6 +1,12 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.1.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.2.0...master))
 
   * TBD
+
+## v1.2.0, 2015-05-04 ([changes](https://github.com/infertux/bashcov/compare/v1.1.0...v1.2.0))
+
+  * [FEATURE] Enforce coherent coding style with Rubocop
+  * [FEATURE] Upgrade dependencies (#11)
+  * [FEATURE] Improve OS X compatibility (#10)
 
 ## v1.1.0, 2015-02-20 ([changes](https://github.com/infertux/bashcov/compare/v1.0.1...v1.1.0))
 
