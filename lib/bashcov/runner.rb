@@ -2,7 +2,7 @@ module Bashcov
   # Runs a given command with xtrace enabled then computes code coverage.
   class Runner
     # @param [String] command Command to run
-    def initialize command
+    def initialize(command)
       @command = command
     end
 
@@ -15,8 +15,8 @@ module Bashcov
       @xtrace = Xtrace.new
       fd = @xtrace.file_descriptor
       @command = "BASH_XTRACEFD=#{fd} PS4='#{Xtrace::PS4}' #{@command}"
-      options = {:in => :in, fd => fd} # bind fds to the child process
-      options.merge!({out: '/dev/null', err: '/dev/null'}) if Bashcov.options.mute
+      options = { :in => :in, fd => fd } # bind fds to the child process
+      options.merge!(out: "/dev/null", err: "/dev/null") if Bashcov.options.mute
 
       command_pid = Process.spawn @command, options # spawn the command
       xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
@@ -46,8 +46,8 @@ module Bashcov
     # @note +SHELLOPTS+ must be exported so we use Ruby's {ENV} variable
     # @return [void]
     def inject_xtrace_flag!
-      existing_flags = (ENV['SHELLOPTS'] || '').split(':')
-      ENV['SHELLOPTS'] = (existing_flags | ['xtrace']).join(':')
+      existing_flags = (ENV["SHELLOPTS"] || "").split(":")
+      ENV["SHELLOPTS"] = (existing_flags | ["xtrace"]).join(":")
     end
 
     # Add files which have not been executed at all (i.e. with no coverage)
@@ -63,10 +63,10 @@ module Bashcov
     # @return [void]
     def expunge_invalid_files!
       @coverage.each_key do |file|
-        unless File.file? file
-          @coverage.delete file
-          warn "Warning: #{file} was executed but has been deleted since then - it won't be reported in coverage."
-        end
+        next if File.file? file
+
+        @coverage.delete file
+        warn "Warning: #{file} was executed but has been deleted since then - it won't be reported in coverage."
       end
     end
 
@@ -82,4 +82,3 @@ module Bashcov
     end
   end
 end
-

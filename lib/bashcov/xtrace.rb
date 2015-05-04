@@ -6,7 +6,7 @@ module Bashcov
     # Prefix used for PS4.
     # @note The first caracter ('+') will be repeated to indicate the nesting
     #   level.
-    PREFIX = '+BASHCOV> '
+    PREFIX = "+BASHCOV> "
 
     # [String] +PS4+ variable used for xtrace output
     # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
@@ -15,10 +15,10 @@ module Bashcov
     #   character in filenames on Unix and Windows.
     GET_ABS_DIR = "$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"
     GET_BASE = "$(basename ${BASH_SOURCE[0]})"
-    PS4 = %Q{#{PREFIX}#{GET_ABS_DIR}/#{GET_BASE}/${LINENO}: }
+    PS4 = %(#{PREFIX}#{GET_ABS_DIR}/#{GET_BASE}/${LINENO}: )
 
     # Regexp to match xtrace elements.
-    LINE_REGEXP = /\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): /
+    LINE_REGEXP = %r{\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): }
 
     # @return [Hash] Coverage of executed files
     attr_reader :coverage
@@ -61,4 +61,3 @@ module Bashcov
     end
   end
 end
-

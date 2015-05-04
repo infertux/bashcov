@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-lib = File.expand_path('../../lib', __FILE__)
+lib = File.expand_path("../../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'bashcov'
+require "bashcov"
 
 Bashcov.parse_options! ARGV
 
@@ -11,9 +11,8 @@ runner = Bashcov::Runner.new Bashcov.options.command
 runner.run
 coverage = runner.result
 
-require 'simplecov'
+require "simplecov"
 
 SimpleCov.command_name Bashcov.name
 SimpleCov.root Bashcov.root_directory
 SimpleCov::Result.new(coverage).format!
-

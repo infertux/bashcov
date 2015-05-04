@@ -1,16 +1,15 @@
-require 'optparse'
-require 'ostruct'
-require 'bashcov/version'
-require 'bashcov/lexer'
-require 'bashcov/line'
-require 'bashcov/runner'
-require 'bashcov/xtrace'
+require "optparse"
+require "ostruct"
+require "bashcov/version"
+require "bashcov/lexer"
+require "bashcov/line"
+require "bashcov/runner"
+require "bashcov/xtrace"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
   class << self
-
     # @return [OpenStruct] Bashcov settings
     attr_reader :options
 
@@ -31,13 +30,13 @@ module Bashcov
     # @param [Array] args list of arguments
     # @raise [SystemExit] if invalid arguments are given
     # @return [void]
-    def parse_options! args
+    def parse_options!(args)
       option_parser.parse!(args)
 
       if args.empty?
         abort("You must give exactly one command to execute.")
       else
-        @options.command = args.join(' ')
+        @options.command = args.join(" ")
       end
     end
 
@@ -48,8 +47,8 @@ module Bashcov
 
   private
 
-    def help program_name
-      <<-HELP.gsub!(/^ +/, '').gsub!("\t", ' ' * 4)
+    def help(program_name)
+      <<-HELP.gsub!(/^ +/, "").gsub!("\t", " " * 4)
         Usage: #{program_name} [options] [--] <command> [options]
         Examples:
         \t#{program_name} ./script.sh
@@ -61,7 +60,7 @@ module Bashcov
 
     def option_parser
       OptionParser.new do |opts|
-        opts.program_name = 'bashcov'
+        opts.program_name = "bashcov"
         opts.version = Bashcov::VERSION
         opts.banner = help opts.program_name
 
@@ -90,4 +89,3 @@ end
 
 # Make sure default options are set
 Bashcov.set_default_options!
-

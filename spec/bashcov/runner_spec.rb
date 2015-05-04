@@ -1,5 +1,5 @@
-require 'spec_helper'
-require 'benchmark'
+require "spec_helper"
+require "benchmark"
 
 describe Bashcov::Runner do
   let(:runner) { Bashcov::Runner.new "bash #{test_suite}" }
@@ -10,17 +10,17 @@ describe Bashcov::Runner do
 
   describe "#run" do
     it "finds commands in $PATH" do
-      expect(Bashcov::Runner.new('ls -l').run).to be_success
+      expect(Bashcov::Runner.new("ls -l").run).to be_success
     end
 
     it "is fast", speed: :slow do
       ratio = 0
 
       3.times do |iteration|
-        t0 = Benchmark.realtime {
-          pid = Process.spawn test_suite, out: '/dev/null', err: '/dev/null'
+        t0 = Benchmark.realtime do
+          pid = Process.spawn test_suite, out: "/dev/null", err: "/dev/null"
           Process.wait pid
-        }
+        end
         expect($?).to be_success
 
         run = nil
@@ -36,23 +36,23 @@ describe Bashcov::Runner do
 
     context "without a SHELLOPTS variable" do
       before do
-        ENV['SHELLOPTS'] = nil
+        ENV["SHELLOPTS"] = nil
       end
 
       it "adds the flags" do
         runner.run
-        expect(ENV['SHELLOPTS']).to eq('xtrace')
+        expect(ENV["SHELLOPTS"]).to eq("xtrace")
       end
     end
 
     context "with an existing SHELLOPTS variable" do
       before do
-        ENV['SHELLOPTS'] = 'posix'
+        ENV["SHELLOPTS"] = "posix"
       end
 
       it "merges the flags" do
         runner.run
-        expect(ENV['SHELLOPTS']).to eq('posix:xtrace')
+        expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
       end
     end
   end
@@ -96,4 +96,3 @@ describe Bashcov::Runner do
     end
   end
 end
-

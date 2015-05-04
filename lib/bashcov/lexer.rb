@@ -3,24 +3,22 @@ module Bashcov
   # coverage
   class Lexer
     # Lines starting with one of these tokens are irrelevant for coverage
-    IGNORE_START_WITH = %w|# function|
+    IGNORE_START_WITH = %w(# function)
 
     # Lines ending with one of these tokens are irrelevant for coverage
     IGNORE_END_WITH = %w|(|
 
     # Lines containing only one of these keywords are irrelevant for coverage
-    IGNORE_IS = %w|esac if then else elif fi while do done { } ;;|
+    IGNORE_IS = %w(esac if then else elif fi while do done { } ;;)
 
     # @param [String] filename File to analyze
     # @param [Hash] coverage Coverage with executed lines marked
     # @raise [ArgumentError] if the given +filename+ is invalid.
-    def initialize filename, coverage
+    def initialize(filename, coverage)
       @filename = File.expand_path(filename)
       @coverage = coverage
 
-      unless File.file?(@filename)
-        raise ArgumentError, "#{@filename} is not a file"
-      end
+      raise ArgumentError, "#{@filename} is not a file" unless File.file?(@filename)
     end
 
     # Yields uncovered relevant lines.
@@ -28,24 +26,24 @@ module Bashcov
     # @return [void]
     def uncovered_relevant_lines
       lineno = 0
-      File.open(@filename, 'rb').each_line do |line|
-        if @coverage[lineno] == Bashcov::Line::IGNORED and is_revelant? line
+      File.open(@filename, "rb").each_line do |line|
+        if @coverage[lineno] == Bashcov::Line::IGNORED && revelant?(line)
           yield lineno
         end
-        lineno +=1
+        lineno += 1
       end
     end
 
   private
 
-    def is_revelant? line
+    def revelant?(line)
       line.strip!
 
       !line.empty? and
-      !IGNORE_IS.include? line and
-      !line.start_with?(*IGNORE_START_WITH) and
-      !line.end_with?(*IGNORE_END_WITH) and
-      line !~ /\A\w+\(\)/ # function declared without the 'function' keyword
+        !IGNORE_IS.include? line and
+        !line.start_with?(*IGNORE_START_WITH) and
+        !line.end_with?(*IGNORE_END_WITH) and
+        line !~ /\A\w+\(\)/ # function declared without the 'function' keyword
     end
   end
 end

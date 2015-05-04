@@ -1,9 +1,9 @@
-require 'spec_helper'
+require "spec_helper"
 
 shared_examples "a fatal error" do
   it "outputs to stderr" do
     expect($stderr).to receive(:write).at_least(:once)
-    ignore_exception { subject }
+    ignore_exception(SystemExit) { subject }
   end
 
   it "exits with non-zero" do
@@ -25,10 +25,10 @@ describe Bashcov do
     end
 
     context "with a filename" do
-      before { @args << 'script.sh' }
+      before { @args << "script.sh" }
 
       context "with the --skip-uncovered flag" do
-        before { @args << '--skip-uncovered' }
+        before { @args << "--skip-uncovered" }
 
         it "sets it properly" do
           subject
@@ -37,7 +37,7 @@ describe Bashcov do
       end
 
       context "with the --mute flag" do
-        before { @args << '--mute' }
+        before { @args << "--mute" }
 
         it "sets it properly" do
           subject
@@ -46,17 +46,17 @@ describe Bashcov do
       end
 
       context "with the --help flag" do
-        before { @args << '--help' }
+        before { @args << "--help" }
 
         it_behaves_like "a fatal error"
       end
 
       context "with the --version flag" do
-        before { @args << '--version' }
+        before { @args << "--version" }
 
         it "outputs to stdout" do
           expect($stdout).to receive(:write).at_least(:once)
-          ignore_exception { subject }
+          ignore_exception(SystemExit) { subject }
         end
 
         it "exits with zero" do
@@ -75,4 +75,3 @@ describe Bashcov do
     end
   end
 end
-

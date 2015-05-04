@@ -1,0 +1,24 @@
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+  Exclude: [spec/**/*]
+
+Style/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Style/AndOr:
+  EnforcedStyle: conditionals
+
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+Style/SpecialGlobalVars:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes

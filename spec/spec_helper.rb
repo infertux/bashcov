@@ -1,6 +1,6 @@
-unless RUBY_ENGINE == 'rbx' # coverage support is broken on rbx
-  require 'simplecov'
-  require 'coveralls'
+unless RUBY_ENGINE == "rbx" # coverage support is broken on rbx
+  require "simplecov"
+  require "coveralls"
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
     SimpleCov::Formatter::HTMLFormatter,
@@ -13,7 +13,7 @@ unless RUBY_ENGINE == 'rbx' # coverage support is broken on rbx
   end
 end
 
-require 'bashcov'
+require "bashcov"
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 
@@ -23,4 +23,3 @@ RSpec.configure do |config|
     Bashcov.options.mute = true # don't print testsuite output
   end
 end
-

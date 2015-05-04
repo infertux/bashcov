@@ -1,10 +1,7 @@
 # Common helpers
 
-def ignore_exception
-  begin
-    yield
-  rescue Exception
-    # silently ignore the exception
-  end
+def ignore_exception(exception)
+  yield
+rescue exception
+  nil
 end
-
