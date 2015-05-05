@@ -17,7 +17,7 @@ end
 describe Bashcov do
   it "preserves the exit status" do
     system("./bin/bashcov ./spec/test_app/scripts/exit_non_zero.sh")
-    expect($?.exitstatus).to eq(21)
+    expect($?.exitstatus).not_to eq(0)
   end
 
   describe ".parse_options!" do
