@@ -8,7 +8,7 @@ require "bashcov"
 Bashcov.parse_options! ARGV
 
 runner = Bashcov::Runner.new Bashcov.options.command
-runner.run
+status = runner.run
 coverage = runner.result
 
 require "simplecov"
@@ -16,3 +16,5 @@ require "simplecov"
 SimpleCov.command_name Bashcov.name
 SimpleCov.root Bashcov.root_directory
 SimpleCov::Result.new(coverage).format!
+
+exit status.exitstatus
