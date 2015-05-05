@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.2.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.2.1...master))
 
   * TBD
+
+## v1.2.1, 2015-05-05 ([changes](https://github.com/infertux/bashcov/compare/v1.2.0...v1.2.1))
+
+  * [BUGFIX] Preserve original exit status when exiting Bashcov
 
 ## v1.2.0, 2015-05-04 ([changes](https://github.com/infertux/bashcov/compare/v1.1.0...v1.2.0))
 
