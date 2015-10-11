@@ -71,6 +71,15 @@ describe Bashcov do
           }
         end
       end
+
+      context "with the --report option" do
+        before { @args << "--report" << "req:Module::Formatter" }
+
+        it "sets it properly" do
+          subject
+          expect(Bashcov.options.reports).to eq([{ require: "req", formatter: "Module::Formatter" }])
+        end
+      end
     end
   end
 

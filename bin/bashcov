@@ -14,6 +14,17 @@ coverage = runner.result
 require "simplecov"
 
 SimpleCov.command_name Bashcov.name
+reports = Bashcov.options.reports
+unless reports.empty?
+  formatters = [
+    SimpleCov::Formatter::HTMLFormatter
+  ]
+  reports.each do |r|
+    require r[:require]
+    formatters.push(r[:formatter].split("::").inject(Object) { |a, e| a.const_get e })
+  end
+  SimpleCov.formatters = formatters
+end
 SimpleCov.root Bashcov.root_directory
 SimpleCov::Result.new(coverage).format!
 
