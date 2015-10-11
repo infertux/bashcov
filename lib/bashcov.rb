@@ -14,8 +14,9 @@ module Bashcov
     attr_reader :options
 
     # @return [String] The project's root directory
-    def root_directory
-      @root_directory ||= Dir.pwd
+    def root_directory(root = nil)
+      return @root_directory if defined?(@root_directory) && root.nil?
+      @root_directory = root || Dir.pwd
     end
 
     # Sets default options overriding any existing ones.
