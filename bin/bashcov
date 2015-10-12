@@ -13,14 +13,9 @@ coverage = runner.result
 
 require "simplecov"
 
-if ENV["COVERAGE_DIR"] then
-  SimpleCov.coverage_dir(ENV["COVERAGE_DIR"])
-  #SimpleCov.at_exit {
-    #SimpleCov.result
-  #}
-end
+SimpleCov.coverage_dir(ENV["COVERAGE_DIR"]) if ENV["COVERAGE_DIR"]
 
-if ENV["COVERAGE_NAME"] then
+if ENV["COVERAGE_NAME"]
   SimpleCov.command_name ENV["COVERAGE_NAME"]
 else
   SimpleCov.command_name Bashcov.name

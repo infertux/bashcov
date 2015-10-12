@@ -19,7 +19,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "simplecov", "~> 0.10.0"
-  gem.add_runtime_dependency "coveralls", ">= 0", ">= 0"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec", "~> 3"
@@ -28,4 +27,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "cane"
   gem.add_development_dependency "rubocop"
   gem.add_development_dependency "yard"
+  gem.add_development_dependency "coveralls"
 end
