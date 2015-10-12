@@ -13,7 +13,19 @@ coverage = runner.result
 
 require "simplecov"
 
-SimpleCov.command_name Bashcov.name
+if ENV["COVERAGE_DIR"] then
+  SimpleCov.coverage_dir(ENV["COVERAGE_DIR"])
+  #SimpleCov.at_exit {
+    #SimpleCov.result
+  #}
+end
+
+if ENV["COVERAGE_NAME"] then
+  SimpleCov.command_name ENV["COVERAGE_NAME"]
+else
+  SimpleCov.command_name Bashcov.name
+end
+
 reports = Bashcov.options.reports
 unless reports.empty?
   formatters = [
