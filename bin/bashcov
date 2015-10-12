@@ -38,6 +38,13 @@ unless reports.empty?
   SimpleCov.formatters = formatters
 end
 SimpleCov.root Bashcov.root_directory
-SimpleCov::Result.new(coverage).format!
+
+result = SimpleCov::Result.new(coverage)
+if SimpleCov.use_merging
+  SimpleCov::ResultMerger.store_result(result) if result
+  result = SimpleCov::ResultMerger.merged_result
+end
+
+result.format!
 
 exit status.exitstatus
