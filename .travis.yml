@@ -15,7 +15,3 @@ matrix:
     - rvm: ruby-head
     - rvm: rbx
     - rvm: rbx-head
-notifications:
-  email:
-    on_success: always
-    on_failure: always
