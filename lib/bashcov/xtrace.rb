@@ -20,9 +20,6 @@ module Bashcov
     # Regexp to match xtrace elements.
     LINE_REGEXP = %r{\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): }
 
-    # @return [Hash] Coverage of executed files
-    attr_reader :coverage
-
     # Creates a temporary file for xtrace output.
     # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
     def initialize
