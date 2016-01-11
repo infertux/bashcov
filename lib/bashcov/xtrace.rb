@@ -1,3 +1,5 @@
+require 'pathname'
+
 module Bashcov
   # This class manages +xtrace+ output.
   #
@@ -13,9 +15,7 @@ module Bashcov
     # @see http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
     # @note We use a forward slash as delimiter since it's the only forbidden
     #   character in filenames on Unix and Windows.
-    GET_ABS_DIR = "$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"
-    GET_BASE = "$(basename ${BASH_SOURCE[0]})"
-    PS4 = %(#{PREFIX}#{GET_ABS_DIR}/#{GET_BASE}/${LINENO}: )
+    PS4 = %(#{PREFIX}${BASH_SOURCE}/${LINENO}: )
 
     # Regexp to match xtrace elements.
     LINE_REGEXP = %r{\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): }
@@ -37,6 +37,20 @@ module Bashcov
       @write.close
     end
 
+    # Attempts to expand symlinks in a given path.
+    # @param  [#to_s]   A file path
+    # @return [String]  +path+, with symlinks (hopefully) expanded
+    # @note the +rescue+ clause is necessary for things like process
+    #       substitution, in which case the file won't actually exist on disk
+    def realpath(path)
+      pathname = Pathname.new(path)
+
+      @path_cache ||= {}
+      @path_cache[path] ||= pathname.realpath.to_s
+    rescue Errno::ENOENT
+      @path_cache[path] ||= pathname.cleanpath(true).to_s
+    end
+
     # Parses xtrace output and computes coverage.
     # @return [Hash] Hash of executed files with coverage information
     def read
@@ -46,7 +60,7 @@ module Bashcov
         match = line.match(LINE_REGEXP)
         next if match.nil? # garbage line from multiline instruction
 
-        filename = File.expand_path(match[:filename], Bashcov.root_directory)
+        filename = realpath(File.expand_path(match[:filename], Bashcov.root_directory))
 
         lineno = match[:lineno].to_i - 1
         @files[filename] ||= []
