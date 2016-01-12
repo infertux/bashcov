@@ -1,4 +1,4 @@
-require 'pathname'
+require "pathname"
 
 module Bashcov
   # This class manages +xtrace+ output.

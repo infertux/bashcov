@@ -1,6 +1,6 @@
 require "spec_helper"
 
-require 'tempfile'
+require "tempfile"
 
 describe Bashcov::Xtrace do
   ORIGINAL_PS4 = Bashcov::Xtrace::PS4.dup
