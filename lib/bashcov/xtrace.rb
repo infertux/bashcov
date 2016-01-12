@@ -6,7 +6,7 @@ module Bashcov
   # @see Runner
   class Xtrace
     # Prefix used for PS4.
-    # @note The first caracter ('+') will be repeated to indicate the nesting
+    # @note The first character ('+') will be repeated to indicate the nesting
     #   level.
     PREFIX = "+BASHCOV> "
 
@@ -19,6 +19,20 @@ module Bashcov
 
     # Regexp to match xtrace elements.
     LINE_REGEXP = %r{\A#{Regexp.escape(PREFIX[0])}+#{PREFIX[1..-1]}(?<filename>.+)\/(?<lineno>\d+): }
+
+    # Cleans redundant slashes and dots and attempts to expand symlinks in a
+    # given path.
+    # @param  [#to_s]   path  File path to clean and expand
+    # @return [String]        +path+, with symlinks (hopefully) expanded
+    # @note Falls back to calling {Pathname#cleanpath} on {Errno::ENOENT}.
+    #   This is necessary for cases like process substitution, when the file
+    #   won't actually exist on disk.
+    def self.realpath(path)
+      pathname = Pathname.new(path)
+      pathname.realpath.to_s
+    rescue Errno::ENOENT
+      pathname.cleanpath(true).to_s
+    end
 
     # Creates a pipe for xtrace output.
     # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
@@ -35,20 +49,6 @@ module Bashcov
     # @return [void]
     def close
       @write.close
-    end
-
-    # Attempts to expand symlinks in a given path.
-    # @param  [#to_s]   A file path
-    # @return [String]  +path+, with symlinks (hopefully) expanded
-    # @note the +rescue+ clause is necessary for things like process
-    #       substitution, in which case the file won't actually exist on disk
-    def realpath(path)
-      pathname = Pathname.new(path)
-
-      @path_cache ||= {}
-      @path_cache[path] ||= pathname.realpath.to_s
-    rescue Errno::ENOENT
-      @path_cache[path] ||= pathname.cleanpath(true).to_s
     end
 
     # Parses xtrace output and computes coverage.
@@ -69,6 +69,16 @@ module Bashcov
       end
 
       @files
+    end
+
+  private
+
+    # Implements simple caching of path expansion results to avoid having to
+    # perform the expansion for each line in a given file.
+    # @see realpath
+    def realpath(path)
+      @path_cache ||= {}
+      @path_cache[path] ||= self.class.realpath(path)
     end
   end
 end
