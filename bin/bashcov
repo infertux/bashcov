@@ -13,8 +13,33 @@ coverage = runner.result
 
 require "simplecov"
 
-SimpleCov.command_name Bashcov.name
+SimpleCov.coverage_dir(ENV["COVERAGE_DIR"]) if ENV["COVERAGE_DIR"]
+
+if ENV["COVERAGE_NAME"]
+  SimpleCov.command_name ENV["COVERAGE_NAME"]
+else
+  SimpleCov.command_name Bashcov.name
+end
+
+reports = Bashcov.options.reports
+unless reports.empty?
+  formatters = [
+    SimpleCov::Formatter::HTMLFormatter
+  ]
+  reports.each do |r|
+    require r[:require]
+    formatters.push(r[:formatter].split("::").inject(Object) { |a, e| a.const_get e })
+  end
+  SimpleCov.formatters = formatters
+end
 SimpleCov.root Bashcov.root_directory
-SimpleCov::Result.new(coverage).format!
+
+result = SimpleCov::Result.new(coverage)
+if SimpleCov.use_merging
+  SimpleCov::ResultMerger.store_result(result) if result
+  result = SimpleCov::ResultMerger.merged_result
+end
+
+result.format!
 
 exit status.exitstatus

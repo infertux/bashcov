@@ -52,6 +52,21 @@ module Bashcov
         @files[filename] ||= []
         @files[filename][lineno] ||= 0
         @files[filename][lineno] += 1
+        line = File.readlines(filename)[lineno]
+        ishere = line.match("cat.*<<-?\s*[\"']?\(.*\)[\"']?")
+        next unless ishere
+        lineno += 1
+        line = File.readlines(filename)[lineno]
+        until line.nil? || line.match("^\s*#{ishere[1]}")
+          @files[filename][lineno] ||= 0
+          @files[filename][lineno] += 1
+          lineno += 1
+          line = File.readlines(filename)[lineno]
+        end
+        unless line.nil?
+          @files[filename][lineno] ||= 0
+          @files[filename][lineno] += 1
+        end
       end
 
       @files

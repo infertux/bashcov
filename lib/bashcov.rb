@@ -14,8 +14,9 @@ module Bashcov
     attr_reader :options
 
     # @return [String] The project's root directory
-    def root_directory
-      @root_directory ||= Dir.pwd
+    def root_directory(root = nil)
+      return @root_directory if defined?(@root_directory) && root.nil?
+      @root_directory = root || Dir.pwd
     end
 
     # Sets default options overriding any existing ones.
@@ -24,6 +25,7 @@ module Bashcov
       @options ||= OpenStruct.new
       @options.skip_uncovered = false
       @options.mute = false
+      @options.reports = []
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -71,6 +73,13 @@ module Bashcov
         end
         opts.on("-m", "--mute", "Do not print script output") do |m|
           @options.mute = m
+        end
+        opts.on("-r rep", "--report rep", String, "Report system integration. <require>:<formatter>") do |rep|
+          sp = rep.split(":", 2)
+          report = {}
+          report[:require] = sp[0]
+          report[:formatter] = sp[1]
+          @options.reports.push(report)
         end
 
         opts.separator "\nCommon options:"
