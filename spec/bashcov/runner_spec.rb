@@ -50,6 +50,10 @@ describe Bashcov::Runner do
         ENV["SHELLOPTS"] = "posix"
       end
 
+      after do
+        ENV["SHELLOPTS"] = nil
+      end
+
       it "merges the flags" do
         runner.run
         expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
