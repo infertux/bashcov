@@ -7,14 +7,13 @@ describe Bashcov::Xtrace do
   SUBSHELL_PS4 = (
       dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'
       basename = '$(basename "$BASH_SOURCE")'
-      PS4 = %W{
+      PS4 = %W(
         #{Bashcov::Xtrace::DEPTH_CHAR + Bashcov::Xtrace::PREFIX}
         #{[dirname, basename].join('/')}
         $(pwd)
         ${OLDPWD}
         ${LINENO}
-        #{Bashcov::Xtrace::EOPS4}
-      }.join($/) + $/
+      ).reduce(Bashcov::Xtrace::DELIM) { |a, e| a + e + Bashcov::Xtrace::DELIM }
   )
 
   let(:case_script) { test_app("scripts/case.sh") }

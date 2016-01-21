@@ -51,6 +51,29 @@ Open `./coverage/index.html` to browse the coverage report.
 You can take great advantage of [SimpleCov] by adding a `.simplecov` file in your project's root (like [this](https://github.com/infertux/bashcov/blob/master/spec/test_app/.simplecov)).
 See [SimpleCov README](https://github.com/colszowka/simplecov#readme) for more information.
 
+### Some gory details
+
+Figuring out where an executing Bash script lives in the file system can be
+surprisingly difficult.  Bashcov tracks executing scripts through `PS4` trickery,
+Bash offers a fair amount of [introspection into its
+internals](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html),
+but the location of the current script has to be inferred through the limited
+information available via `BASH_SOURCE`, `PWD`, and `OLDPWD` (and potentially
+`DIRSTACK` if you are using `pushd`/`popd`).  Given that:
+
+  * `BASH_SOURCE` is only an absolute path if the script was invoked using an
+    absolute path; and
+  * The builtins `cd`, `pushd`, and `popd` alter `PWD` and `OLDPWD`; and
+  * None of these variables are read-only, so can be `unset` or otherwise
+    altered; and
+
+it can be easy to lose track of where we are.
+
+"Wait a minute, what about `pwd`, `readlink`, and so on?" Great, except that
+subshells executed as part of expanding `PS4` can cause Bash to report that
+certain lines have executed more times than they really have.
+
+
 ## Contributing
 
 Bug reports and patches are most welcome.
