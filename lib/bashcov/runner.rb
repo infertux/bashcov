@@ -37,7 +37,7 @@ module Bashcov
         expunge_invalid_files!
         mark_relevant_lines!
 
-        @coverage
+        convert_coverage
       end
     end
 
@@ -55,30 +55,34 @@ module Bashcov
     def find_bash_files!
       return if Bashcov.options.skip_uncovered
 
-      Dir["#{Bashcov.root_directory}/**/*.sh"].each do |file|
-        @coverage[file] ||= [] # empty coverage array
+      Pathname.glob("#{Bashcov.root_directory}/**/*.sh").each do |filename|
+        @coverage[filename] = [] unless @coverage.include?(filename)
       end
     end
 
     # @return [void]
     def expunge_invalid_files!
-      @coverage.each_key do |file|
-        next if File.file? file
+      @coverage.each_key do |filename|
+        next if filename.file?
 
-        @coverage.delete file
-        warn "Warning: #{file} was executed but has been deleted since then - it won't be reported in coverage."
+        @coverage.delete filename
+        warn "Warning: #{filename} was executed but has been deleted since then - it won't be reported in coverage."
       end
     end
 
     # @see Lexer
     # @return [void]
     def mark_relevant_lines!
-      @coverage.each do |filename, coverage|
+      @coverage.each_pair do |filename, coverage|
         lexer = Lexer.new(filename, coverage)
         lexer.uncovered_relevant_lines do |lineno|
           @coverage[filename][lineno] = Bashcov::Line::UNCOVERED
         end
       end
+    end
+
+    def convert_coverage
+      Hash[@coverage.map { |filename, coverage| [filename.to_s, coverage] }]
     end
   end
 end

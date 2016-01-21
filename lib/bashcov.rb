@@ -1,5 +1,6 @@
 require "optparse"
 require "ostruct"
+require "pathname"
 require "bashcov/version"
 require "bashcov/lexer"
 require "bashcov/line"
@@ -15,7 +16,7 @@ module Bashcov
 
     # @return [String] The project's root directory
     def root_directory
-      @root_directory ||= Dir.pwd
+      @root_directory ||= Pathname.getwd
     end
 
     # Sets default options overriding any existing ones.

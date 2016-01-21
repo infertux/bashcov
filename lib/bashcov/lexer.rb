@@ -15,7 +15,8 @@ module Bashcov
     # @param [Hash] coverage Coverage with executed lines marked
     # @raise [ArgumentError] if the given +filename+ is invalid.
     def initialize(filename, coverage)
-      @filename = File.expand_path(filename)
+      # @todo this should maybe be relative
+      @filename = filename
       @coverage = coverage
 
       raise ArgumentError, "#{@filename} is not a file" unless File.file?(@filename)

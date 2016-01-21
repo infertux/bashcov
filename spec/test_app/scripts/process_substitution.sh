@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bashbashbashbash
 
 function print_to_stderr {
     echo "data" >&2

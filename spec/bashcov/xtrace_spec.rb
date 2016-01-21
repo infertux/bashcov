@@ -7,7 +7,14 @@ describe Bashcov::Xtrace do
   SUBSHELL_PS4 = (
       dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'
       basename = '$(basename "$BASH_SOURCE")'
-      %(#{Bashcov::Xtrace::PREFIX}#{dirname}/#{basename}/${LINENO}: )
+      PS4 = %W{
+        #{Bashcov::Xtrace::DEPTH_CHAR + Bashcov::Xtrace::PREFIX}
+        #{[dirname, basename].join('/')}
+        $(pwd)
+        ${OLDPWD}
+        ${LINENO}
+        #{Bashcov::Xtrace::EOPS4}
+      }.join($/) + $/
   )
 
   let(:case_script) { test_app("scripts/case.sh") }
@@ -38,43 +45,6 @@ describe Bashcov::Xtrace do
         expect(result_without_subshell).to satisfy(satisfy_msg) do |r|
           result_with_subshell.zip(r).any? { |with, without| with.to_i > without.to_i }
         end
-      end
-    end
-  end
-
-  describe ".realpath" do
-    context "given a path that does not exist" do
-      it "returns the path cleaned of excess dots and slashes" do
-        expect(Bashcov::Xtrace.realpath("/this//./is///a/path")).to eq("/this/is/a/path")
-      end
-    end
-
-    context "given a path that contains symlinks" do
-      it "resolves the symlinks to produce the on-disk path" do
-        begin
-          tempfile = Tempfile.new("bashcov")
-
-          symlink_path = Dir::Tmpname.create("bashcov") do |path|
-            File.symlink(tempfile.path, path)
-          end
-
-          expect(Bashcov::Xtrace.realpath(symlink_path)).to eq(tempfile.path)
-        ensure
-          tempfile.close unless tempfile.closed?
-          tempfile.unlink
-          File.unlink(symlink_path)
-        end
-      end
-    end
-  end
-
-  describe "#realpath" do
-    context "given a path" do
-      it "caches the path" do
-        xtrace = Bashcov::Xtrace.new
-        path = "//hey/./././//a/path"
-        resolved = xtrace.send(:realpath, path)
-        expect(xtrace.instance_variable_get(:@path_cache)[path]).to eq(resolved)
       end
     end
   end
