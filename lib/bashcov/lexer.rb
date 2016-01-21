@@ -3,13 +3,13 @@ module Bashcov
   # coverage
   class Lexer
     # Lines starting with one of these tokens are irrelevant for coverage
-    IGNORE_START_WITH = %w(# function)
+    IGNORE_START_WITH = %w(# function).freeze
 
     # Lines ending with one of these tokens are irrelevant for coverage
-    IGNORE_END_WITH = %w|(|
+    IGNORE_END_WITH = %w|(|.freeze
 
     # Lines containing only one of these keywords are irrelevant for coverage
-    IGNORE_IS = %w(esac if then else elif fi while do done { } ;;)
+    IGNORE_IS = %w(esac if then else elif fi while do done { } ;;).freeze
 
     # @param [String] filename File to analyze
     # @param [Hash] coverage Coverage with executed lines marked
