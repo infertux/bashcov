@@ -31,7 +31,7 @@ describe Bashcov::Runner do
       end
 
       puts "#{ratio} times longer with Bashcov"
-      # XXX no proper assertion - just outputs the ratio
+      # XXX: no proper assertion - just outputs the ratio
     end
 
     context "without a SHELLOPTS variable" do
@@ -48,6 +48,10 @@ describe Bashcov::Runner do
     context "with an existing SHELLOPTS variable" do
       before do
         ENV["SHELLOPTS"] = "posix"
+      end
+
+      after do
+        ENV["SHELLOPTS"] = nil
       end
 
       it "merges the flags" do
