@@ -1,3 +1,4 @@
+require "forwardable"
 require "optparse"
 require "ostruct"
 require "pathname"
@@ -6,25 +7,27 @@ require "bashcov/lexer"
 require "bashcov/line"
 require "bashcov/runner"
 require "bashcov/xtrace"
+require "bashcov/errors"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
-  class << self
+  # Container for parsing and exposing options and static configuration
+  class Instance
     # @return [OpenStruct] Bashcov settings
     attr_reader :options
+
+    # Sets default options overriding any existing ones.
+    # @return [void]
+    def initialize
+      @options ||= OpenStruct.new
+      @options.skip_uncovered = false
+      @options.mute = false
+    end
 
     # @return [String] The project's root directory
     def root_directory
       @root_directory ||= Pathname.getwd
-    end
-
-    # Sets default options overriding any existing ones.
-    # @return [void]
-    def set_default_options!
-      @options ||= OpenStruct.new
-      @options.skip_uncovered = false
-      @options.mute = false
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -84,6 +87,17 @@ module Bashcov
           exit
         end
       end
+    end
+  end
+
+  class << self
+    extend Forwardable
+
+    def_delegators :@instance, :root_directory, :name, :parse_options!, :options
+
+    # Resets options to a fresh state
+    def set_default_options!
+      @instance = Bashcov::Instance.new
     end
   end
 end
