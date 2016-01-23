@@ -64,9 +64,15 @@ module Bashcov
 
         # The next three lines will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
         bash_source, pwd, oldpwd = (1..3).map { Pathname.new lines.next.chomp(DELIM) }
-        lineno = lines.next.chomp(DELIM).to_i - 1
+        lineno = lines.next.chomp(DELIM)
 
-        parse_hit!(bash_source, pwd, oldpwd, lineno)
+        # If +$LINENO+ isn't a series of digits, something has gone wrong.
+        unless lineno =~ /\A\d+\z/
+          got = lineno.empty? ? "<nil>" : lineno
+          raise XtraceError.new("expected integer for $LINENO, got `#{got}'", @files)
+        end
+
+        parse_hit!(bash_source, pwd, oldpwd, lineno.to_i)
       end
 
       @files
@@ -84,16 +90,18 @@ module Bashcov
     # @param [Pathname] pwd         expanded +$PWD+
     # @param [Pathname] oldpwd      expanded +$OLDPWD+
     # @param [Integer]  lineno      expanded +$LINENO+
-    # @note +lineno+ will be used as an array index, and will typically equal
-    # +$LINENO+ - 1
     def parse_hit!(bash_source, pwd, oldpwd, lineno)
       update_wd_stacks!(pwd, oldpwd)
 
       script = find_script(bash_source)
 
+      # For one-liners, +$LINENO+ == 0.  Do this to avoid an +IndexError+;
+      # one-liners will be culled from the coverage results later on.
+      index = lineno > 1 ? lineno - 1 : 0
+
       @files[script] ||= []
-      @files[script][lineno] ||= 0
-      @files[script][lineno] += 1
+      @files[script][index] ||= 0
+      @files[script][index] += 1
     end
 
     # Scans entries in the $PWD stack, checking whether +entry/$BASH_SOURCE+
