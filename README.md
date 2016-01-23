@@ -20,10 +20,11 @@
 [Dependencies]: https://gemnasium.com/infertux/bashcov "Bashcov dependencies on Gemnasium"
 [Bashcov]: https://github.com/infertux/bashcov
 [SimpleCov]: https://github.com/colszowka/simplecov "Bashcov is backed by SimpleCov to generate awesome coverage report"
+[Test app demo]: http://infertux.github.com/bashcov/test_app/ "Coverage for the bundled test application"
 
 You should check out these coverage examples - it's worth a thousand words:
 
-  - [Test app demo](http://infertux.github.com/bashcov/test_app/ "Coverage for the bundled test application")
+  - [Test app demo]
   - [RVM demo](http://infertux.github.com/bashcov/rvm/ "Coverage for RVM")
 
 ## Installation
@@ -54,25 +55,46 @@ See [SimpleCov README](https://github.com/colszowka/simplecov#readme) for more i
 ### Some gory details
 
 Figuring out where an executing Bash script lives in the file system can be
-surprisingly difficult.  Bashcov tracks executing scripts through `PS4` trickery,
-Bash offers a fair amount of [introspection into its
+surprisingly difficult.  Bash offers a fair amount of [introspection into its
 internals](https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html),
-but the location of the current script has to be inferred through the limited
-information available via `BASH_SOURCE`, `PWD`, and `OLDPWD` (and potentially
-`DIRSTACK` if you are using `pushd`/`popd`).  Given that:
+but the location of the current script has to be inferred from the limited
+information available through `BASH_SOURCE`, `PWD`, and `OLDPWD` (and
+potentially `DIRSTACK` if you are using `pushd`/`popd`).  For this purpose,
+Bashcov puts Bash in debug mode and sets up a `PS4` that expands the values of
+these variables, reading them on each command that Bash executes.  But, given
+that:
 
   * `BASH_SOURCE` is only an absolute path if the script was invoked using an
-    absolute path; and
-  * The builtins `cd`, `pushd`, and `popd` alter `PWD` and `OLDPWD`; and
-  * None of these variables are read-only, so can be `unset` or otherwise
-    altered; and
+    absolute path,
+  * The builtins `cd`, `pushd`, and `popd` alter `PWD` and `OLDPWD`, and
+  * None of these variables are read-only and can therefore be `unset` or
+    otherwise altered,
 
 it can be easy to lose track of where we are.
 
-"Wait a minute, what about `pwd`, `readlink`, and so on?" Great, except that
-subshells executed as part of expanding `PS4` can cause Bash to report that
-certain lines have executed more times than they really have.
+"Wait a minute, what about `pwd`, `readlink`, and so on?"  That would be great,
+except that subshells executed as part of expanding the `PS4` can cause Bash to
+report [extra executions](https://github.com/infertux/bashcov/commit/4130874e30a05b7ab6ea66fb96a19acaa973c178)
+for [certain lines](https://github.com/infertux/bashcov/pull/16).  Also,
+subshells are slow, and the `PS4` is expanded on each and every command when
+Bash is in debug mode.
 
+To deal with these limitations, Bashcov uses the expedient of maintaining two
+stacks that track changes to `PWD` and `OLDPWD`.  To determine the full path to
+the executing script, Bashcov iterates in reverse over the `PWD` stack, testing
+for the first `$PWD/$BASH_SOURCE` combination that refers to an existing file.
+This heuristic isn't immune to false positives -- under certain combinations of
+directory stucture, script invocation paths, and working directory changes, it
+may yield a path that doesn't refer to the currently-running script.  However,
+it performs well under the various working directory changes performed in the
+[test app demo] and avoids the spurious extra hits caused by using subshells in
+`PS4`.
+
+One final note on innards: Bashcov's `PS4` separates `BASH_SOURCE`, `PWD`,
+`OLDPWD`, and its other fields using a long random string.  Although unlikely,
+it is possible that this string appears in the path of a script under test or
+in a command the script executes.  When this happens,  Bashcov won't correctly
+parse the `PS4` and will abort early with incomplete coverage results.
 
 ## Contributing
 
