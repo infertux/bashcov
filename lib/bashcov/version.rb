@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # :nodoc:
 module Bashcov
   # Current distribution version
