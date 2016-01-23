@@ -108,7 +108,7 @@ describe Bashcov::Runner do
       end
 
       it "prints an error message" do
-        expect { tmprunner.run }.to output(/expected integer.*got.*\/tmp/).to_stderr
+        expect { tmprunner.run }.to output(/expected integer.*got.*tmp/).to_stderr
       end
 
       it "indicates that no lines were executed" do
