@@ -4,8 +4,14 @@ require "benchmark"
 describe Bashcov::Runner do
   let(:runner) { Bashcov::Runner.new "bash #{test_suite}" }
 
-  before :all do
-    Dir.chdir File.dirname(test_suite)
+  around :each do |example|
+    # Reset the options to, among other things, pick up on a new working
+    # directory.
+    Bashcov.set_default_options!
+
+    Dir.chdir File.dirname(test_suite) do
+      example.run
+    end
   end
 
   describe "#run" do
@@ -57,6 +63,58 @@ describe Bashcov::Runner do
       it "merges the flags" do
         runner.run
         expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
+      end
+    end
+
+    context "given a script that unsets $LINENO" do
+      include_context("temporary script", "unset_lineno") do
+        # @note "temporary script" context expects +script_text+ to be defined.
+        let(:script_text) do
+          <<-EOF.gsub(/\A\s+/, "")
+            #!/usr/bin/env bash
+
+            echo "Hello, world!"
+            LINENO= echo "What line is this?"
+            echo "Hello? Is anyone there?"
+          EOF
+        end
+
+        let(:unset_lineno_coverage) { [nil, nil, 1, 0, 0] }
+      end
+
+      it "prints an error message" do
+        expect { tmprunner.run }.to output(/expected integer.*got.*nil/).to_stderr
+      end
+
+      it "returns an incomplete coverage hash" do
+        tmprunner.run
+        expect(tmprunner.result[tmpscript.path]).to \
+          contain_exactly(*unset_lineno_coverage)
+      end
+    end
+
+    context "given a script whose path contains Xtrace::DELIM" do
+      include_context("temporary script", Bashcov::Xtrace::DELIM) do
+        # @note "temporary script" context expects +script_text+ to be defined.
+        let(:script_text) do
+          <<-EOF.gsub(/\A\s+/, "")
+            #!/usr/bin/env bash
+
+            echo "Oh no!"
+          EOF
+        end
+
+        let(:bad_path_coverage) { [nil, nil, 0] }
+      end
+
+      it "prints an error message" do
+        expect { tmprunner.run }.to output(/expected integer.*got.*\/tmp/).to_stderr
+      end
+
+      it "indicates that no lines were executed" do
+        tmprunner.run
+        expect(tmprunner.result[tmpscript.path]).to \
+          contain_exactly(*bad_path_coverage)
       end
     end
   end
