@@ -22,12 +22,25 @@ module Bashcov
       env = { "BASH_XTRACEFD" => fd.to_s, "PS4" => Xtrace::PS4 }
 
       command_pid = Process.spawn env, @command, options # spawn the command
-      xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
 
-      Process.wait command_pid
-      @xtrace.close
+      begin
+        xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
 
-      @coverage = xtrace_thread.value # wait for the thread to return
+        Process.wait command_pid
+
+        @xtrace.close
+
+        @coverage = xtrace_thread.value # wait for the thread to return
+      rescue XtraceError => e
+        $stderr.puts <<-ERROR.gsub!(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
+          Warning: encountered an error parsing Bash's output(error was:
+          #{e.message}). This can occur if your script or its path contains the
+          sequence #{Xtrace::DELIM}, or if your script unsets LINENO. Aborting
+          early; coverage report will be incomplete.
+        ERROR
+
+        @coverage = e.files
+      end
 
       $?
     end
