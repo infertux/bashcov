@@ -58,9 +58,9 @@ module Bashcov
     # Parses xtrace output and computes coverage.
     # @return [Hash] Hash of executed files with coverage information
     def read
-      lines = @read.each_line(DELIM)
-
-      abort lines.to_a.inspect if 1 > 0
+      # lines = @read.each_line(DELIM)
+      # abort lines.to_a.inspect if 1 > 0
+      abort @read.each_line.to_a.join if 1 > 0
 
       loop do
         # Reject all lines until we've seen the start of the PS4
