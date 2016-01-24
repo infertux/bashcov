@@ -1,4 +1,3 @@
-require "forwardable"
 require "optparse"
 require "ostruct"
 require "pathname"
@@ -23,11 +22,23 @@ module Bashcov
       @options ||= OpenStruct.new
       @options.skip_uncovered = false
       @options.mute = false
+      @options.bash_path = "/bin/bash"
     end
 
     # @return [String] The project's root directory
     def root_directory
       @root_directory ||= Pathname.getwd
+    end
+
+    # @return [Array<String>] An array representing the components of
+    #   +BASH_VERSINFO+
+    def bash_versinfo
+      @bash_versinfo ||= `#{@options.bash_path} -c 'echo "${BASH_VERSINFO[@]}"'`.chomp.split
+    end
+
+    # @return [Boolean] Whether Bash supports +BASH_XTRACEFD+
+    def bash_xtracefd?
+      @has_bash_xtracefd ||= bash_versinfo[0..1].join.to_i >= 41
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -76,6 +87,13 @@ module Bashcov
         opts.on("-m", "--mute", "Do not print script output") do |m|
           @options.mute = m
         end
+        opts.on("--bash-path PATH", "Path to Bash") do |p|
+          if File.file? p
+            p
+          else
+            abort("`#{p}' is not a valid path")
+          end
+        end
 
         opts.separator "\nCommon options:"
 
@@ -90,14 +108,23 @@ module Bashcov
     end
   end
 
-  class << self
-    extend Forwardable
+module_function
 
-    def_delegators :@instance, :root_directory, :name, :parse_options!, :options
+  # Reset options to the default state
+  def set_default_options!
+    module_functions = [:root_directory, :name, :parse_options!, :options,
+                        :bash_versinfo, :bash_xtracefd?]
 
-    # Resets options to a fresh state
-    def set_default_options!
-      @instance = Bashcov::Instance.new
+    # Would be nice to use SingleForwardable, but the way that
+    # SingleForwardable defines methods appears to preclude closing over a
+    # locally-scoped object.
+    delegate = Bashcov::Instance.new
+    module_functions.each do |m|
+      define_method m do |*args, &block|
+        delegate.send(m, *args, &block)
+      end
+
+      module_function m
     end
   end
 end
