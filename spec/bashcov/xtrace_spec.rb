@@ -17,7 +17,7 @@ describe Bashcov::Xtrace do
   )
 
   let(:case_script) { test_app("scripts/case.sh") }
-  let(:case_runner) { Bashcov::Runner.new "bash #{case_script}" }
+  let(:case_runner) { Bashcov::Runner.new "#{Bashcov.options.bash_path} #{case_script}" }
 
   before :all do
     Dir.chdir File.dirname(test_suite)
