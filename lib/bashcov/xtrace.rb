@@ -59,7 +59,9 @@ module Bashcov
     # @return [Hash] Hash of executed files with coverage information
     def read
       lines = @read.each_line(DELIM)
-fail RuntimeError, "#{lines.to_a.inspect}"
+
+      abort lines.to_a.inspect if 1 > 0
+
       loop do
         # Reject all lines until we've seen the start of the PS4
         nil until lines.next =~ LINE_START_REGEXP
