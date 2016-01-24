@@ -68,7 +68,9 @@ module Bashcov
         bash_source, pwd, oldpwd = (1..3).map { Pathname.new lines.next.chomp(DELIM) }
         lineno = lines.next.chomp(DELIM)
 
-        # If +$LINENO+ isn't a series of digits, something has gone wrong.
+        # If +$LINENO+ isn't a series of digits, something has gone wrong.  Add
+        # +@files+ to the exception in order to propagate the existing coverage
+        # data back to the {Bashcov::Runner} instance.
         unless lineno =~ /\A\d+\z/
           got = lineno.empty? ? "<nil>" : lineno
           raise XtraceError.new("expected integer for $LINENO, got `#{got}'", @files)
