@@ -29,7 +29,7 @@ module Bashcov
 
     # Regexp to match the beginning of the {PS4}.  {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
-    LINE_START_REGEXP = /^#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}/
+    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}#{DELIM}/
 
     # Creates a pipe for xtrace output.
     # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
@@ -60,9 +60,11 @@ module Bashcov
     def read
       lines = @read.each_line(DELIM)
 
+      abort lines.to_a.map { |l| "#=> #{l}" }.join("\n") if 1 > 0
+
       loop do
         # Reject all lines until we've seen the start of the PS4
-        nil until lines.next =~ LINE_START_REGEXP
+        nil until lines.next =~ PS4_START_REGEXP
 
         # The next three lines will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
         bash_source, pwd, oldpwd = (1..3).map { Pathname.new lines.next.chomp(DELIM) }
