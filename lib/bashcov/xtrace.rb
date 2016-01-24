@@ -23,13 +23,13 @@ module Bashcov
     # variables +$BASH_SOURCE+, +$PWD+, +$OLDPWD+, and +$LINENO+, delimited by
     # {DELIM}.
     # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
-    PS4 = %W(#{DEPTH_CHAR + PREFIX} ${BASH_SOURCE} ${PWD} ${OLDPWD} ${LINENO}).reduce(DELIM) do |a, e|
-      a + e + DELIM
-    end
+    PS4 = %w(${BASH_SOURCE} ${PWD} ${OLDPWD} ${LINENO}).reduce(DEPTH_CHAR + PREFIX) do |a, e|
+      a + DELIM + e
+    end + DELIM
 
     # Regexp to match the beginning of the {PS4}.  {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
-    LINE_START_REGEXP = /\A#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}/
+    LINE_START_REGEXP = /^#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}/
 
     # Creates a pipe for xtrace output.
     # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
@@ -58,9 +58,7 @@ module Bashcov
     # Parses xtrace output and computes coverage.
     # @return [Hash] Hash of executed files with coverage information
     def read
-      # lines = @read.each_line(DELIM)
-      # abort lines.to_a.inspect if 1 > 0
-      abort @read.each_line.to_a.join if 1 > 0
+      lines = @read.each_line(DELIM)
 
       loop do
         # Reject all lines until we've seen the start of the PS4
