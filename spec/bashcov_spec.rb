@@ -50,6 +50,23 @@ describe Bashcov do
         end
       end
 
+      context "with the --bash-path option" do
+        context "given an existing path" do
+          before { @args += ["--bash-path", "/bin/bash"] }
+
+          it "sets it properly" do
+            subject
+            expect(Bashcov.options.bash_path).to eq("/bin/bash")
+          end
+        end
+
+        context "given an non-existing path" do
+          before(:each) { @args += ["--bash-path", "/pretty/sure/this/is/not/bash"] }
+
+          it_behaves_like "a fatal error"
+        end
+      end
+
       context "with the --help flag" do
         before { @args << "--help" }
 

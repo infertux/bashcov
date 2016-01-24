@@ -14,6 +14,36 @@ describe Bashcov::Runner do
     end
   end
 
+  describe "#inject_xtrace_flag!" do
+    context "without a SHELLOPTS variable" do
+      before do
+        ENV["SHELLOPTS"] = nil
+      end
+
+      it "adds the flags" do
+        runner.send(:inject_xtrace_flag!) do
+          expect(ENV["SHELLOPTS"]).to eq("xtrace")
+        end
+      end
+    end
+
+    context "with an existing SHELLOPTS variable" do
+      before do
+        ENV["SHELLOPTS"] = "posix"
+      end
+
+      after do
+        ENV["SHELLOPTS"] = nil
+      end
+
+      it "merges the flags" do
+        runner.send(:inject_xtrace_flag!) do
+          expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
+        end
+      end
+    end
+  end
+
   describe "#run" do
     it "finds commands in $PATH" do
       expect(Bashcov::Runner.new("ls -l").run).to be_success
@@ -38,32 +68,6 @@ describe Bashcov::Runner do
 
       puts "#{ratio} times longer with Bashcov"
       # XXX: no proper assertion - just outputs the ratio
-    end
-
-    context "without a SHELLOPTS variable" do
-      before do
-        ENV["SHELLOPTS"] = nil
-      end
-
-      it "adds the flags" do
-        runner.run
-        expect(ENV["SHELLOPTS"]).to eq("xtrace")
-      end
-    end
-
-    context "with an existing SHELLOPTS variable" do
-      before do
-        ENV["SHELLOPTS"] = "posix"
-      end
-
-      after do
-        ENV["SHELLOPTS"] = nil
-      end
-
-      it "merges the flags" do
-        runner.run
-        expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
-      end
     end
 
     context "given a script that unsets $LINENO" do
@@ -115,6 +119,50 @@ describe Bashcov::Runner do
         tmprunner.run
         expect(tmprunner.result[tmpscript.path]).to \
           contain_exactly(*bad_path_coverage)
+      end
+    end
+
+    context "given a version of Bash prior to 4.1" do
+      include_context("temporary script", "no_stderr") do
+        let(:stderr_output) { "AIEEE!" }
+
+        # @note "temporary script" context expects +script_text+ to be defined.
+        let(:script_text) do
+          <<-EOF.gsub(/\A\s+/, "")
+            #!/usr/bin/env bash
+
+            echo #{stderr_output} 1>&2
+          EOF
+        end
+      end
+
+      let(:xtracefd_warning) { Regexp.new(/Warning:.*older Bash version/) }
+
+      before(:each) do
+        Bashcov.module_exec do
+          def bash_xtracefd?
+            false
+          end
+          module_function :"bash_xtracefd?"
+        end
+      end
+
+      context "when options.mute is true" do
+        it "does not print a warning about the lack of BASH_XTRACEFD" do
+          Bashcov.options.mute = true
+          expect { tmprunner.run }.not_to output(xtracefd_warning).to_stderr
+        end
+      end
+
+      context "when options.mute is false" do
+        it "prints a warning about the lack of BASH_XTRACEFD" do
+          Bashcov.options.mute = false
+          expect { tmprunner.run }.to output(xtracefd_warning).to_stderr
+        end
+      end
+
+      it "does not pass script output to standard error" do
+        expect { tmprunner.run }.not_to output(stderr_output).to_stderr
       end
     end
   end
