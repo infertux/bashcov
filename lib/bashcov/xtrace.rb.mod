@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require "bashcov"
+
 require "pathname"
 require "securerandom"
-
-require "bashcov"
 
 module Bashcov
   # This class manages +xtrace+ output.
@@ -19,22 +19,21 @@ module Bashcov
 
     # [String] A randomly-generated token for delimiting the fields of the
     #   +{PS4}+
-    DELIM = Bashcov.truncated_ps4? ? "\n" : SecureRandom.uuid
-
-    # [Array<String>] A collection of Bash internal variables to expand in the
-    #   {PS4}
-    FIELDS = %w(${BASH_SOURCE} ${PWD} ${OLDPWD} ${LINENO})
+    DELIM = SecureRandom.uuid
+    #DELIM = SecureRandom.base64(4)
+    #DELIM = "^"
 
     # [String] +PS4+ variable used for xtrace output.  Expands to internal Bash
-    #   variables +$BASH_SOURCE+, +$PWD+, +$OLDPWD+, and +$LINENO+, delimited
-    #   by {DELIM}.
+    # variables +$BASH_SOURCE+, +$PWD+, +$OLDPWD+, and +$LINENO+, delimited by
+    # {DELIM}.
     # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
-    PS4 = FIELDS.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + DELIM + e } + DELIM
+    PS4 = %w(${BASH_SOURCE} ${PWD} ${OLDPWD} ${LINENO}).reduce(DEPTH_CHAR + PREFIX) do |a, e|
+      a + DELIM + e
+    end + DELIM
 
     # Regexp to match the beginning of the {PS4}.  {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
-    #PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}#{DELIM}/
-    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}$/
+    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}#{DELIM}/
 
     # Creates a pipe for xtrace output.
     # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
@@ -62,16 +61,25 @@ module Bashcov
 
     # Parses xtrace output and computes coverage.
     # @return [Hash] Hash of executed files with coverage information
-    def read_trap
-      lines = @read.each_line(DELIM)
+    def read
+      #@read.each_line(DELIM) { |line| puts "#=> Line: #{line}" } ; exit
+
+      #lines = @read.each_line(DELIM)
+      #get_fields(@read) { |f| $stderr.puts "#=> Field: #{f}" }
+      #exit
 
       #abort lines.to_a.map { |l| "#=> #{l}" }.join("\n") if 1 > 0
 
       loop do
+        # Reject all lines until we've seen the start of the PS4
+        nil until lines.next =~ PS4_START_REGEXP
+
         # The next three lines will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
         bash_source, pwd, oldpwd = (1..3).map { Pathname.new lines.next.chomp(DELIM) }
         lineno = lines.next.chomp(DELIM)
-        #$stderr.puts format "BASH_SOURCE(%s) | PWD(%s) | OLDPWD(%s) | LINENO(%i)", bash_source, pwd, oldpwd, lineno
+
+        $stderr.puts format("BASH_SOURCE(%s) | PWD(%s) | OLDPWD(%s) | LINENO(%s) | REST(%s)",
+                            bash_source, pwd, oldpwd, lineno, lines.peek)
 
         # If +$LINENO+ isn't a series of digits, something has gone wrong.  Add
         # +@files+ to the exception in order to propagate the existing coverage
@@ -91,35 +99,64 @@ module Bashcov
       # :nocov:
     end
 
-    def read_xtrace
-      fields = FieldStream.new(@read).each
+  private
 
-      #abort fields.to_a.map { |l| "#=> #{l}" }.join("\n") if 1 > 0
+    def get_fields(read_io)
+      # Create enumerator
+      return enum_for(__method__) unless block_given?
+
+      # Copy stream to StringIO so that we can seek back and forth
+      # ...
+      # Maybe be a bit slow
+      read = StringIO.new
+      IO.copy_stream(read_io, read)
+      read.close_write
+
+      read_position = 0
+      read_bytes = 128
 
       loop do
-        # The next three fields will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
-        bash_source, pwd, oldpwd = (1..3).map { Pathname.new fields.next }
-        lineno = fields.next
-        #$stderr.puts format "BASH_SOURCE(%s) | PWD(%s) | OLDPWD(%s) | LINENO(%i)", bash_source, pwd, oldpwd, lineno
+        break if read.eof?
 
-        # If +$LINENO+ isn't a series of digits, something has gone wrong.  Add
-        # +@files+ to the exception in order to propagate the existing coverage
-        # data back to the {Bashcov::Runner} instance.
-        unless lineno =~ /\A\d+\z/
-          got = lineno.empty? ? "<nil>" : lineno
-          raise XtraceError.new("expected integer for $LINENO, got `#{got}'", @files)
+        # Seek to new position in stream
+        read.seek(read_position)
+        line = read.read(read_bytes)
+        $stderr.puts("#=> Position(#{read_position}) | Line(#{line}) | EOF(#{read.eof?})")
+
+        # Split at delimiter
+        field, delim, after = line.partition(DELIM)
+
+        # @todo use String#byteslice?
+        # {DELIM} wasn't found in the string
+        if (field == line)
+
+          # Find largest prefix of {DELIM} in +line+
+          delim_index = 0
+          line_rindex = -1
+          delim_chars = DELIM.chars
+          line_chars = line.chars
+
+          while delim_chars[0..delim_index] == line_chars[line_rindex..-1]
+            delim_index += 1
+            line_rindex -= 1
+          end
+
+          field = line[0..(line_rindex - 1)]
+
+          yield field
+
+          # We hit the 128-byte max
+          read_position += read_bytes
+        else
+          yield field
+
+          # Start next read after the end of the delimiter
+          read_position += field.length + delim.length
         end
-
-        parse_hit!(bash_source, pwd, oldpwd, lineno.to_i)
       end
 
-      @files
-    rescue StopIteration
-      # :nocov: -- here in case the +fields+ iterator raises it on +#next+.
-      @files
-      # :nocov:
+      read.close
     end
-  private
 
     # Parses the expanded {PS4} fields and updates the coverage-tracking
     # {@files} hash

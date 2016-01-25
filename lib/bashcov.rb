@@ -1,16 +1,17 @@
 require "optparse"
 require "ostruct"
 require "pathname"
+
 require "bashcov/version"
-require "bashcov/lexer"
-require "bashcov/line"
-require "bashcov/runner"
-require "bashcov/xtrace"
 require "bashcov/errors"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
+  [:Lexer, :Line, :Runner, :Trap, :Xtrace].each do |class_sym|
+    autoload class_sym, "bashcov/#{class_sym.downcase}"
+  end
+
   # Container for parsing and exposing options and static configuration
   class Instance
     # @return [OpenStruct] Bashcov settings
@@ -39,6 +40,19 @@ module Bashcov
     # @return [Boolean] Whether Bash supports +BASH_XTRACEFD+
     def bash_xtracefd?
       @has_bash_xtracefd ||= bash_versinfo[0..1].join.to_i >= 41
+    end
+
+    # @return [Boolean] Whether Bash supports a +PS4+ of greater than 128 bytes
+    # @see https://tiswww.case.edu/php/chet/bash/CHANGES
+    # @note Item +i.+ under the +bash-4.2-release+ to +bash-4.3-alpha+ change
+    #   list notes that version 4.2 truncates +PS4+ if it is greater than 128
+    #   bytes.
+    def truncated_ps4?
+      @has_truncated_ps4 ||= bash_versinfo[0..1].join.to_i <= 42
+    end
+
+    def ps4_length
+      truncated_ps4? ? 128 : nil
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -113,7 +127,8 @@ module_function
   # Reset options to the default state
   def set_default_options!
     module_functions = [:root_directory, :name, :parse_options!, :options,
-                        :bash_versinfo, :bash_xtracefd?]
+                        :bash_versinfo, :bash_xtracefd?, :truncated_ps4?,
+                        :ps4_length]
 
     # Would be nice to use SingleForwardable, but the way that
     # SingleForwardable defines methods appears to preclude closing over a

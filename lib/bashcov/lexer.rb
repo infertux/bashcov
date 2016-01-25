@@ -1,3 +1,5 @@
+require "bashcov"
+
 module Bashcov
   # Simple lexer which analyzes Bash files in order to get information for
   # coverage
