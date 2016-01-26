@@ -9,10 +9,10 @@ describe Bashcov::Xtrace do
       basename = '$(basename "$BASH_SOURCE")'
       PS4 = %W(
         #{Bashcov::Xtrace::DEPTH_CHAR + Bashcov::Xtrace::PREFIX}
+        ${LINENO}
         #{[dirname, basename].join('/')}
         $(pwd)
         ${OLDPWD}
-        ${LINENO}
       ).reduce(Bashcov::Xtrace::DELIM) { |a, e| a + e + Bashcov::Xtrace::DELIM }
   )
 

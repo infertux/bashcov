@@ -111,14 +111,16 @@ describe Bashcov::Runner do
         let(:bad_path_coverage) { [nil, nil, 0] }
       end
 
-      it "prints an error message" do
-        expect { tmprunner.run }.to output(/expected integer.*got.*tmp/).to_stderr
-      end
+      context "given a version of Bash from 4.3 and up" do
+        before do
+          skip "Platform is using a Bash prior to 4.3" if Bashcov.truncated_ps4?
+        end
 
-      it "indicates that no lines were executed" do
-        tmprunner.run
-        expect(tmprunner.result[tmpscript.path]).to \
-          contain_exactly(*bad_path_coverage)
+        it "indicates that no lines were executed" do
+          tmprunner.run
+          expect(tmprunner.result[tmpscript.path]).to \
+            contain_exactly(*bad_path_coverage)
+        end
       end
     end
 
@@ -134,16 +136,31 @@ describe Bashcov::Runner do
             echo #{stderr_output} 1>&2
           EOF
         end
-      end
 
-      let(:xtracefd_warning) { Regexp.new(/Warning:.*older Bash version/) }
+        let(:xtracefd_warning) { Regexp.new(/Warning:.*older Bash version/) }
 
-      before(:each) do
-        Bashcov.module_exec do
-          def bash_xtracefd?
-            false
+        around(:each) do |example|
+          stored_has_bash_xtracefd = Bashcov.bash_xtracefd?
+
+          Bashcov.module_exec do
+            def bash_xtracefd?
+              false
+            end
+            module_function :"bash_xtracefd?"
           end
-          module_function :"bash_xtracefd?"
+
+          example.run
+
+          Bashcov.module_exec do
+            define_method :bash_xtracefd? do
+              stored_has_bash_xtracefd
+            end
+            module_function :"bash_xtracefd?"
+          end
+        end
+
+        after(:all) do
+          Bashcov.set_default_options!
         end
       end
 

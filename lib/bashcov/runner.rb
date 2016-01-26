@@ -12,49 +12,80 @@ module Bashcov
     # @note Binds Bashcov +stdin+ to the program being executed.
     # @return [Process::Status] Status of the executed command
     def run
-      @xtrace = Xtrace.new
+      field_stream = if Bashcov.truncated_ps4?
+                       FieldStream::Truncated.new
+                     else
+                       FieldStream::Unlimited.new
+                     end
+
+      @xtrace = Xtrace.new(field_stream)
+
       fd = @xtrace.file_descriptor
       env = { "PS4" => Xtrace::PS4 }
-      options = { :in => :in, fd => fd }
+      options = { in: :in }
 
       if Bashcov.options.mute
         options[:out] = "/dev/null"
         options[:err] = "/dev/null"
       end
 
-      command_pid = Process.spawn env, @command, options # spawn the command
+      run_method = Bashcov.trap? ? :run_trap : :run_xtrace
+      send(run_method, fd, env, options) do
+        command_pid = Process.spawn env, @command, options # spawn the command
 
-      begin
-        xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
+        begin
+          xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
 
-        Process.wait command_pid
+          Process.wait command_pid
 
-        @xtrace.close
+          @xtrace.close
 
-        @coverage = xtrace_thread.value # wait for the thread to return
-      rescue XtraceError => e
-        $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
-          Warning: encountered an error parsing Bash's output(error was:
-          #{e.message}). This can occur if your script or its path contains
-          the sequence `#{Regexp.escape Xtrace::DELIM}', or if your script
-          unsets LINENO. Aborting early; coverage report will be incomplete.
-        ERROR
+          @coverage = xtrace_thread.value # wait for the thread to return
+        rescue XtraceError => e
+          $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
+            Warning: encountered an error parsing Bash's output(error was:
+            #{e.message}). This can occur if your script or its path contains
+            the sequence `#{Regexp.escape Xtrace::DELIM}', or if your script
+            unsets LINENO. Aborting early; coverage report will be incomplete.
+          ERROR
 
-        @coverage = e.files
+          @coverage = e.files
+        end
       end
 
       $?
     end
 
-    def run_xtrace
+    def run_xtrace(fd, env, options)
+      # Older versions of Bash (< 4.1) don't have the BASH_XTRACEFD variable
+      if Bashcov.bash_xtracefd?
+        options[fd] = fd # bind FDs to the child process
+
+        env["BASH_XTRACEFD"] = fd.to_s
+      else
+        # Send subprocess standard error to @xtrace.file_descriptor
+        options[:err] = fd
+
+        # Don't bother issuing warning if we're silencing output anyway
+        unless Bashcov.options.mute
+          $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
+            Warning: you are using an older Bash version that does not support
+            BASH_XTRACEFD. All xtrace output will print to standard error, and
+            your script's output on standard error will not be printed to the
+            console.
+          ERROR
+        end
+      end
+
       inject_xtrace_flag! do
-        bash_env = Trap.set("bashcov_debug_trap", Xtrace::DELIM, fd, Xtrace::FIELDS)
-        env = { "PS4" => Xtrace::PS4, "BASH_ENV" => bash_env.path }
+        yield
       end
     end
 
-    def run_trap
-
+    def run_trap(fd, env, _options)
+      bash_env = Trap.set("bashcov_debug_trap", Xtrace::DELIM, fd, Xtrace::FIELDS)
+      env["BASH_ENV"] = bash_env.path
+      yield
     end
 
     # @return [Hash] Coverage hash of the last run

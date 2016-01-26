@@ -91,9 +91,9 @@ describe Bashcov do
     end
   end
 
-  describe ".name" do
+  describe ".fullname" do
     it "includes the version" do
-      expect(Bashcov.name).to include Bashcov::VERSION
+      expect(Bashcov.fullname).to include Bashcov::VERSION
     end
   end
 end

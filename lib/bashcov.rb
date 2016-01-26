@@ -11,6 +11,7 @@ module Bashcov
   [:Lexer, :Line, :Runner, :Trap, :Xtrace].each do |class_sym|
     autoload class_sym, "bashcov/#{class_sym.downcase}"
   end
+  autoload :FieldStream, "bashcov/field_stream"
 
   # Container for parsing and exposing options and static configuration
   class Instance
@@ -22,7 +23,8 @@ module Bashcov
     def initialize
       @options ||= OpenStruct.new
       @options.skip_uncovered = false
-      @options.mute = false
+      @options.mute            = false
+      @options.use_trap        = false
       @options.bash_path = "/bin/bash"
     end
 
@@ -51,6 +53,23 @@ module Bashcov
       @has_truncated_ps4 ||= bash_versinfo[0..1].join.to_i <= 42
     end
 
+    # @return [Boolean]  Whether to use +trap+ to capture coverage stats
+    def skip_uncovered?
+      options.skip_uncovered
+    end
+
+    # @return [Boolean]  Whether to use +trap+ to capture coverage stats
+    def mute?
+      options.mute
+    end
+
+    # @return [Boolean]  Whether to use +trap+ to capture coverage stats
+    def trap?
+      options.use_trap
+    end
+
+    # @return [Integer, nil]  Maximum +PS4+ length, or nil if length is
+    #    effectively unlimited
     def ps4_length
       truncated_ps4? ? 128 : nil
     end
@@ -70,7 +89,8 @@ module Bashcov
     end
 
     # @return [String] Program name including version for easy consistent output
-    def name
+    # @note +fullname+ instead of name to avoid clashing with +Module.name+
+    def fullname
       "bashcov v#{VERSION}"
     end
 
@@ -101,6 +121,9 @@ module Bashcov
         opts.on("-m", "--mute", "Do not print script output") do |m|
           @options.mute = m
         end
+        opts.on("-T", "--trap", "Use `trap' to capture coverage") do |t|
+          @options.use_trap = t
+        end
         opts.on("--bash-path PATH", "Path to Bash") do |p|
           if File.file? p
             p
@@ -122,24 +145,20 @@ module Bashcov
     end
   end
 
-module_function
+  class << self
+    attr_accessor :delegate
 
-  # Reset options to the default state
-  def set_default_options!
-    module_functions = [:root_directory, :name, :parse_options!, :options,
-                        :bash_versinfo, :bash_xtracefd?, :truncated_ps4?,
-                        :ps4_length]
+    # Reset options to the default state
+    def set_default_options!
+      self.delegate = Bashcov::Instance.new
+    end
 
-    # Would be nice to use SingleForwardable, but the way that
-    # SingleForwardable defines methods appears to preclude closing over a
-    # locally-scoped object.
-    delegate = Bashcov::Instance.new
-    module_functions.each do |m|
-      define_method m do |*args, &block|
-        delegate.send(m, *args, &block)
-      end
+    def respond_to_missing?(*args)
+      delegate.respond_to?(*args)
+    end
 
-      module_function m
+    def method_missing(method_name, *args, &block)
+      delegate.send(method_name, *args, &block)
     end
   end
 end

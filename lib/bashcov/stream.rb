@@ -24,7 +24,7 @@ module Bashcov
         # Pull +read_bytes - bytes_read+ characters from the stream
         buffer = @read.read(read_bytes)
 
-        #$stderr.puts("#=> Position(#{read_position}) | buffer(#{buffer}) | EOF(#{@read.eof?})")
+        # $stderr.puts("#=> Position(#{read_position}) | buffer(#{buffer}) | EOF(#{@read.eof?})")
 
         break if buffer.nil?
 

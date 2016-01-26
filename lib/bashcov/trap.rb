@@ -32,6 +32,7 @@ module Bashcov
   private
 
     def write_trap_text(delim, fd, fields)
+      $stderr.puts trap_text(delim, fd, fields)
       write trap_text(delim, fd, fields)
       close
     end
