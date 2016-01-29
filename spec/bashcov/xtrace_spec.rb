@@ -8,12 +8,13 @@ describe Bashcov::Xtrace do
       dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'
       basename = '$(basename "$BASH_SOURCE")'
       PS4 = %W(
-        #{Bashcov::Xtrace::DEPTH_CHAR + Bashcov::Xtrace::PREFIX}
         ${LINENO}
         #{[dirname, basename].join('/')}
         $(pwd)
         ${OLDPWD}
-      ).reduce(Bashcov::Xtrace::DELIM) { |a, e| a + e + Bashcov::Xtrace::DELIM }
+      ).reduce(Bashcov::Xtrace::DEPTH_CHAR + Bashcov::Xtrace::PREFIX) do |a, e|
+        a + Bashcov::Xtrace::DELIM + e
+      end + Bashcov::Xtrace::DELIM
   )
 
   let(:case_script) { test_app("scripts/case.sh") }

@@ -2,7 +2,7 @@ require "spec_helper"
 require "benchmark"
 
 describe Bashcov::Runner do
-  let(:runner) { Bashcov::Runner.new "bash #{test_suite}" }
+  let(:runner) { Bashcov::Runner.new([Bashcov.options.bash_path, test_suite]) }
 
   around :each do |example|
     # Reset the options to, among other things, pick up on a new working
@@ -75,7 +75,7 @@ describe Bashcov::Runner do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-EOF.gsub(/\A\s+/, "")
-            #!/usr/bin/env bash
+            #!/bin/bash
 
             echo "Hello, world!"
             LINENO= echo "What line is this?"

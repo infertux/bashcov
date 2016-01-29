@@ -68,12 +68,6 @@ module Bashcov
       options.use_trap
     end
 
-    # @return [Integer, nil]  Maximum +PS4+ length, or nil if length is
-    #    effectively unlimited
-    def ps4_length
-      truncated_ps4? ? 128 : nil
-    end
-
     # Parses the given CLI arguments and sets +options+.
     # @param [Array] args list of arguments
     # @raise [SystemExit] if invalid arguments are given
@@ -84,7 +78,7 @@ module Bashcov
       if args.empty?
         abort("You must give exactly one command to execute.")
       else
-        @options.command = args.join(" ")
+        @options.command = args.unshift(@options.bash_path)
       end
     end
 
@@ -126,7 +120,7 @@ module Bashcov
         end
         opts.on("--bash-path PATH", "Path to Bash") do |p|
           if File.file? p
-            p
+            @options.bash_path = p
           else
             abort("`#{p}' is not a valid path")
           end
@@ -153,10 +147,12 @@ module Bashcov
       self.delegate = Bashcov::Instance.new
     end
 
+    # Passes off +respond_to?+ to {delegate} for missing methods
     def respond_to_missing?(*args)
       delegate.respond_to?(*args)
     end
 
+    # Dispatches missing methods to {delegate}
     def method_missing(method_name, *args, &block)
       delegate.send(method_name, *args, &block)
     end

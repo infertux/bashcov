@@ -31,7 +31,7 @@ module Bashcov
 
       run_method = Bashcov.trap? ? :run_trap : :run_xtrace
       send(run_method, fd, env, options) do
-        command_pid = Process.spawn env, @command, options # spawn the command
+        command_pid = Process.spawn env, *@command, options # spawn the command
 
         begin
           xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output

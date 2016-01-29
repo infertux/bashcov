@@ -19,7 +19,7 @@ module Bashcov
 
     # [String] A randomly-generated token for delimiting the fields of the
     #   +{PS4}+
-    DELIM = Bashcov.truncated_ps4? ? SecureRandom.base64(6) : SecureRandom.uuid
+    DELIM = Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
 
     # [Array<String>] A collection of Bash internal variables to expand in the
     #   {PS4}
@@ -61,12 +61,19 @@ module Bashcov
       @write.close
     end
 
+    # Read fields extracted from Bash's debugging output
+    # @return [Hash<Pathname, Array<Integer, nil>>] A hash mapping Bash scripts
+    #   to Simplecov-style coverage stats
     def read
       @field_stream.read = @read
 
-      fields = @field_stream.each(DELIM, FIELDS.length, PS4_START_REGEXP)
+      field_count = FIELDS.length
+      fields = @field_stream.each(DELIM, field_count, PS4_START_REGEXP)
 
-      until (hit = fields.take(FIELDS.length)).empty? do
+      # +take(field_count)+ would be more natural here, but doesn't seem to
+      # play nicely with +Enumerator+s backed by +IO+ objects.
+      loop do
+        break if (hit = (1..field_count).map { fields.next }).empty?
         parse_hit!(*hit)
       end
 
