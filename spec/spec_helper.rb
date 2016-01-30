@@ -20,6 +20,12 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 RSpec.configure do |config|
   config.before(:each) do
     Bashcov.set_default_options!
-    Bashcov.options.mute = true # don't print testsuite output
+
+    # Permit setting the path to Bash from the controlling environment
+    unless (bash_path = ENV["BASHCOV_BASH_PATH"]).nil?
+      Bashcov.bash_path = bash_path
+    end
+
+    Bashcov.mute = true # don't print testsuite output
   end
 end

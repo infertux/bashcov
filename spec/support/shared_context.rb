@@ -10,7 +10,7 @@ shared_context "temporary script" do |script_basename|
     script
   end
 
-  let(:tmprunner) { Bashcov::Runner.new("#{Bashcov.options.bash_path} #{tmpscript.path}") }
+  let(:tmprunner) { Bashcov::Runner.new([Bashcov.bash_path, tmpscript.path]) }
 
   around do |example|
     Dir.mktmpdir script_basename do |tmpdir|

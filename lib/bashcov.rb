@@ -1,44 +1,21 @@
 require "optparse"
 require "ostruct"
 require "pathname"
-require "bashcov/version"
-require "bashcov/lexer"
-require "bashcov/line"
+
+require "bashcov/bash_info"
 require "bashcov/runner"
-require "bashcov/xtrace"
-require "bashcov/errors"
+require "bashcov/version"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
-  # Container for parsing and exposing options and static configuration
-  class Instance
-    # @return [OpenStruct] Bashcov settings
-    attr_reader :options
+  extend Bashcov::BashInfo
 
-    # Sets default options overriding any existing ones.
-    # @return [void]
-    def initialize
-      @options ||= OpenStruct.new
-      @options.skip_uncovered = false
-      @options.mute = false
-      @options.bash_path = "/bin/bash"
-    end
+  class << self
+    def options
+      set_default_options! unless defined?(@options)
 
-    # @return [String] The project's root directory
-    def root_directory
-      @root_directory ||= Pathname.getwd
-    end
-
-    # @return [Array<String>] An array representing the components of
-    #   +BASH_VERSINFO+
-    def bash_versinfo
-      @bash_versinfo ||= `#{@options.bash_path} -c 'echo "${BASH_VERSINFO[@]}"'`.chomp.split
-    end
-
-    # @return [Boolean] Whether Bash supports +BASH_XTRACEFD+
-    def bash_xtracefd?
-      @has_bash_xtracefd ||= bash_versinfo[0..1].join.to_i >= 41
+      @options
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -46,18 +23,43 @@ module Bashcov
     # @raise [SystemExit] if invalid arguments are given
     # @return [void]
     def parse_options!(args)
-      option_parser.parse!(args)
+      begin
+        option_parser.parse!(args)
+      rescue OptionParser::ParseError, Errno::ENOENT => e
+        abort "#{option_parser.program_name}: #{e.message}"
+      end
 
       if args.empty?
         abort("You must give exactly one command to execute.")
       else
-        @options.command = args.join(" ")
+        options.command = args.unshift(bash_path)
       end
     end
 
     # @return [String] Program name including version for easy consistent output
-    def name
+    # @note +fullname+ instead of name to avoid clashing with +Module.name+
+    def fullname
       "bashcov v#{VERSION}"
+    end
+
+    # Wipe the current options and reset default values
+    def set_default_options!
+      @options = OpenStruct.new
+
+      @options.root_directory   = Dir.getwd
+      @options.skip_uncovered   = false
+      @options.bash_path        = "/bin/bash"
+      @options.mute             = false
+    end
+
+    # Passes off +respond_to?+ to {options} for missing methods
+    def respond_to_missing?(*args)
+      options.respond_to?(*args)
+    end
+
+    # Dispatches missing methods to {options}
+    def method_missing(method_name, *args, &block)
+      options.send(method_name, *args, &block)
     end
 
   private
@@ -82,17 +84,18 @@ module Bashcov
         opts.separator "\nSpecific options:"
 
         opts.on("-s", "--skip-uncovered", "Do not report uncovered files") do |s|
-          @options.skip_uncovered = s
+          options.skip_uncovered = s
         end
         opts.on("-m", "--mute", "Do not print script output") do |m|
-          @options.mute = m
+          options.mute = m
         end
-        opts.on("--bash-path PATH", "Path to Bash") do |p|
-          if File.file? p
-            p
-          else
-            abort("`#{p}' is not a valid path")
-          end
+        opts.on("--bash-path PATH", "Path to Bash executable") do |p|
+          raise Errno::ENOENT, p unless File.file? p
+          options.bash_path = p
+        end
+        opts.on("--root PATH", "Project root directory") do |d|
+          raise Errno::ENOENT, d unless File.directory? d
+          options.root_directory = d
         end
 
         opts.separator "\nCommon options:"
@@ -107,27 +110,4 @@ module Bashcov
       end
     end
   end
-
-module_function
-
-  # Reset options to the default state
-  def set_default_options!
-    module_functions = [:root_directory, :name, :parse_options!, :options,
-                        :bash_versinfo, :bash_xtracefd?]
-
-    # Would be nice to use SingleForwardable, but the way that
-    # SingleForwardable defines methods appears to preclude closing over a
-    # locally-scoped object.
-    delegate = Bashcov::Instance.new
-    module_functions.each do |m|
-      define_method m do |*args, &block|
-        delegate.send(m, *args, &block)
-      end
-
-      module_function m
-    end
-  end
 end
-
-# Make sure default options are set
-Bashcov.set_default_options!

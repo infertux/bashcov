@@ -3,42 +3,58 @@ require "spec_helper"
 require "tempfile"
 
 describe Bashcov::Xtrace do
-  ORIGINAL_PS4 = Bashcov::Xtrace::PS4.dup
-  SUBSHELL_PS4 = (
-      dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'
-      basename = '$(basename "$BASH_SOURCE")'
-      PS4 = %W(
-        #{Bashcov::Xtrace::DEPTH_CHAR + Bashcov::Xtrace::PREFIX}
-        #{[dirname, basename].join('/')}
-        $(pwd)
-        ${OLDPWD}
-        ${LINENO}
-      ).reduce(Bashcov::Xtrace::DELIM) { |a, e| a + e + Bashcov::Xtrace::DELIM }
-  )
+  describe ".delim" do
+    around :each do |example|
+      stored_delim = Bashcov::Xtrace.delim
+      Bashcov::Xtrace.delim = nil
+      example.run
+      Bashcov::Xtrace.delim = stored_delim
+    end
 
-  let(:case_script) { test_app("scripts/case.sh") }
-  let(:case_runner) { Bashcov::Runner.new "#{Bashcov.options.bash_path} #{case_script}" }
+    context "On Bash 4.2 and prior" do
+      it "is the ASCII record separator character" do
+        # Fake that we're on 4.2
+        allow(Bashcov).to receive(:truncated_ps4?).and_return(true)
+        expect(Bashcov::Xtrace.delim).to eq("\x1E")
+      end
+    end
 
-  before :all do
-    Dir.chdir File.dirname(test_suite)
+    context "on Bash 4.3 and later" do
+      let(:uuid_match) { /\A[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[89AB][\dA-F]{3}-[\dA-F]{12}\z/i }
+
+      it "is a UUID" do
+        allow(Bashcov).to receive(:truncated_ps4?).and_return(false)
+        expect(Bashcov::Xtrace.delim).to match(uuid_match)
+      end
+    end
   end
 
-  describe "Bashcov::Xtrace::PS4" do
+  describe ".ps4" do
+    let!(:subshell_ps4) do
+      dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'
+      basename = '$(basename "$BASH_SOURCE")'
+      Bashcov::Xtrace.make_ps4(*%W(${LINENO} #{[dirname, basename].join('/')} $(pwd) ${OLDPWD}))
+    end
+
+    let(:case_script) { test_app("scripts/case.sh") }
+    let(:case_runner) { Bashcov::Runner.new([Bashcov.bash_path, case_script]) }
+
+    def case_result
+      case_runner.tap(&:run).result[case_script].dup
+    end
+
+    before :each do
+      Dir.chdir File.dirname(test_suite)
+    end
+
     context "when shell expansion triggers subshell execution" do
-      after do
-        Bashcov::Xtrace.const_redefine(:PS4, ORIGINAL_PS4)
-      end
-
       it "causes extra hits to be reported" do
-        Bashcov.options.skip_uncovered = true
+        result_without_subshell = case_result
 
-        case_runner.run
-        result_without_subshell = case_runner.result[case_script].dup
+        allow(Bashcov).to receive(:skip_uncovered).and_return(true)
+        allow(Bashcov::Xtrace).to receive(:ps4).and_return(subshell_ps4)
 
-        Bashcov::Xtrace.const_redefine(:PS4, SUBSHELL_PS4)
-        case_runner.instance_variable_set(:@result, nil)
-        case_runner.run
-        result_with_subshell = case_runner.result[case_script].dup
+        result_with_subshell = case_result
 
         satisfy_msg = "have at least one line with fewer hits than #{result_with_subshell}"
         expect(result_without_subshell).to satisfy(satisfy_msg) do |r|

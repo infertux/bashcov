@@ -3,6 +3,8 @@
 require "pathname"
 require "securerandom"
 
+require "bashcov/errors"
+
 module Bashcov
   # This class manages +xtrace+ output.
   #
@@ -15,25 +17,42 @@ module Bashcov
     # [String] Prefix used in +PS4+ to identify relevant output
     PREFIX = "BASHCOV>".freeze
 
-    # [String] A randomly-generated token for delimiting the fields of the
-    #   +{PS4}+
-    DELIM = SecureRandom.uuid
+    # [Array<String>] A collection of Bash internal variables to expand in the
+    #   {PS4}
+    FIELDS = %w(${LINENO} ${BASH_SOURCE} ${PWD} ${OLDPWD}).freeze
 
-    # [String] +PS4+ variable used for xtrace output.  Expands to internal Bash
-    # variables +$BASH_SOURCE+, +$PWD+, +$OLDPWD+, and +$LINENO+, delimited by
-    # {DELIM}.
-    # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
-    PS4 = %W(#{DEPTH_CHAR + PREFIX} ${BASH_SOURCE} ${PWD} ${OLDPWD} ${LINENO}).reduce(DELIM) do |a, e|
-      a + e + DELIM
+    class << self
+      attr_writer :delim, :ps4
+
+      # [String] A randomly-generated token for delimiting the fields of the
+      #   +{PS4}+
+      def delim
+        # ASCII RS (record separator) character.  Not invalid in a file name, but unlikely to appear in one.
+        @delim ||= (Bashcov.truncated_ps4? && !Bashcov.use_trap) ? "\x1E" : SecureRandom.uuid
+      end
+
+      # [String] +PS4+ variable used for xtrace output.  Expands to internal Bash
+      #   variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+, delimited
+      #   by {delim}.
+      # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
+      def ps4
+        @ps4 ||= make_ps4(*FIELDS)
+      end
+
+      def make_ps4(*fields)
+        fields.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + delim + e } + delim
+      end
     end
 
     # Regexp to match the beginning of the {PS4}.  {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
-    LINE_START_REGEXP = /\A#{Regexp.escape(DEPTH_CHAR)}+#{PREFIX}/
+    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m
 
     # Creates a pipe for xtrace output.
-    # @see http://stackoverflow.com/questions/6977561/pipe-vs-temporary-file
-    def initialize
+    # @see http://stackoverflow.com/questions/6977562/pipe-vs-temporary-file
+    def initialize(field_stream)
+      @field_stream = field_stream
+
       @read, @write = IO.pipe
 
       # Tracks coverage for each file under test
@@ -55,64 +74,63 @@ module Bashcov
       @write.close
     end
 
-    # Parses xtrace output and computes coverage.
-    # @return [Hash] Hash of executed files with coverage information
+    # Read fields extracted from Bash's debugging output
+    # @return [Hash<Pathname, Array<Integer, nil>>] A hash mapping Bash scripts
+    #   to Simplecov-style coverage stats
     def read
-      lines = @read.each_line(DELIM)
+      @field_stream.read = @read
 
+      field_count = FIELDS.length
+      fields = @field_stream.each(self.class.delim, field_count, PS4_START_REGEXP)
+
+      # +take(field_count)+ would be more natural here, but doesn't seem to
+      # play nicely with +Enumerator+s backed by +IO+ objects.
       loop do
-        # Reject all lines until we've seen the start of the PS4
-        nil until lines.next =~ LINE_START_REGEXP
-
-        # The next three lines will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
-        bash_source, pwd, oldpwd = (1..3).map { Pathname.new lines.next.chomp(DELIM) }
-        lineno = lines.next.chomp(DELIM)
-
-        # If +$LINENO+ isn't a series of digits, something has gone wrong.  Add
-        # +@files+ to the exception in order to propagate the existing coverage
-        # data back to the {Bashcov::Runner} instance.
-        unless lineno =~ /\A\d+\z/
-          got = lineno.empty? ? "<nil>" : lineno
-          raise XtraceError.new("expected integer for $LINENO, got `#{got}'", @files)
-        end
-
-        parse_hit!(bash_source, pwd, oldpwd, lineno.to_i)
+        break if (hit = (1..field_count).map { fields.next }).empty?
+        parse_hit!(*hit)
       end
 
       @files
-    rescue StopIteration
-      # :nocov: -- here in case the +lines+ iterator raises it on +#next+.
-      @files
-      # :nocov:
     end
 
   private
 
-    # Parses the expanded {PS4} fields and updates the coverage-tracking
+    # Parses the expanded {ps4} fields and updates the coverage-tracking
     # {@files} hash
-    # @param [Pathname] bash_source expanded +$BASH_SOURCE+
-    # @param [Pathname] pwd         expanded +$PWD+
-    # @param [Pathname] oldpwd      expanded +$OLDPWD+
-    # @param [Integer]  lineno      expanded +$LINENO+
-    def parse_hit!(bash_source, pwd, oldpwd, lineno)
+    # @param [String]  lineno       expanded +LINENO+
+    # @param [Pathname] bash_source expanded +BASH_SOURCE+
+    # @param [Pathname] pwd         expanded +PWD+
+    # @param [Pathname] oldpwd      expanded +OLDPWD+
+    def parse_hit!(lineno, *paths)
+      # If +LINENO+ isn't a series of digits, something has gone wrong.  Add
+      # +@files+ to the exception in order to propagate the existing coverage
+      # data back to the {Bashcov::Runner} instance.
+      unless lineno =~ /\A\d+\z/
+        got = lineno.empty? ? "<nil>" : lineno
+        raise XtraceError.new("expected integer for $LINENO, got `#{got}'", @files)
+      end
+
+      # The next three fields will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
+      bash_source, pwd, oldpwd = paths.map { |p| Pathname.new(p) }
+
       update_wd_stacks!(pwd, oldpwd)
 
       script = find_script(bash_source)
 
-      # For one-liners, +$LINENO+ == 0.  Do this to avoid an +IndexError+;
+      # For one-liners, +LINENO+ == 0.  Do this to avoid an +IndexError+;
       # one-liners will be culled from the coverage results later on.
-      index = lineno > 1 ? lineno - 1 : 0
+      index = (lineno_i = lineno.to_i) > 1 ? lineno_i - 1 : 0
 
       @files[script] ||= []
       @files[script][index] ||= 0
       @files[script][index] += 1
     end
 
-    # Scans entries in the $PWD stack, checking whether +entry/$BASH_SOURCE+
+    # Scans entries in the +PWD+ stack, checking whether +entry/$BASH_SOURCE+
     # refers to an existing file.  Scans the stack in reverse on the assumption
     # that more-recent entries are more plausible candidates for base
-    # directories from which $BASH_SOURCE can be reached.
-    # @param [Pathname] bash_source expanded +$BASH_SOURCE+
+    # directories from which +BASH_SOURCE+ can be reached.
+    # @param [Pathname] bash_source expanded +BASH_SOURCE+
     # @return [Pathname] the resolved path to +bash_source+, if it exists;
     #   otherwise, +bash_source+ cleaned of redundant slashes and dots
     def find_script(bash_source)
@@ -120,10 +138,10 @@ module Bashcov
       script.nil? ? bash_source.cleanpath : script.realpath
     end
 
-    # Updates the stacks that track the history of values for +$PWD+ and
-    # +$OLDPWD+
-    # @param [Pathname] pwd     expanded +$PWD+
-    # @param [Pathname] oldpwd  expanded +$OLDPWD+
+    # Updates the stacks that track the history of values for +PWD+ and
+    # +OLDPWD+
+    # @param [Pathname] pwd     expanded +PWD+
+    # @param [Pathname] oldpwd  expanded +OLDPWD+
     # @return [void]
     def update_wd_stacks!(pwd, oldpwd)
       @pwd_stack[0] ||= pwd
