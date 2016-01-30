@@ -2,7 +2,7 @@ require "spec_helper"
 require "benchmark"
 
 describe Bashcov::Runner do
-  let(:runner) { Bashcov::Runner.new([Bashcov.options.bash_path, test_suite]) }
+  let(:runner) { Bashcov::Runner.new([Bashcov.bash_path, test_suite]) }
 
   around :each do |example|
     # Reset the options to, among other things, pick up on a new working
@@ -97,8 +97,8 @@ describe Bashcov::Runner do
       end
     end
 
-    context "given a script whose path contains Xtrace::DELIM" do
-      include_context("temporary script", Bashcov::Xtrace::DELIM) do
+    context "given a script whose path contains Xtrace.delim" do
+      include_context("temporary script", Bashcov::Xtrace.delim) do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-EOF.gsub(/\A\s+/, "")
@@ -138,42 +138,20 @@ describe Bashcov::Runner do
         end
 
         let(:xtracefd_warning) { Regexp.new(/Warning:.*older Bash version/) }
-
-        around(:each) do |example|
-          stored_has_bash_xtracefd = Bashcov.bash_xtracefd?
-
-          Bashcov.module_exec do
-            def bash_xtracefd?
-              false
-            end
-            module_function :"bash_xtracefd?"
-          end
-
-          example.run
-
-          Bashcov.module_exec do
-            define_method :bash_xtracefd? do
-              stored_has_bash_xtracefd
-            end
-            module_function :"bash_xtracefd?"
-          end
-        end
-
-        after(:all) do
-          Bashcov.set_default_options!
-        end
       end
 
-      context "when options.mute is true" do
+      context "when mute is true" do
         it "does not print a warning about the lack of BASH_XTRACEFD" do
-          Bashcov.options.mute = true
+          allow(Bashcov).to receive(:bash_xtracefd?).and_return(false)
+          allow(Bashcov).to receive(:mute).and_return(true)
           expect { tmprunner.run }.not_to output(xtracefd_warning).to_stderr
         end
       end
 
-      context "when options.mute is false" do
+      context "when mute is false" do
         it "prints a warning about the lack of BASH_XTRACEFD" do
-          Bashcov.options.mute = false
+          allow(Bashcov).to receive(:bash_xtracefd?).and_return(false)
+          allow(Bashcov).to receive(:mute).and_return(false)
           expect { tmprunner.run }.to output(xtracefd_warning).to_stderr
         end
       end
@@ -197,9 +175,9 @@ describe Bashcov::Runner do
       expect(runner.result).to eq correct_coverage
     end
 
-    context "with options.skip_uncovered = true" do
+    context "with skip_uncovered = true" do
       before do
-        Bashcov.options.skip_uncovered = true
+        Bashcov.skip_uncovered = true
       end
 
       it "does not include uncovered files" do
@@ -208,9 +186,9 @@ describe Bashcov::Runner do
       end
     end
 
-    context "with options.mute = true" do
+    context "with mute = true" do
       before do
-        Bashcov.options.mute = true
+        Bashcov.mute = true
       end
 
       it "does not print the command output" do

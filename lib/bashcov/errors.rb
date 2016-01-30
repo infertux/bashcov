@@ -1,5 +1,3 @@
-require "bashcov"
-
 module Bashcov
   # Signals an error parsing Bash's debugging output.
   class XtraceError < ::RuntimeError

@@ -2,70 +2,20 @@ require "optparse"
 require "ostruct"
 require "pathname"
 
+require "bashcov/bash_info"
+require "bashcov/runner"
 require "bashcov/version"
-require "bashcov/errors"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
-  [:Lexer, :Line, :Runner, :Trap, :Xtrace].each do |class_sym|
-    autoload class_sym, "bashcov/#{class_sym.downcase}"
-  end
-  autoload :FieldStream, "bashcov/field_stream"
+  extend Bashcov::BashInfo
 
-  # Container for parsing and exposing options and static configuration
-  class Instance
-    # @return [OpenStruct] Bashcov settings
-    attr_reader :options
+  class << self
+    def options
+      set_default_options! unless defined?(@options)
 
-    # Sets default options overriding any existing ones.
-    # @return [void]
-    def initialize
-      @options ||= OpenStruct.new
-      @options.skip_uncovered = false
-      @options.mute            = false
-      @options.use_trap        = false
-      @options.bash_path = "/bin/bash"
-    end
-
-    # @return [String] The project's root directory
-    def root_directory
-      @root_directory ||= Pathname.getwd
-    end
-
-    # @return [Array<String>] An array representing the components of
-    #   +BASH_VERSINFO+
-    def bash_versinfo
-      @bash_versinfo ||= `#{@options.bash_path} -c 'echo "${BASH_VERSINFO[@]}"'`.chomp.split
-    end
-
-    # @return [Boolean] Whether Bash supports +BASH_XTRACEFD+
-    def bash_xtracefd?
-      @has_bash_xtracefd ||= bash_versinfo[0..1].join.to_i >= 41
-    end
-
-    # @return [Boolean] Whether Bash supports a +PS4+ of greater than 128 bytes
-    # @see https://tiswww.case.edu/php/chet/bash/CHANGES
-    # @note Item +i.+ under the +bash-4.2-release+ to +bash-4.3-alpha+ change
-    #   list notes that version 4.2 truncates +PS4+ if it is greater than 128
-    #   bytes.
-    def truncated_ps4?
-      @has_truncated_ps4 ||= bash_versinfo[0..1].join.to_i <= 42
-    end
-
-    # @return [Boolean]  Whether to use +trap+ to capture coverage stats
-    def skip_uncovered?
-      options.skip_uncovered
-    end
-
-    # @return [Boolean]  Whether to use +trap+ to capture coverage stats
-    def mute?
-      options.mute
-    end
-
-    # @return [Boolean]  Whether to use +trap+ to capture coverage stats
-    def trap?
-      options.use_trap
+      @options
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -73,12 +23,16 @@ module Bashcov
     # @raise [SystemExit] if invalid arguments are given
     # @return [void]
     def parse_options!(args)
-      option_parser.parse!(args)
+      begin
+        option_parser.parse!(args)
+      rescue OptionParser::ParseError, Errno::ENOENT => e
+        abort "#{option_parser.program_name}: #{e.message}"
+      end
 
       if args.empty?
         abort("You must give exactly one command to execute.")
       else
-        @options.command = args.unshift(@options.bash_path)
+        options.command = args.unshift(bash_path)
       end
     end
 
@@ -86,6 +40,25 @@ module Bashcov
     # @note +fullname+ instead of name to avoid clashing with +Module.name+
     def fullname
       "bashcov v#{VERSION}"
+    end
+
+    # Wipe the current options and reset default values
+    def set_default_options!
+      @options = OpenStruct.new
+
+      @options.root_directory   = Dir.getwd
+      @options.skip_uncovered   = false
+      @options.mute             = false
+    end
+
+    # Passes off +respond_to?+ to {options} for missing methods
+    def respond_to_missing?(*args)
+      options.respond_to?(*args)
+    end
+
+    # Dispatches missing methods to {options}
+    def method_missing(method_name, *args, &block)
+      options.send(method_name, *args, &block)
     end
 
   private
@@ -110,20 +83,18 @@ module Bashcov
         opts.separator "\nSpecific options:"
 
         opts.on("-s", "--skip-uncovered", "Do not report uncovered files") do |s|
-          @options.skip_uncovered = s
+          options.skip_uncovered = s
         end
         opts.on("-m", "--mute", "Do not print script output") do |m|
-          @options.mute = m
+          options.mute = m
         end
-        opts.on("-T", "--trap", "Use `trap' to capture coverage") do |t|
-          @options.use_trap = t
+        opts.on("--bash-path PATH", "Path to Bash executable") do |p|
+          raise Errno::ENOENT, p unless File.file? p
+          options.bash_path = p
         end
-        opts.on("--bash-path PATH", "Path to Bash") do |p|
-          if File.file? p
-            @options.bash_path = p
-          else
-            abort("`#{p}' is not a valid path")
-          end
+        opts.on("--root PATH", "Project root directory") do |d|
+          raise Errno::ENOENT, d unless File.directory? d
+          options.root_directory = d
         end
 
         opts.separator "\nCommon options:"
@@ -138,26 +109,4 @@ module Bashcov
       end
     end
   end
-
-  class << self
-    attr_accessor :delegate
-
-    # Reset options to the default state
-    def set_default_options!
-      self.delegate = Bashcov::Instance.new
-    end
-
-    # Passes off +respond_to?+ to {delegate} for missing methods
-    def respond_to_missing?(*args)
-      delegate.respond_to?(*args)
-    end
-
-    # Dispatches missing methods to {delegate}
-    def method_missing(method_name, *args, &block)
-      delegate.send(method_name, *args, &block)
-    end
-  end
 end
-
-# Make sure default options are set
-Bashcov.set_default_options!

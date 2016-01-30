@@ -3,7 +3,7 @@
 require "pathname"
 require "securerandom"
 
-require "bashcov"
+require "bashcov/errors"
 
 module Bashcov
   # This class manages +xtrace+ output.
@@ -17,19 +17,32 @@ module Bashcov
     # [String] Prefix used in +PS4+ to identify relevant output
     PREFIX = "BASHCOV>".freeze
 
-    # [String] A randomly-generated token for delimiting the fields of the
-    #   +{PS4}+
-    DELIM = Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
-
     # [Array<String>] A collection of Bash internal variables to expand in the
     #   {PS4}
     FIELDS = %w(${LINENO} ${BASH_SOURCE} ${PWD} ${OLDPWD}).freeze
 
-    # [String] +PS4+ variable used for xtrace output.  Expands to internal Bash
-    #   variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+, delimited
-    #   by {DELIM}.
-    # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
-    PS4 = FIELDS.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + DELIM + e } + DELIM
+    class << self
+      attr_writer :delim, :ps4
+
+      # [String] A randomly-generated token for delimiting the fields of the
+      #   +{PS4}+
+      def delim
+        # ASCII RS (record separator) character.  Not invalid in a file name, but unlikely to appear in one.
+        @delim ||= (Bashcov.truncated_ps4? && !Bashcov.use_trap) ? "\x1E" : SecureRandom.uuid
+      end
+
+      # [String] +PS4+ variable used for xtrace output.  Expands to internal Bash
+      #   variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+, delimited
+      #   by {delim}.
+      # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
+      def ps4
+        @ps4 ||= make_ps4(*FIELDS)
+      end
+
+      def make_ps4(*fields)
+        fields.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + delim + e } + delim
+      end
+    end
 
     # Regexp to match the beginning of the {PS4}.  {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
@@ -68,7 +81,7 @@ module Bashcov
       @field_stream.read = @read
 
       field_count = FIELDS.length
-      fields = @field_stream.each(DELIM, field_count, PS4_START_REGEXP)
+      fields = @field_stream.each(self.class.delim, field_count, PS4_START_REGEXP)
 
       # +take(field_count)+ would be more natural here, but doesn't seem to
       # play nicely with +Enumerator+s backed by +IO+ objects.
@@ -82,7 +95,7 @@ module Bashcov
 
   private
 
-    # Parses the expanded {PS4} fields and updates the coverage-tracking
+    # Parses the expanded {ps4} fields and updates the coverage-tracking
     # {@files} hash
     # @param [String]  lineno       expanded +LINENO+
     # @param [Pathname] bash_source expanded +BASH_SOURCE+

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "bashcov"
-
 # :nodoc:
 module Bashcov
   # Current distribution version

@@ -20,6 +20,39 @@ describe Bashcov do
     expect($?.exitstatus).not_to eq(0)
   end
 
+  describe ".fullname" do
+    it "includes the version" do
+      expect(Bashcov.fullname).to include Bashcov::VERSION
+    end
+  end
+
+  describe ".respond_to_missing?" do
+    it "delegates to .options" do
+      allow(Bashcov.options).to receive(:foo).and_return("bar")
+      expect(Bashcov).to respond_to(:foo)
+
+      expect(Bashcov.options).not_to respond_to(:bar)
+      expect(Bashcov).not_to respond_to(:bar)
+    end
+  end
+
+  describe ".method_missing" do
+    it "delegates to .options" do
+      allow(Bashcov.options).to receive(:foo).and_return("bar")
+      expect(Bashcov).to respond_to(:foo)
+      expect(Bashcov.foo).to eq("bar")
+
+      expect(Bashcov.options.bar).to be nil
+      expect(Bashcov.bar).to be nil
+
+      allow(Bashcov.options).to receive(:baz).and_raise(NoMethodError, "whoops")
+      expect { Bashcov.baz }.to raise_error do |error|
+        expect(error).to be_a(NoMethodError)
+        expect(error.message).to eq("whoops")
+      end
+    end
+  end
+
   describe ".parse_options!" do
     before { @args = [] }
 
@@ -37,7 +70,7 @@ describe Bashcov do
 
         it "sets it properly" do
           subject
-          expect(Bashcov.options.skip_uncovered).to be true
+          expect(Bashcov.skip_uncovered).to be true
         end
       end
 
@@ -46,7 +79,7 @@ describe Bashcov do
 
         it "sets it properly" do
           subject
-          expect(Bashcov.options.mute).to be true
+          expect(Bashcov.mute).to be true
         end
       end
 
@@ -56,12 +89,29 @@ describe Bashcov do
 
           it "sets it properly" do
             subject
-            expect(Bashcov.options.bash_path).to eq("/bin/bash")
+            expect(Bashcov.bash_path).to eq("/bin/bash")
           end
         end
 
         context "given an non-existing path" do
           before(:each) { @args += ["--bash-path", "/pretty/sure/this/is/not/bash"] }
+
+          it_behaves_like "a fatal error"
+        end
+      end
+
+      context "with the --root option" do
+        context "given an existing path" do
+          before { @args += ["--root", "/etc"] }
+
+          it "sets it properly" do
+            subject
+            expect(Bashcov.root_directory).to eq("/etc")
+          end
+        end
+
+        context "given an non-existing path" do
+          before(:each) { @args += ["--root", "/confident/this/does/not/exist/either"] }
 
           it_behaves_like "a fatal error"
         end
@@ -88,12 +138,6 @@ describe Bashcov do
           }
         end
       end
-    end
-  end
-
-  describe ".fullname" do
-    it "includes the version" do
-      expect(Bashcov.fullname).to include Bashcov::VERSION
     end
   end
 end

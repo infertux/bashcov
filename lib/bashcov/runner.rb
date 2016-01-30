@@ -1,4 +1,7 @@
-require "bashcov"
+require "bashcov/errors"
+require "bashcov/field_stream"
+require "bashcov/lexer"
+require "bashcov/xtrace"
 
 module Bashcov
   # Runs a given command with xtrace enabled then computes code coverage.
@@ -12,16 +15,11 @@ module Bashcov
     # @note Binds Bashcov +stdin+ to the program being executed.
     # @return [Process::Status] Status of the executed command
     def run
-      field_stream = if Bashcov.truncated_ps4?
-                       FieldStream::Truncated.new
-                     else
-                       FieldStream::Unlimited.new
-                     end
-
+      field_stream = FieldStream.new
       @xtrace = Xtrace.new(field_stream)
 
       fd = @xtrace.file_descriptor
-      env = { "PS4" => Xtrace::PS4 }
+      env = { "PS4" => Xtrace.ps4 }
       options = { in: :in }
 
       if Bashcov.options.mute
@@ -29,8 +27,7 @@ module Bashcov
         options[:err] = "/dev/null"
       end
 
-      run_method = Bashcov.trap? ? :run_trap : :run_xtrace
-      send(run_method, fd, env, options) do
+      run_xtrace(fd, env, options) do
         command_pid = Process.spawn env, *@command, options # spawn the command
 
         begin
@@ -45,7 +42,7 @@ module Bashcov
           $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
             Warning: encountered an error parsing Bash's output(error was:
             #{e.message}). This can occur if your script or its path contains
-            the sequence `#{Regexp.escape Xtrace::DELIM}', or if your script
+            the sequence `#{Regexp.escape Xtrace.delim}', or if your script
             unsets LINENO. Aborting early; coverage report will be incomplete.
           ERROR
 
@@ -67,7 +64,7 @@ module Bashcov
         options[:err] = fd
 
         # Don't bother issuing warning if we're silencing output anyway
-        unless Bashcov.options.mute
+        unless Bashcov.mute
           $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
             Warning: you are using an older Bash version that does not support
             BASH_XTRACEFD. All xtrace output will print to standard error, and
@@ -80,12 +77,6 @@ module Bashcov
       inject_xtrace_flag! do
         yield
       end
-    end
-
-    def run_trap(fd, env, _options)
-      bash_env = Trap.set("bashcov_debug_trap", Xtrace::DELIM, fd, Xtrace::FIELDS)
-      env["BASH_ENV"] = bash_env.path
-      yield
     end
 
     # @return [Hash] Coverage hash of the last run
@@ -122,7 +113,7 @@ module Bashcov
     # Add files which have not been executed at all (i.e. with no coverage)
     # @return [void]
     def find_bash_files!
-      return if Bashcov.options.skip_uncovered
+      return if Bashcov.skip_uncovered
 
       Pathname.glob("#{Bashcov.root_directory}/**/*.sh").each do |filename|
         @coverage[filename] = [] unless @coverage.include?(filename)
