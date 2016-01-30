@@ -27,24 +27,26 @@ module Bashcov
       # [String] A randomly-generated token for delimiting the fields of the
       #   +{PS4}+
       def delim
-        # ASCII RS (record separator) character.  Not invalid in a file name, but unlikely to appear in one.
+        # ASCII RS (record separator) character.  Not invalid in a file name,
+        # but unlikely to appear in one.
         @delim ||= (Bashcov.truncated_ps4? && !Bashcov.use_trap) ? "\x1E" : SecureRandom.uuid
       end
 
-      # [String] +PS4+ variable used for xtrace output.  Expands to internal Bash
-      #   variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+, delimited
-      #   by {delim}.
+      # @return [String] +PS4+ variable used for xtrace output.  Expands to
+      #   internal Bash variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+,
+      #   delimited by {delim}.
       # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
       def ps4
         @ps4 ||= make_ps4(*FIELDS)
       end
 
+      # @return [String] a {delim}-separated +String+ suitable for use as +PS4+
       def make_ps4(*fields)
         fields.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + delim + e } + delim
       end
     end
 
-    # Regexp to match the beginning of the {PS4}.  {DEPTH_CHAR} will be
+    # Regexp to match the beginning of the {.ps4}.  {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
     PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m
 
@@ -97,10 +99,14 @@ module Bashcov
 
     # Parses the expanded {ps4} fields and updates the coverage-tracking
     # {@files} hash
-    # @param [String]  lineno       expanded +LINENO+
-    # @param [Pathname] bash_source expanded +BASH_SOURCE+
-    # @param [Pathname] pwd         expanded +PWD+
-    # @param [Pathname] oldpwd      expanded +OLDPWD+
+    # @overload parse_hit!(lineno, bash_source, pwd, oldpwd)
+    #   @param [String]  lineno       expanded +LINENO+
+    #   @param [Pathname] bash_source expanded +BASH_SOURCE+
+    #   @param [Pathname] pwd         expanded +PWD+
+    #   @param [Pathname] oldpwd      expanded +OLDPWD+
+    # @return [void]
+    # @raise [XtraceError] when +lineno+ is not composed solely of digits,
+    #   indicating that something has gone wrong with parsing the +PS4+ fields
     def parse_hit!(lineno, *paths)
       # If +LINENO+ isn't a series of digits, something has gone wrong.  Add
       # +@files+ to the exception in order to propagate the existing coverage

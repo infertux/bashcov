@@ -12,9 +12,10 @@ module Bashcov
   extend Bashcov::BashInfo
 
   class << self
+    # @return [OpenStruct] The +OpenStruct+ object representing Bashcov's
+    # execution environment
     def options
       set_default_options! unless defined?(@options)
-
       @options
     end
 

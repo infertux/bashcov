@@ -1,6 +1,6 @@
 module Bashcov
   # Module exposing information concerning the installed Bash version
-  # @note methods do not cache results because {bash_path} can change at
+  # @note methods do not cache results because +bash_path+ can change at
   #   runtime
   # @note receiver is expected to implement +bash_path+
   module BashInfo
@@ -15,8 +15,8 @@ module Bashcov
       bash_versinfo[0..1].join.to_i >= 41
     end
 
-    # @param [Integer] bytes  The number of bytes to test; default 128
-    # @return [Boolean] Whether Bash supports a +PS4+ of at least a given
+    # @param [Integer] length  the number of bytes to test; default 128
+    # @return [Boolean] whether Bash supports a +PS4+ of at least a given
     #   number of bytes
     # @see https://tiswww.case.edu/php/chet/bash/CHANGES
     # @note Item +i.+ under the +bash-4.2-release+ to +bash-4.3-alpha+ change
