@@ -48,6 +48,7 @@ module Bashcov
 
       @options.root_directory   = Dir.getwd
       @options.skip_uncovered   = false
+      @options.bash_path        = "/bin/bash"
       @options.mute             = false
     end
 
