@@ -83,18 +83,20 @@ To deal with these limitations, Bashcov uses the expedient of maintaining two
 stacks that track changes to `PWD` and `OLDPWD`.  To determine the full path to
 the executing script, Bashcov iterates in reverse over the `PWD` stack, testing
 for the first `$PWD/$BASH_SOURCE` combination that refers to an existing file.
-This heuristic isn't immune to false positives -- under certain combinations of
-directory stucture, script invocation paths, and working directory changes, it
-may yield a path that doesn't refer to the currently-running script.  However,
-it performs well under the various working directory changes performed in the
-[test app demo] and avoids the spurious extra hits caused by using subshells in
-`PS4`.
+This heuristic is susceptible to false positives -- under certain combinations
+of directory stucture, script invocation paths, and working directory changes,
+it may yield a path that doesn't refer to the currently-running script.
+However, it performs well under the various working directory changes performed
+in the [test app demo] and avoids the spurious extra hits caused by using
+subshells in the `PS4`.
 
-One final note on innards: Bashcov's `PS4` separates `BASH_SOURCE`, `PWD`,
-`OLDPWD`, and its other fields using a long random string.  Although unlikely,
-it is possible that this string appears in the path of a script under test or
-in a command the script executes.  When this happens,  Bashcov won't correctly
-parse the `PS4` and will abort early with incomplete coverage results.
+One final note on innards: Bash 4.3 fixed a bug in which `PS4` expansion is
+truncated to a maximum of 128 characters.  On platforms whose Bash version
+suffers from this bug, Bashcov uses the ASCII record separator character to
+delimit the `PS4` fields, whereas it uses a long random string on Bash 4.3 and
+above.  When the field delimiter appears in the path of a script under test or
+in a command the script executes, Bashcov won't correctly parse the `PS4` and
+will abort early with incomplete coverage results.
 
 ## Contributing
 
