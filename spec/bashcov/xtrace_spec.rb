@@ -4,14 +4,15 @@ require "tempfile"
 
 describe Bashcov::Xtrace do
   describe ".delim" do
-    before :each do
-      if Bashcov::Xtrace.instance_variable_get(:@delim)
-        Bashcov::Xtrace.remove_instance_variable(:@delim)
-      end
+    around :each do |example|
+      stored_delim = Bashcov::Xtrace.delim
+      Bashcov::Xtrace.delim = nil
+      example.run
+      Bashcov::Xtrace.delim = stored_delim
     end
 
     context "On Bash 4.2 and prior" do
-      it "is one character in length" do
+      it "is the ASCII record separator character" do
         # Fake that we're on 4.2
         allow(Bashcov).to receive(:truncated_ps4?).and_return(true)
         expect(Bashcov::Xtrace.delim).to eq("\x1E")
@@ -39,10 +40,6 @@ describe Bashcov::Xtrace do
     let(:case_runner) { Bashcov::Runner.new([Bashcov.bash_path, case_script]) }
 
     def case_result
-      if case_runner.instance_variable_get(:@result)
-        case_runner.remove_instance_variable(:@result)
-      end
-
       case_runner.tap(&:run).result[case_script].dup
     end
 
