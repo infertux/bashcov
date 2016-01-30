@@ -56,6 +56,20 @@ module Bashcov
       $?
     end
 
+    # @return [Hash] Coverage hash of the last run
+    # @note The result is memoized.
+    def result
+      @result ||= begin
+        find_bash_files!
+        expunge_invalid_files!
+        mark_relevant_lines!
+
+        convert_coverage
+      end
+    end
+
+  private
+
     def run_xtrace(fd, env, options)
       # Older versions of Bash (< 4.1) don't have the BASH_XTRACEFD variable
       if Bashcov.bash_xtracefd?
@@ -81,20 +95,6 @@ module Bashcov
         yield
       end
     end
-
-    # @return [Hash] Coverage hash of the last run
-    # @note The result is memoized.
-    def result
-      @result ||= begin
-        find_bash_files!
-        expunge_invalid_files!
-        mark_relevant_lines!
-
-        convert_coverage
-      end
-    end
-
-  private
 
     # @note +SHELLOPTS+ must be exported so we use Ruby's {ENV} variable
     # @yield [void] adds "xtrace" to +SHELLOPTS+ and then runs the provided
