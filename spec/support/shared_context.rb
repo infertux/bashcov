@@ -20,3 +20,39 @@ shared_context "temporary script" do |script_basename|
     end
   end
 end
+
+shared_context "delimited stream" do |field_count, start = "START>"|
+  let(:field_count) { field_count }
+  let(:start) { start }
+  let(:start_match) { /#{Regexp.escape(start)}$/ }
+  let(:delim) { SecureRandom.uuid }
+  let(:token_length) { 4 }
+  let(:taken) { 10 }
+  # @note +(taken + 1) * 2+ to account for the start-of-fields signifier and
+  # for the delimiters -- i.e., if we want to yield 10 actual fields, we have
+  # to take 22 from the generator because 10 of these will be +delim+ and
+  # 2 will be +start+.
+  let(:input) { generator.take((taken + 1) * 2).join }
+  let(:read)  { StringIO.new(input).tap(&:close_write) }
+  let(:stream) { Bashcov::FieldStream.new(read) }
+
+  # Generate a series of fields delimited by +delim+
+  let(:generator) do
+    Enumerator.new do |y|
+      b = true
+      fields_yielded = 0
+
+      loop do
+        if b
+          # << is higher-precedence than ternary operator
+          y << (fields_yielded == 0 ? start : SecureRandom.base64(token_length))
+          fields_yielded = fields_yielded == field_count + 1 ? 0 : fields_yielded + 1
+        else
+          y << delim
+        end
+
+        b ^= true
+      end
+    end
+  end
+end

@@ -1,10 +1,8 @@
 require "spec_helper"
 
-require "tempfile"
-
 describe Bashcov::Xtrace do
   describe ".delim" do
-    around :each do |example|
+    around(:each) do |example|
       stored_delim = Bashcov::Xtrace.delim
       Bashcov::Xtrace.delim = nil
       example.run
