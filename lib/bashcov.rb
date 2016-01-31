@@ -37,10 +37,15 @@ module Bashcov
       end
     end
 
+    # @return [String] Program name
+    def program_name
+      "bashcov"
+    end
+
     # @return [String] Program name including version for easy consistent output
     # @note +fullname+ instead of name to avoid clashing with +Module.name+
     def fullname
-      "bashcov v#{VERSION}"
+      "#{program_name} v#{VERSION}"
     end
 
     # Wipe the current options and reset default values
@@ -78,7 +83,7 @@ module Bashcov
 
     def option_parser
       OptionParser.new do |opts|
-        opts.program_name = "bashcov"
+        opts.program_name = program_name
         opts.version = Bashcov::VERSION
         opts.banner = help opts.program_name
 
