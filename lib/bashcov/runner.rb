@@ -42,12 +42,12 @@ module Bashcov
 
           @coverage = xtrace_thread.value # wait for the thread to return
         rescue XtraceError => e
-          $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
-            Warning: encountered an error parsing Bash's output(error was:
-            #{e.message}). This can occur if your script or its path contains
-            the sequence `#{Regexp.escape Xtrace.delim}', or if your script
-            unsets LINENO. Aborting early; coverage report will be incomplete.
-          ERROR
+          write_warning <<-WARNING
+            encountered an error parsing Bash's output (error was:
+            #{e.message}).  This can occur if your script or its path contains
+            the sequence #{Xtrace.delim.inspect}, or if your script unsets
+            LINENO.  Aborting early; coverage report will be incomplete.
+          WARNING
 
           @coverage = e.files
         end
@@ -70,6 +70,11 @@ module Bashcov
 
   private
 
+    def write_warning(message)
+      warn format "%s: warning: %s", Bashcov.program_name,
+                  message.gsub(/^\s+/, "").lines.map(&:chomp).join(" ")
+    end
+
     def run_xtrace(fd, env, options)
       # Older versions of Bash (< 4.1) don't have the BASH_XTRACEFD variable
       if Bashcov.bash_xtracefd?
@@ -82,12 +87,12 @@ module Bashcov
 
         # Don't bother issuing warning if we're silencing output anyway
         unless Bashcov.mute
-          $stderr.puts <<-ERROR.gsub(/^\s+/, "").lines.map { |s| s.chomp("\n") }.join(" ")
-            Warning: you are using an older Bash version that does not support
+          write_warning <<-WARNING
+            you are using a version of Bash that does not support
             BASH_XTRACEFD. All xtrace output will print to standard error, and
             your script's output on standard error will not be printed to the
             console.
-          ERROR
+          WARNING
         end
       end
 
@@ -129,7 +134,10 @@ module Bashcov
         next if filename.file?
 
         @coverage.delete filename
-        warn "Warning: #{filename} was executed but has been deleted since then - it won't be reported in coverage."
+        write_warning <<-WARNING
+          #{filename} was executed but has been deleted since then - it won't
+          be reported in coverage.
+        WARNING
       end
     end
 

@@ -24,11 +24,10 @@ module Bashcov
     class << self
       attr_writer :delim, :ps4
 
-      # [String] A randomly-generated token for delimiting the fields of the
-      #   +{PS4}+
+      # [String] A randomly-generated UUID or the ASCII RS (record separator)
+      #   character, depending on whether the current Bash suffers from the
+      #   truncated +PS4+ bug.  Used for delimiting the fields of the +PS4+.
       def delim
-        # ASCII RS (record separator) character.  Not invalid in a file name,
-        # but unlikely to appear in one.
         @delim ||= (Bashcov.truncated_ps4? && !Bashcov.use_trap) ? "\x1E" : SecureRandom.uuid
       end
 
@@ -112,8 +111,8 @@ module Bashcov
       # +@files+ to the exception in order to propagate the existing coverage
       # data back to the {Bashcov::Runner} instance.
       unless lineno =~ /\A\d+\z/
-        got = lineno.empty? ? "<nil>" : lineno
-        raise XtraceError.new("expected integer for $LINENO, got `#{got}'", @files)
+        lineno_err = (lineno.empty? ? nil : lineno).inspect
+        raise XtraceError.new("expected integer for LINENO, got `#{lineno_err}'", @files)
       end
 
       # The next three fields will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
