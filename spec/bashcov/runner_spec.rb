@@ -4,11 +4,7 @@ require "benchmark"
 describe Bashcov::Runner do
   let(:runner) { Bashcov::Runner.new([Bashcov.bash_path, test_suite]) }
 
-  around :each do |example|
-    # Reset the options to, among other things, pick up on a new working
-    # directory.
-    Bashcov.set_default_options!
-
+  around(:each) do |example|
     Dir.chdir File.dirname(test_suite) do
       example.run
     end
@@ -71,7 +67,7 @@ describe Bashcov::Runner do
     end
 
     context "given a script that unsets $LINENO" do
-      include_context("temporary script", "unset_lineno") do
+      include_context "temporary script", "unset_lineno" do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-EOF.gsub(/\A\s+/, "")
@@ -98,7 +94,20 @@ describe Bashcov::Runner do
     end
 
     context "given a script whose path contains Xtrace.delim" do
-      include_context("temporary script", Bashcov::Xtrace.delim) do
+      # @note Due to the way that RSpec orders evaluation of contexts,
+      # examples, and example hooks, {Bashcov::Xtrace.delim} in:
+      #   +include_context "temporary script", Bashcov::Xtrace.delim+
+      # gets expanded prior to setting Bashcov.bash_path in +spec_helper.rb+,
+      # which causes an inappropriate value for {Bashcov::Xtrace.delim} if the
+      # default Bash (+/bin/bash+) does not suffer from the truncated +PS4+ bug
+      # but the Bash keyed to the +BASHCOV_BASH_PATH+ environment variable
+      # does.  We therefore have to run the same code block here to ensure the
+      # value is set properly at the time the temporary script is created.
+      unless (bash_path = ENV["BASHCOV_BASH_PATH"]).nil?
+        Bashcov.bash_path = bash_path
+      end
+
+      include_context "temporary script", Bashcov::Xtrace.delim do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-EOF.gsub(/\A\s+/, "")
@@ -124,7 +133,7 @@ describe Bashcov::Runner do
     end
 
     context "given a version of Bash prior to 4.1" do
-      include_context("temporary script", "no_stderr") do
+      include_context "temporary script", "no_stderr" do
         let(:stderr_output) { "AIEEE!" }
 
         # @note "temporary script" context expects +script_text+ to be defined.
@@ -136,7 +145,7 @@ describe Bashcov::Runner do
           EOF
         end
 
-        let(:xtracefd_warning) { Regexp.new(/Warning:.*older Bash version/) }
+        let(:xtracefd_warning) { Regexp.new(/warning:.*version of Bash/) }
       end
 
       context "when mute is true" do

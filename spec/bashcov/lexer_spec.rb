@@ -1,5 +1,4 @@
 require "spec_helper"
-require "bashcov/lexer"
 
 describe Bashcov::Lexer do
   describe "#initialize" do

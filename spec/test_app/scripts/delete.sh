@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cat > tmp.sh <<'BASH'
-#!/usr/bin/env bash
+#!/bin/bash
 rm -v $0
 BASH
 
