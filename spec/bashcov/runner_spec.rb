@@ -103,9 +103,7 @@ describe Bashcov::Runner do
       # but the Bash keyed to the +BASHCOV_BASH_PATH+ environment variable
       # does.  We therefore have to run the same code block here to ensure the
       # value is set properly at the time the temporary script is created.
-      unless (bash_path = ENV["BASHCOV_BASH_PATH"]).nil?
-        Bashcov.bash_path = bash_path
-      end
+      Bashcov.bash_path = ENV["BASHCOV_BASH_PATH"] unless ENV["BASHCOV_BASH_PATH"].nil?
 
       include_context "temporary script", Bashcov::Xtrace.delim do
         # @note "temporary script" context expects +script_text+ to be defined.
@@ -127,7 +125,7 @@ describe Bashcov::Runner do
           # Hack to execute this line (and get it counted in the coverage
           # stats) even if we're on Bash 4.2
           expect(tmprunner.result[tmpscript.path]).to \
-            contain_exactly(*bad_path_coverage) if Bashcov.truncated_ps4?
+            contain_exactly(*bad_path_coverage) unless Bashcov.truncated_ps4?
         end
       end
     end

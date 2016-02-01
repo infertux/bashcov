@@ -22,9 +22,7 @@ RSpec.configure do |config|
     Bashcov.set_default_options!
 
     # Permit setting the path to Bash from the controlling environment
-    unless (bash_path = ENV["BASHCOV_BASH_PATH"]).nil?
-      Bashcov.bash_path = bash_path
-    end
+    Bashcov.bash_path = ENV["BASHCOV_BASH_PATH"] unless ENV["BASHCOV_BASH_PATH"].nil?
 
     Bashcov.mute = true # don't print testsuite output
   end
