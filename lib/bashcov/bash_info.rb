@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bashcov
   # Module exposing information concerning the installed Bash version
   # @note methods do not cache results because +bash_path+ can change at

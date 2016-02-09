@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_context "temporary script" do |script_basename|
   before(:each) do
     raise NoMethodError, "You must define `script_text'" unless respond_to?(:script_text)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "optparse"
 require "ostruct"
 require "pathname"
@@ -71,7 +73,7 @@ module Bashcov
     end
 
     def help(program_name)
-      <<-HELP.gsub!(/^ +/, "").gsub!("\t", " " * 4)
+      <<-HELP.gsub(/^ +/, "").gsub("\t", " " * 4)
         Usage: #{program_name} [options] [--] <command> [options]
         Examples:
         \t#{program_name} ./script.sh

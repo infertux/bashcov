@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bashcov
   # Classes for streaming token-delimited fields
   class FieldStream

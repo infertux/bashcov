@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bashcov
   # {Line} represents a line of code.
   module Line

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bashcov
   # Signals an error parsing Bash's debugging output.
   class XtraceError < ::RuntimeError

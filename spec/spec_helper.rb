@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 unless RUBY_ENGINE == "rbx" # coverage support is broken on rbx
   require "simplecov"
   require "coveralls"

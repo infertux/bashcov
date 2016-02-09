@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bashcov/errors"
 require "bashcov/field_stream"
 require "bashcov/lexer"
