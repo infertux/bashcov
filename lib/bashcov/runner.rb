@@ -106,14 +106,11 @@ module Bashcov
     #   block
     # @return [Object, ...] the value returned by the calling block
     def inject_xtrace_flag!
-      return enum_for(__method__) unless block_given?
-
       existing_flags_s = ENV["SHELLOPTS"]
       existing_flags = (existing_flags_s || "").split(":")
       ENV["SHELLOPTS"] = (existing_flags | ["xtrace"]).join(":")
 
-      # Calls the provided block
-      Proc.new.call
+      yield
     ensure
       ENV["SHELLOPTS"] = existing_flags_s
     end
