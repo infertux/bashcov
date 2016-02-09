@@ -58,6 +58,8 @@ module Bashcov
       @options.mute             = false
     end
 
+  private
+
     # Passes off +respond_to?+ to {options} for missing methods
     def respond_to_missing?(*args)
       options.respond_to?(*args)
@@ -67,8 +69,6 @@ module Bashcov
     def method_missing(method_name, *args, &block)
       options.send(method_name, *args, &block)
     end
-
-  private
 
     def help(program_name)
       <<-HELP.gsub!(/^ +/, "").gsub!("\t", " " * 4)
