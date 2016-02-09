@@ -35,7 +35,7 @@ shared_context "delimited stream" do |field_count, start = "START>"|
   # to take 22 from the generator because 10 of these will be +delimiter+ and
   # 2 will be +start+.
   let(:input) { generator.take((taken + 1) * 2).join }
-  let(:read)  { StringIO.new(input).tap(&:close_write) }
+  let(:read) { StringIO.new(input).tap(&:close_write) }
   let(:stream) { Bashcov::FieldStream.new(read) }
 
   # Generate a series of fields delimited by +delimiter+

@@ -17,7 +17,7 @@ module Bashcov
       bash_versinfo[0..1].join.to_i >= 41
     end
 
-    # @param [Integer] length  the number of bytes to test; default 128
+    # @param [Integer] length the number of bytes to test; default 128
     # @return [Boolean] whether Bash supports a +PS4+ of at least a given
     #   number of bytes
     # @see https://tiswww.case.edu/php/chet/bash/CHANGES

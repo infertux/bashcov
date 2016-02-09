@@ -103,7 +103,7 @@ describe Bashcov::Runner do
       # which causes an inappropriate value for {Bashcov::Xtrace.delimiter} if the
       # default Bash (+/bin/bash+) does not suffer from the truncated +PS4+ bug
       # but the Bash keyed to the +BASHCOV_BASH_PATH+ environment variable
-      # does.  We therefore have to run the same code block here to ensure the
+      # does. We therefore have to run the same code block here to ensure the
       # value is set properly at the time the temporary script is created.
       Bashcov.bash_path = ENV["BASHCOV_BASH_PATH"] unless ENV["BASHCOV_BASH_PATH"].nil?
 

@@ -26,12 +26,12 @@ module Bashcov
 
       # [String] A randomly-generated UUID or the ASCII RS (record separator)
       #   character, depending on whether the current Bash suffers from the
-      #   truncated +PS4+ bug.  Used for delimiting the fields of the +PS4+.
+      #   truncated +PS4+ bug. Used for delimiting the fields of the +PS4+.
       def delimiter
         @delimiter ||= Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
       end
 
-      # @return [String] +PS4+ variable used for xtrace output.  Expands to
+      # @return [String] +PS4+ variable used for xtrace output. Expands to
       #   internal Bash variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+,
       #   delimited by {delimiter}.
       # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
@@ -48,7 +48,7 @@ module Bashcov
       end
     end
 
-    # Regexp to match the beginning of the {.ps4}.  {DEPTH_CHAR} will be
+    # Regexp to match the beginning of the {.ps4}. {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
     PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m
 
@@ -112,7 +112,7 @@ module Bashcov
     # @raise [XtraceError] when +lineno+ is not composed solely of digits,
     #   indicating that something has gone wrong with parsing the +PS4+ fields
     def parse_hit!(lineno, *paths)
-      # If +LINENO+ isn't a series of digits, something has gone wrong.  Add
+      # If +LINENO+ isn't a series of digits, something has gone wrong. Add
       # +@files+ to the exception in order to propagate the existing coverage
       # data back to the {Bashcov::Runner} instance.
       unless lineno =~ /\A\d+\z/
@@ -130,7 +130,7 @@ module Bashcov
 
       script = find_script(bash_source)
 
-      # For one-liners, +LINENO+ == 0.  Do this to avoid an +IndexError+;
+      # For one-liners, +LINENO+ == 0. Do this to avoid an +IndexError+;
       # one-liners will be culled from the coverage results later on.
       index = (lineno_i = lineno.to_i) > 1 ? lineno_i - 1 : 0
 
@@ -140,7 +140,7 @@ module Bashcov
     end
 
     # Scans entries in the +PWD+ stack, checking whether +entry/$BASH_SOURCE+
-    # refers to an existing file.  Scans the stack in reverse on the assumption
+    # refers to an existing file. Scans the stack in reverse on the assumption
     # that more-recent entries are more plausible candidates for base
     # directories from which +BASH_SOURCE+ can be reached.
     # @param [Pathname] bash_source expanded +BASH_SOURCE+

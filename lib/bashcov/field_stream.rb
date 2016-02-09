@@ -29,7 +29,7 @@ module Bashcov
     # @param [Regexp]      start_match a +Regexp+ that, when matched against the
     #   input stream, signifies the beginning of the next series of fields to
     #   yield
-    # @yieldparam [String] field each field extracted from the stream.  If
+    # @yieldparam [String] field each field extracted from the stream. If
     #   +start_match+ is matched with fewer than +field_count+ fields yielded
     #   since the last match, yields empty strings until +field_count+ is
     #   reached.

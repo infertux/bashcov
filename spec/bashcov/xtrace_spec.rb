@@ -11,7 +11,7 @@ describe Bashcov::Xtrace do
       Bashcov::Xtrace.delimiter = stored_delimiter
     end
 
-    context "On Bash 4.2 and prior" do
+    context "on Bash 4.2 and prior" do
       it "is the ASCII record separator character" do
         # Fake that we're on 4.2
         allow(Bashcov).to receive(:truncated_ps4?).and_return(true)
