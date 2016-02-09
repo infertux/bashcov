@@ -14,7 +14,7 @@ coverage = runner.result
 
 require "simplecov"
 
-SimpleCov.command_name Bashcov.name
+SimpleCov.command_name Bashcov.fullname
 SimpleCov.root Bashcov.root_directory
 SimpleCov::Result.new(coverage).format!
 
