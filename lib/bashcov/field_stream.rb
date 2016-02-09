@@ -8,8 +8,8 @@ module Bashcov
       @read = read
     end
 
-    # A convenience wrapper around +each_line(sep)+ that also does
-    # +chomp(sep)+ on the yielded line.
+    # A convenience wrapper around +each_line(delim)+ that also does
+    # +chomp(delim)+ on the yielded line.
     # @param [String, nil] delim the field separator for the stream
     # @return [void]
     # @yieldparam [String] field each +chomp+ed line

@@ -28,7 +28,7 @@ module Bashcov
       #   character, depending on whether the current Bash suffers from the
       #   truncated +PS4+ bug.  Used for delimiting the fields of the +PS4+.
       def delim
-        @delim ||= (Bashcov.truncated_ps4? && !Bashcov.use_trap) ? "\x1E" : SecureRandom.uuid
+        @delim ||= Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
       end
 
       # @return [String] +PS4+ variable used for xtrace output.  Expands to
