@@ -8,7 +8,7 @@ require "bashcov"
 
 Bashcov.parse_options! ARGV
 
-runner = Bashcov::Runner.new Bashcov.options.command
+runner = Bashcov::Runner.new Bashcov.command
 status = runner.run
 coverage = runner.result
 

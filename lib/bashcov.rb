@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "ostruct"
 require "pathname"
 
 require "bashcov/bash_info"
@@ -13,9 +12,12 @@ require "bashcov/version"
 module Bashcov
   extend Bashcov::BashInfo
 
+  Options = Struct.new(
+    *%i(skip_uncovered mute bash_path root_directory command)
+  )
+
   class << self
-    # @return [OpenStruct] The +OpenStruct+ object representing Bashcov's
-    # execution environment
+    # @return [Struct] The +Struct+ object representing Bashcov configuration
     def options
       set_default_options! unless defined?(@options)
       @options
@@ -52,12 +54,12 @@ module Bashcov
 
     # Wipe the current options and reset default values
     def set_default_options!
-      @options = OpenStruct.new
+      @options = Options.new
 
-      @options.root_directory   = Dir.getwd
       @options.skip_uncovered   = false
-      @options.bash_path        = "/bin/bash"
       @options.mute             = false
+      @options.bash_path        = "/bin/bash"
+      @options.root_directory   = Dir.getwd
     end
 
   private
@@ -69,7 +71,7 @@ module Bashcov
 
     # Dispatches missing methods to {options}
     def method_missing(method_name, *args, &block)
-      options.send(method_name, *args, &block)
+      options.public_send(method_name, *args, &block)
     end
 
     def help(program_name)

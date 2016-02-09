@@ -44,9 +44,6 @@ describe Bashcov do
       expect(Bashcov).to respond_to(:foo)
       expect(Bashcov.foo).to eq("bar")
 
-      expect(Bashcov.options.bar).to be nil
-      expect(Bashcov.bar).to be nil
-
       allow(Bashcov.options).to receive(:baz).and_raise(NoMethodError, "whoops")
       expect { Bashcov.baz }.to raise_error do |error|
         expect(error).to be_a(NoMethodError)
