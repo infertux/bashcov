@@ -74,7 +74,7 @@ module Bashcov
       options.public_send(method_name, *args, &block)
     end
 
-    def help(program_name)
+    def help
       <<-HELP.gsub(/^ +/, "").gsub("\t", " " * 4)
         Usage: #{program_name} [options] [--] <command> [options]
         Examples:
@@ -89,7 +89,7 @@ module Bashcov
       OptionParser.new do |opts|
         opts.program_name = program_name
         opts.version = Bashcov::VERSION
-        opts.banner = help opts.program_name
+        opts.banner = help
 
         opts.separator "\nSpecific options:"
 
