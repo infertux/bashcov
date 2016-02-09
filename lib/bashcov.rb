@@ -12,6 +12,7 @@ require "bashcov/version"
 module Bashcov
   extend Bashcov::BashInfo
 
+  # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
     *%i(skip_uncovered mute bash_path root_directory command)
   )
