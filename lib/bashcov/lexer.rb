@@ -22,7 +22,9 @@ module Bashcov
       @filename = filename
       @coverage = coverage
 
-      raise ArgumentError, "#{@filename} is not a file" unless File.file?(@filename)
+      unless File.file?(@filename)
+        raise ArgumentError, "#{@filename} is not a file"
+      end
     end
 
     # Yields uncovered relevant lines.

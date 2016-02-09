@@ -1,7 +1,7 @@
 sudo: false
 language: ruby
 after_script:
-  - cane
+  - cane --style-exclude 'spec/**/*.rb'
   - yard stats --list-undoc
 os:
   - linux

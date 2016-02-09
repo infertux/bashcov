@@ -36,7 +36,8 @@ module Bashcov
         command_pid = Process.spawn env, *@command, options # spawn the command
 
         begin
-          xtrace_thread = Thread.new { @xtrace.read } # start processing the xtrace output
+          # start processing the xtrace output
+          xtrace_thread = Thread.new { @xtrace.read }
 
           Process.wait command_pid
 

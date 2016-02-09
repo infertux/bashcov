@@ -39,9 +39,12 @@ module Bashcov
         @ps4 ||= make_ps4(*FIELDS)
       end
 
-      # @return [String] a {delimiter}-separated +String+ suitable for use as +PS4+
+      # @return [String] a {delimiter}-separated +String+ suitable for use as
+      #   +PS4+
       def make_ps4(*fields)
-        fields.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + delimiter + e } + delimiter
+        fields.reduce(DEPTH_CHAR + PREFIX) do |memo, field|
+          memo + delimiter + field
+        end + delimiter
       end
     end
 
@@ -82,7 +85,9 @@ module Bashcov
       @field_stream.read = @read
 
       field_count = FIELDS.length
-      fields = @field_stream.each(self.class.delimiter, field_count, PS4_START_REGEXP)
+      fields = @field_stream.each(
+        self.class.delimiter, field_count, PS4_START_REGEXP
+      )
 
       # +take(field_count)+ would be more natural here, but doesn't seem to
       # play nicely with +Enumerator+s backed by +IO+ objects.
@@ -111,8 +116,11 @@ module Bashcov
       # +@files+ to the exception in order to propagate the existing coverage
       # data back to the {Bashcov::Runner} instance.
       unless lineno =~ /\A\d+\z/
-        lineno_err = (lineno.empty? ? nil : lineno).inspect
-        raise XtraceError.new("expected integer for LINENO, got `#{lineno_err}'", @files)
+        lineno_err = lineno.empty? ? nil : lineno
+
+        raise XtraceError.new(
+          "expected integer for LINENO, got `#{lineno_err.inspect}'", @files
+        )
       end
 
       # The next three fields will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
@@ -161,8 +169,7 @@ module Bashcov
       if pwd == @oldpwd_stack[-1] && oldpwd == @oldpwd_stack[-2]
         @pwd_stack.pop
         @oldpwd_stack.pop
-      # New cd/pushd.
-      else
+      else # New cd/pushd
         @pwd_stack << pwd
         @oldpwd_stack << oldpwd
       end
