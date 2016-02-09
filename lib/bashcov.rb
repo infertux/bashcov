@@ -1,29 +1,22 @@
 require "optparse"
 require "ostruct"
-require "bashcov/version"
-require "bashcov/lexer"
-require "bashcov/line"
+require "pathname"
+
+require "bashcov/bash_info"
 require "bashcov/runner"
-require "bashcov/xtrace"
+require "bashcov/version"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
+  extend Bashcov::BashInfo
+
   class << self
-    # @return [OpenStruct] Bashcov settings
-    attr_reader :options
-
-    # @return [String] The project's root directory
-    def root_directory
-      @root_directory ||= Dir.pwd
-    end
-
-    # Sets default options overriding any existing ones.
-    # @return [void]
-    def set_default_options!
-      @options ||= OpenStruct.new
-      @options.skip_uncovered = false
-      @options.mute = false
+    # @return [OpenStruct] The +OpenStruct+ object representing Bashcov's
+    # execution environment
+    def options
+      set_default_options! unless defined?(@options)
+      @options
     end
 
     # Parses the given CLI arguments and sets +options+.
@@ -31,18 +24,48 @@ module Bashcov
     # @raise [SystemExit] if invalid arguments are given
     # @return [void]
     def parse_options!(args)
-      option_parser.parse!(args)
+      begin
+        option_parser.parse!(args)
+      rescue OptionParser::ParseError, Errno::ENOENT => e
+        abort "#{option_parser.program_name}: #{e.message}"
+      end
 
       if args.empty?
         abort("You must give exactly one command to execute.")
       else
-        @options.command = args.join(" ")
+        options.command = args.unshift(bash_path)
       end
     end
 
+    # @return [String] Program name
+    def program_name
+      "bashcov"
+    end
+
     # @return [String] Program name including version for easy consistent output
-    def name
-      "bashcov v#{VERSION}"
+    # @note +fullname+ instead of name to avoid clashing with +Module.name+
+    def fullname
+      "#{program_name} v#{VERSION}"
+    end
+
+    # Wipe the current options and reset default values
+    def set_default_options!
+      @options = OpenStruct.new
+
+      @options.root_directory   = Dir.getwd
+      @options.skip_uncovered   = false
+      @options.bash_path        = "/bin/bash"
+      @options.mute             = false
+    end
+
+    # Passes off +respond_to?+ to {options} for missing methods
+    def respond_to_missing?(*args)
+      options.respond_to?(*args)
+    end
+
+    # Dispatches missing methods to {options}
+    def method_missing(method_name, *args, &block)
+      options.send(method_name, *args, &block)
     end
 
   private
@@ -60,17 +83,25 @@ module Bashcov
 
     def option_parser
       OptionParser.new do |opts|
-        opts.program_name = "bashcov"
+        opts.program_name = program_name
         opts.version = Bashcov::VERSION
         opts.banner = help opts.program_name
 
         opts.separator "\nSpecific options:"
 
         opts.on("-s", "--skip-uncovered", "Do not report uncovered files") do |s|
-          @options.skip_uncovered = s
+          options.skip_uncovered = s
         end
         opts.on("-m", "--mute", "Do not print script output") do |m|
-          @options.mute = m
+          options.mute = m
+        end
+        opts.on("--bash-path PATH", "Path to Bash executable") do |p|
+          raise Errno::ENOENT, p unless File.file? p
+          options.bash_path = p
+        end
+        opts.on("--root PATH", "Project root directory") do |d|
+          raise Errno::ENOENT, d unless File.directory? d
+          options.root_directory = d
         end
 
         opts.separator "\nCommon options:"
@@ -86,6 +117,3 @@ module Bashcov
     end
   end
 end
-
-# Make sure default options are set
-Bashcov.set_default_options!
