@@ -31,7 +31,7 @@ module Bashcov
     def uncovered_relevant_lines
       lineno = 0
       File.open(@filename, "rb").each_line do |line|
-        if @coverage[lineno] == Bashcov::Line::IGNORED && revelant?(line)
+        if @coverage[lineno] == Bashcov::Line::IGNORED && relevant?(line)
           yield lineno
         end
         lineno += 1
@@ -40,7 +40,7 @@ module Bashcov
 
   private
 
-    def revelant?(line)
+    def relevant?(line)
       line.strip!
 
       !line.empty? and
