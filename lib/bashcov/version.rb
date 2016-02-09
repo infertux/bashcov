@@ -2,6 +2,6 @@
 
 # :nodoc:
 module Bashcov
-  # Current distribution version
-  VERSION = "1.2.1"
+  # Current Bashcov version
+  VERSION = "1.3.0"
 end
