@@ -9,19 +9,19 @@ describe Bashcov::FieldStream do
 
   describe "#each_field" do
     it "removes the field delimiter" do
-      expect(stream.each_field(delim).to_a).to all(not_end_with(delim))
+      expect(stream.each_field(delimiter).to_a).to all(not_end_with(delimiter))
     end
 
     context "given a block" do
       it "yields each field in the stream" do
         expected = [start] + [String] * taken
-        expect { |e| stream.each_field(delim, &e) }.to yield_successive_args(*expected)
+        expect { |e| stream.each_field(delimiter, &e) }.to yield_successive_args(*expected)
       end
     end
 
     context "without a block" do
       it "returns an enumerator" do
-        expect(stream.each_field(delim)).to be_an(Enumerator)
+        expect(stream.each_field(delimiter)).to be_an(Enumerator)
       end
     end
   end
@@ -30,14 +30,14 @@ describe Bashcov::FieldStream do
     context "given a block" do
       it "yields each field in the stream" do
         expected = [String] * taken
-        expect { |e| stream.each(delim, field_count, start_match, &e) }.to \
+        expect { |e| stream.each(delimiter, field_count, start_match, &e) }.to \
           yield_successive_args(*expected)
       end
     end
 
     context "without a block" do
       it "returns an enumerator" do
-        expect(stream.each(delim, field_count, start_match)).to be_an(Enumerator)
+        expect(stream.each(delimiter, field_count, start_match)).to be_an(Enumerator)
       end
     end
 
@@ -47,7 +47,7 @@ describe Bashcov::FieldStream do
 
       it "returns empty strings for the remaining fields" do
         expected = [String] * taken + [""] * empty_count
-        expect { |e| stream.each(delim, field_count, start_match, &e) }.to \
+        expect { |e| stream.each(delimiter, field_count, start_match, &e) }.to \
           yield_successive_args(*expected)
       end
     end

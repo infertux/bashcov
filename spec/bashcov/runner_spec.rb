@@ -95,19 +95,19 @@ describe Bashcov::Runner do
       end
     end
 
-    context "given a script whose path contains Xtrace.delim" do
+    context "given a script whose path contains Xtrace.delimiter" do
       # @note Due to the way that RSpec orders evaluation of contexts,
-      # examples, and example hooks, {Bashcov::Xtrace.delim} in:
-      #   +include_context "temporary script", Bashcov::Xtrace.delim+
+      # examples, and example hooks, {Bashcov::Xtrace.delimiter} in:
+      #   +include_context "temporary script", Bashcov::Xtrace.delimiter+
       # gets expanded prior to setting Bashcov.bash_path in +spec_helper.rb+,
-      # which causes an inappropriate value for {Bashcov::Xtrace.delim} if the
+      # which causes an inappropriate value for {Bashcov::Xtrace.delimiter} if the
       # default Bash (+/bin/bash+) does not suffer from the truncated +PS4+ bug
       # but the Bash keyed to the +BASHCOV_BASH_PATH+ environment variable
       # does.  We therefore have to run the same code block here to ensure the
       # value is set properly at the time the temporary script is created.
       Bashcov.bash_path = ENV["BASHCOV_BASH_PATH"] unless ENV["BASHCOV_BASH_PATH"].nil?
 
-      include_context "temporary script", Bashcov::Xtrace.delim do
+      include_context "temporary script", Bashcov::Xtrace.delimiter do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-EOF.gsub(/\A\s+/, "")

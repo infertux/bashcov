@@ -10,31 +10,31 @@ module Bashcov
       @read = read
     end
 
-    # A convenience wrapper around +each_line(delim)+ that also does
-    # +chomp(delim)+ on the yielded line.
-    # @param [String, nil] delim the field separator for the stream
+    # A convenience wrapper around +each_line(delimiter)+ that also does
+    # +chomp(delimiter)+ on the yielded line.
+    # @param [String, nil] delimiter the field separator for the stream
     # @return [void]
     # @yieldparam [String] field each +chomp+ed line
-    def each_field(delim)
-      return enum_for(__method__, delim) unless block_given?
+    def each_field(delimiter)
+      return enum_for(__method__, delimiter) unless block_given?
 
-      read.each_line(delim) do |line|
-        yield line.chomp(delim)
+      read.each_line(delimiter) do |line|
+        yield line.chomp(delimiter)
       end
     end
 
     # Yields fields extracted from a input stream
-    # @param [String, nil] delim   the field separator
-    # @param [Integer] field_count the number of fields to extract
-    # @param [Regexp] start_match  a +Regexp+ that, when matched against the
+    # @param [String, nil] delimiter   the field separator
+    # @param [Integer]     field_count the number of fields to extract
+    # @param [Regexp]      start_match a +Regexp+ that, when matched against the
     #   input stream, signifies the beginning of the next series of fields to
     #   yield
     # @yieldparam [String] field each field extracted from the stream.  If
     #   +start_match+ is matched with fewer than +field_count+ fields yielded
     #   since the last match, yields empty strings until +field_count+ is
     #   reached.
-    def each(delim, field_count, start_match)
-      return enum_for(__method__, delim, field_count, start_match) unless block_given?
+    def each(delimiter, field_count, start_match)
+      return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
 
       # Whether the current field is the start-of-fields match
       matched_start = nil
@@ -43,7 +43,7 @@ module Bashcov
       # match
       seen_fields = 0
 
-      fields = each_field(delim)
+      fields = each_field(delimiter)
 
       # Close over +field_count+ and +seen_fields+ to yield empty strings to
       # the caller when we've already hit the next start-of-fields match

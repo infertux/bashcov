@@ -46,9 +46,9 @@ module Bashcov
         rescue XtraceError => e
           write_warning <<-WARNING
             encountered an error parsing Bash's output (error was:
-            #{e.message}).  This can occur if your script or its path contains
-            the sequence #{Xtrace.delim.inspect}, or if your script unsets
-            LINENO.  Aborting early; coverage report will be incomplete.
+            #{e.message}). This can occur if your script or its path contains
+            the sequence #{Xtrace.delimiter.inspect}, or if your script unsets
+            LINENO. Aborting early; coverage report will be incomplete.
           WARNING
 
           @coverage = e.files

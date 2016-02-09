@@ -22,26 +22,26 @@ module Bashcov
     FIELDS = %w(${LINENO} ${BASH_SOURCE} ${PWD} ${OLDPWD}).freeze
 
     class << self
-      attr_writer :delim, :ps4
+      attr_writer :delimiter, :ps4
 
       # [String] A randomly-generated UUID or the ASCII RS (record separator)
       #   character, depending on whether the current Bash suffers from the
       #   truncated +PS4+ bug.  Used for delimiting the fields of the +PS4+.
-      def delim
-        @delim ||= Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
+      def delimiter
+        @delimiter ||= Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
       end
 
       # @return [String] +PS4+ variable used for xtrace output.  Expands to
       #   internal Bash variables +BASH_SOURCE+, +PWD+, +OLDPWD+, and +LINENO+,
-      #   delimited by {delim}.
+      #   delimited by {delimiter}.
       # @see http://www.gnu.org/software/bash/manual/bashref.html#index-PS4
       def ps4
         @ps4 ||= make_ps4(*FIELDS)
       end
 
-      # @return [String] a {delim}-separated +String+ suitable for use as +PS4+
+      # @return [String] a {delimiter}-separated +String+ suitable for use as +PS4+
       def make_ps4(*fields)
-        fields.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + delim + e } + delim
+        fields.reduce(DEPTH_CHAR + PREFIX) { |a, e| a + delimiter + e } + delimiter
       end
     end
 
@@ -82,7 +82,7 @@ module Bashcov
       @field_stream.read = @read
 
       field_count = FIELDS.length
-      fields = @field_stream.each(self.class.delim, field_count, PS4_START_REGEXP)
+      fields = @field_stream.each(self.class.delimiter, field_count, PS4_START_REGEXP)
 
       # +take(field_count)+ would be more natural here, but doesn't seem to
       # play nicely with +Enumerator+s backed by +IO+ objects.

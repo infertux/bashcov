@@ -3,19 +3,19 @@
 require "spec_helper"
 
 describe Bashcov::Xtrace do
-  describe ".delim" do
+  describe ".delimiter" do
     around(:each) do |example|
-      stored_delim = Bashcov::Xtrace.delim
-      Bashcov::Xtrace.delim = nil
+      stored_delimiter = Bashcov::Xtrace.delimiter
+      Bashcov::Xtrace.delimiter = nil
       example.run
-      Bashcov::Xtrace.delim = stored_delim
+      Bashcov::Xtrace.delimiter = stored_delimiter
     end
 
     context "On Bash 4.2 and prior" do
       it "is the ASCII record separator character" do
         # Fake that we're on 4.2
         allow(Bashcov).to receive(:truncated_ps4?).and_return(true)
-        expect(Bashcov::Xtrace.delim).to eq("\x1E")
+        expect(Bashcov::Xtrace.delimiter).to eq("\x1E")
       end
     end
 
@@ -24,7 +24,7 @@ describe Bashcov::Xtrace do
 
       it "is a UUID" do
         allow(Bashcov).to receive(:truncated_ps4?).and_return(false)
-        expect(Bashcov::Xtrace.delim).to match(uuid_match)
+        expect(Bashcov::Xtrace.delimiter).to match(uuid_match)
       end
     end
   end
