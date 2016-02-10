@@ -15,14 +15,13 @@ Gem::Specification.new do |gem|
   gem.license       = "MIT"
 
   gem.files         = `git ls-files -z`.split("\x0").reject { |f| f.start_with?(".") || f.match(%r{\A(test|spec|features)/}) }
-  gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.executables   = gem.files.grep(%r{\Abin/}).map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
   gem.add_dependency "simplecov", "~> 0.11"
 
   gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec", "~> 3"
+  gem.add_development_dependency "rspec"
   gem.add_development_dependency "guard-rspec"
   gem.add_development_dependency "rb-inotify"
   gem.add_development_dependency "cane"
