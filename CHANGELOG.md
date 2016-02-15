@@ -1,6 +1,7 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.3.0...master))
 
-  * TBD
+  * [BUGFIX] Expand `PS4` variables to empty strings so that Bashcov won't
+             cause scripts to abort when Bash is running under `set -o nounset`
 
 ## v1.3.0, 2016-02-10 ([changes](https://github.com/infertux/bashcov/compare/v1.2.1...v1.3.0))
 

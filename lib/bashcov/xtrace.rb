@@ -19,7 +19,7 @@ module Bashcov
 
     # [Array<String>] A collection of Bash internal variables to expand in the
     #   {PS4}
-    FIELDS = %w(${LINENO} ${BASH_SOURCE} ${PWD} ${OLDPWD}).freeze
+    FIELDS = %w(${LINENO-} ${BASH_SOURCE-} ${PWD-} ${OLDPWD-}).freeze
 
     class << self
       attr_writer :delimiter, :ps4
