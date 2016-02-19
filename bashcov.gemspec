@@ -18,6 +18,8 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{\Abin/}).map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
+  gem.required_ruby_version = ">= 2.0.0"
+
   gem.add_dependency "simplecov", "~> 0.11"
 
   gem.add_development_dependency "rake"
