@@ -1,7 +1,11 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.3.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.3.1...master))
 
-  * [BUGFIX] Expand `PS4` variables to empty strings so that Bashcov won't
-             cause scripts to abort when Bash is running under `set -o nounset`
+  * TBD
+
+## v1.3.1, 2016-02-19 ([changes](https://github.com/infertux/bashcov/compare/v1.3.0...v1.3.1))
+
+  * [FEATURE] Add support back for Ruby 2.0.0 until it's officially EOL
+  * [BUGFIX]  Expand `PS4` variables to empty strings so that Bashcov won't cause scripts to abort when Bash is running under `set -o nounset`
 
 ## v1.3.0, 2016-02-10 ([changes](https://github.com/infertux/bashcov/compare/v1.2.1...v1.3.0))
 
