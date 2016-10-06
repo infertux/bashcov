@@ -63,8 +63,8 @@ module Bashcov
           matched_start = nil
           seen_fields = 0
         elsif seen_fields < field_count
-            yield field
-            seen_fields += 1
+          yield field
+          seen_fields += 1
         end
       end
 

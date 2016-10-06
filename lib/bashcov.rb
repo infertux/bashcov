@@ -71,7 +71,7 @@ module Bashcov
     end
 
     # Dispatches missing methods to {options}
-    def method_missing(method_name, *args, &block)
+    def method_missing(method_name, *args, &block) # rubocop:disable Style/MethodMissing
       options.public_send(method_name, *args, &block)
     end
 

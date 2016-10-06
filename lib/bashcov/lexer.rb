@@ -22,7 +22,7 @@ module Bashcov
       @filename = filename
       @coverage = coverage
 
-      unless File.file?(@filename)
+      unless File.file?(@filename) # rubocop:disable Style/GuardClause
         raise ArgumentError, "#{@filename} is not a file"
       end
     end
@@ -45,10 +45,10 @@ module Bashcov
     def relevant?(line)
       line.strip!
 
-      !line.empty? and
-        !IGNORE_IS.include? line and
-        !line.start_with?(*IGNORE_START_WITH) and
-        !line.end_with?(*IGNORE_END_WITH) and
+      !line.empty? &&
+        !IGNORE_IS.include?(line) &&
+        !line.start_with?(*IGNORE_START_WITH) &&
+        !line.end_with?(*IGNORE_END_WITH) &&
         line !~ /\A\w+\(\)/ # function declared without the 'function' keyword
     end
   end

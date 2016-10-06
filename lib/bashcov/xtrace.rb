@@ -12,10 +12,10 @@ module Bashcov
   class Xtrace
     # [String] Character that will be used to indicate the nesting level of
     #   +xtrace+d instructions
-    DEPTH_CHAR = "+"
+    DEPTH_CHAR = "+".freeze
 
     # [String] Prefix used in +PS4+ to identify relevant output
-    PREFIX = "BASHCOV>"
+    PREFIX = "BASHCOV>".freeze
 
     # [Array<String>] A collection of Bash internal variables to expand in the
     #   {PS4}

@@ -1,6 +1,17 @@
-inherit_from:
-  - https://gist.githubusercontent.com/infertux/cdd2ccc6e0a0cd94f458/raw
+Metrics:
+  Enabled: false
+
+Lint/UnneededSplatExpansion:
+  Enabled: false
+
+Style/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Style/StringLiterals:
+  Enabled: false
 
 Style/SpecialGlobalVars:
   Enabled: false
 
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma
