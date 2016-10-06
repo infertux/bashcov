@@ -1,20 +1,48 @@
-sudo: false
+sudo: required
 language: ruby
+addons:
+  apt:
+    packages:
+    - lftp
+cache:
+  directories:
+    - bash
+before_script:
+  - whereis bash
+  - bash --version
+  - ./spec/install_bash.sh
+  - bash --version
 after_script:
   - cane --style-exclude 'spec/**/*.rb'
   - yard stats --list-undoc
 os:
   - linux
-  - osx
 rvm:
   - 2.2.5
   - 2.3.1
-  - ruby-head
-  - rbx
-  - rbx-head
+env:
+  matrix:
+    - BASHVER=4.0
+    - BASHVER=4.1
+    - BASHVER=4.2
+    - BASHVER=4.3
+    - BASHVER=4.4
 matrix:
+  include:
+    - rvm: ruby-head
+      env: BASHVER=4.3
+    - rvm: ruby-head
+      env: BASHVER=4.4
+    - rvm: rbx-2
+      env: BASHVER=4.3
+    - rvm: rbx-2
+      env: BASHVER=4.4
+    - rvm: 2.3.1
+      os: osx
+      env: BASHVER=
   allow_failures:
     - os: osx
     - rvm: ruby-head
-    - rvm: rbx
-    - rvm: rbx-head
+    - rvm: rbx-2
+    - env: BASHVER=4.0
+    - env: BASHVER=4.1

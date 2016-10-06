@@ -12,14 +12,14 @@ describe Bashcov::Runner do
     end
   end
 
-  describe "#inject_xtrace_flag!" do
+  describe "#with_xtrace_flag" do
     context "without a SHELLOPTS variable" do
       before do
         ENV["SHELLOPTS"] = nil
       end
 
       it "adds the flags" do
-        runner.send(:inject_xtrace_flag!) do
+        runner.send(:with_xtrace_flag) do
           expect(ENV["SHELLOPTS"]).to eq("xtrace")
         end
       end
@@ -35,7 +35,7 @@ describe Bashcov::Runner do
       end
 
       it "merges the flags" do
-        runner.send(:inject_xtrace_flag!) do
+        runner.send(:with_xtrace_flag) do
           expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
         end
       end
@@ -120,7 +120,7 @@ describe Bashcov::Runner do
         let(:bad_path_coverage) { [nil, nil, 0] }
       end
 
-      context "given a version of Bash from 4.3 and up" do
+      context "given a version of Bash from 4.3 and up", if: BASHVER >= "4.3" do
         it "indicates that no lines were executed" do
           tmprunner.run
 
@@ -132,7 +132,7 @@ describe Bashcov::Runner do
       end
     end
 
-    context "given a version of Bash prior to 4.1" do
+    context "given a version of Bash prior to 4.1", if: BASHVER < "4.1" do
       include_context "temporary script", "no_stderr" do
         let(:stderr_output) { "AIEEE!" }
 

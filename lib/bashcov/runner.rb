@@ -99,7 +99,7 @@ module Bashcov
         end
       end
 
-      inject_xtrace_flag! do
+      with_xtrace_flag do
         yield
       end
     end
@@ -108,7 +108,7 @@ module Bashcov
     # @yield [void] adds "xtrace" to +SHELLOPTS+ and then runs the provided
     #   block
     # @return [Object, ...] the value returned by the calling block
-    def inject_xtrace_flag!
+    def with_xtrace_flag
       existing_flags_s = ENV["SHELLOPTS"]
       existing_flags = (existing_flags_s || "").split(":")
       ENV["SHELLOPTS"] = (existing_flags | ["xtrace"]).join(":")

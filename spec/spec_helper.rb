@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
-unless RUBY_ENGINE == "rbx" # coverage support is broken on rbx
-  require "simplecov"
-  require "coveralls"
+require "simplecov"
+require "coveralls"
 
-  formatters = [SimpleCov::Formatter::HTMLFormatter, Coveralls::SimpleCov::Formatter]
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
-  SimpleCov.start do
-    minimum_coverage 100
-    add_group "Sources", "lib"
-    add_group "Tests", "spec"
-  end
-end
+formatters = [SimpleCov::Formatter::HTMLFormatter, Coveralls::SimpleCov::Formatter]
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
+
+ENV["BASHVER"] ||= `bash -c 'echo ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}'`
+BASHVER = ENV["BASHVER"]
+puts "BASHVER=#{BASHVER}"
 
 require "bashcov"
 
