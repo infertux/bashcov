@@ -28,27 +28,13 @@ describe Bashcov do
     end
   end
 
-  describe ".respond_to_missing?" do
+  describe ".mute" do
     it "delegates to .options" do
-      allow(Bashcov.options).to receive(:foo).and_return("bar")
-      expect(Bashcov).to respond_to(:foo)
+      Bashcov.options.mute = true
+      expect(Bashcov).to respond_to(:mute)
+      expect(Bashcov.mute).to be true
 
-      expect(Bashcov.options).not_to respond_to(:bar)
-      expect(Bashcov).not_to respond_to(:bar)
-    end
-  end
-
-  describe ".method_missing" do
-    it "delegates to .options" do
-      allow(Bashcov.options).to receive(:foo).and_return("bar")
-      expect(Bashcov).to respond_to(:foo)
-      expect(Bashcov.foo).to eq("bar")
-
-      allow(Bashcov.options).to receive(:baz).and_raise(NoMethodError, "whoops")
-      expect { Bashcov.baz }.to raise_error do |error|
-        expect(error).to be_a(NoMethodError)
-        expect(error.message).to eq("whoops")
-      end
+      expect { Bashcov.foo }.to raise_error(NoMethodError)
     end
   end
 

@@ -46,9 +46,8 @@ shared_context "delimited stream" do |field_count, start = "START>"|
 
       loop do
         if b
-          # << is higher-precedence than ternary operator
           y << (fields_yielded == 0 ? start : SecureRandom.base64(token_length))
-          fields_yielded = fields_yielded == field_count + 1 ? 0 : fields_yielded + 1
+          fields_yielded = (fields_yielded == field_count + 1 ? 0 : fields_yielded + 1)
         else
           y << delimiter
         end

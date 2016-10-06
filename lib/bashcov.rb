@@ -18,6 +18,15 @@ module Bashcov
   )
 
   class << self
+    # Define option accessors
+    Options.new.members.each do |option|
+      [option, "#{option}="].each do |method|
+        define_method method do |*args|
+          options.public_send(*[method, *args])
+        end
+      end
+    end
+
     # @return [Struct] The +Struct+ object representing Bashcov configuration
     def options
       set_default_options! unless defined?(@options)
@@ -64,16 +73,6 @@ module Bashcov
     end
 
   private
-
-    # Passes off +respond_to?+ to {options} for missing methods
-    def respond_to_missing?(*args)
-      options.respond_to?(*args)
-    end
-
-    # Dispatches missing methods to {options}
-    def method_missing(method_name, *args, &block) # rubocop:disable Style/MethodMissing
-      options.public_send(method_name, *args, &block)
-    end
 
     def help
       <<-HELP.gsub(/^ +/, "").gsub("\t", " " * 4)
