@@ -154,9 +154,7 @@ module Bashcov
       begin
         script.realpath
       rescue Errno::ENOENT # catch race condition if the file has been deleted
-        # :nocov:
         bash_source.cleanpath
-        # :nocov:
       end
     end
 

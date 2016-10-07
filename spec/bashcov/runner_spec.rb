@@ -150,7 +150,6 @@ describe Bashcov::Runner do
 
       context "when mute is true" do
         it "does not print a warning about the lack of BASH_XTRACEFD" do
-          allow(Bashcov).to receive(:bash_xtracefd?).and_return(false)
           allow(Bashcov).to receive(:mute).and_return(true)
           expect { tmprunner.run }.not_to output(xtracefd_warning).to_stderr
         end
@@ -158,7 +157,6 @@ describe Bashcov::Runner do
 
       context "when mute is false" do
         it "prints a warning about the lack of BASH_XTRACEFD" do
-          allow(Bashcov).to receive(:bash_xtracefd?).and_return(false)
           allow(Bashcov).to receive(:mute).and_return(false)
           expect { tmprunner.run }.to output(xtracefd_warning).to_stderr
         end
