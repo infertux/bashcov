@@ -3,5 +3,5 @@
 # :nodoc:
 module Bashcov
   # Current Bashcov version
-  VERSION = "1.3.1".freeze
+  VERSION = "1.4.0".freeze
 end

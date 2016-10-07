@@ -59,7 +59,7 @@ module Bashcov
     # @return [String] Program name including version for easy consistent output
     # @note +fullname+ instead of name to avoid clashing with +Module.name+
     def fullname
-      "#{program_name} v#{VERSION} (bash #{BASH_VERSION})"
+      "#{program_name} #{VERSION} (bash #{BASH_VERSION})"
     end
 
     # Wipe the current options and reset default values
