@@ -85,7 +85,7 @@ describe Bashcov::Runner do
       end
 
       it "prints an error message" do
-        expect { tmprunner.run }.to output(/expected integer.*got.*nil/).to_stderr
+        expect { tmprunner.run }.to output(/expected integer.*got.*""/).to_stderr
       end
 
       it "returns an incomplete coverage hash" do

@@ -115,11 +115,11 @@ module Bashcov
       # If +LINENO+ isn't a series of digits, something has gone wrong. Add
       # +@files+ to the exception in order to propagate the existing coverage
       # data back to the {Bashcov::Runner} instance.
-      unless lineno =~ /\A\d+\z/
-        lineno_err = lineno.empty? ? nil : lineno
-
+      if lineno =~ /\A\d+\z/
+        lineno = lineno.to_i
+      else
         raise XtraceError.new(
-          "expected integer for LINENO, got `#{lineno_err.inspect}'", @files
+          "expected integer for LINENO, got #{lineno.inspect}", @files
         )
       end
 
@@ -132,7 +132,7 @@ module Bashcov
 
       # For one-liners, +LINENO+ == 0. Do this to avoid an +IndexError+;
       # one-liners will be culled from the coverage results later on.
-      index = (lineno_i = lineno.to_i) > 1 ? lineno_i - 1 : 0
+      index = (lineno > 1 ? lineno - 1 : 0)
 
       @files[script] ||= []
       @files[script][index] ||= 0
@@ -148,7 +148,16 @@ module Bashcov
     #   otherwise, +bash_source+ cleaned of redundant slashes and dots
     def find_script(bash_source)
       script = @pwd_stack.reverse.map { |wd| wd + bash_source }.find(&:file?)
-      script.nil? ? bash_source.cleanpath : script.realpath
+
+      return bash_source.cleanpath if script.nil?
+
+      begin
+        script.realpath
+      rescue Errno::ENOENT # catch race condition if the file has been deleted
+        # :nocov:
+        bash_source.cleanpath
+        # :nocov:
+      end
     end
 
     # Updates the stacks that track the history of values for +PWD+ and
