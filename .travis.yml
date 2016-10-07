@@ -40,6 +40,8 @@ matrix:
     - rvm: 2.3.1
       os: osx
       env: INSTALL_BASH_VERSION=
+    - rvm: 2.3.1
+      env: INSTALL_BASH_VERSION=
   allow_failures:
     - os: osx
     - rvm: ruby-head
