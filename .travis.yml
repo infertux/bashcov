@@ -30,13 +30,9 @@ env:
 matrix:
   include:
     - rvm: ruby-head
-      env: INSTALL_BASH_VERSION=4.3
-    - rvm: ruby-head
-      env: INSTALL_BASH_VERSION=4.4
+      env: INSTALL_BASH_VERSION=
     - rvm: rbx-2
-      env: INSTALL_BASH_VERSION=4.3
-    - rvm: rbx-2
-      env: INSTALL_BASH_VERSION=4.4
+      env: INSTALL_BASH_VERSION=
     - rvm: 2.3.1
       os: osx
       env: INSTALL_BASH_VERSION=
