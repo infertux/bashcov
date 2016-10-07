@@ -22,27 +22,27 @@ rvm:
   - 2.3.1
 env:
   matrix:
-    - BASHVER=4.0
-    - BASHVER=4.1
-    - BASHVER=4.2
-    - BASHVER=4.3
-    - BASHVER=4.4
+    - INSTALL_BASH_VERSION=4.0
+    - INSTALL_BASH_VERSION=4.1
+    - INSTALL_BASH_VERSION=4.2
+    - INSTALL_BASH_VERSION=4.3
+    - INSTALL_BASH_VERSION=4.4
 matrix:
   include:
     - rvm: ruby-head
-      env: BASHVER=4.3
+      env: INSTALL_BASH_VERSION=4.3
     - rvm: ruby-head
-      env: BASHVER=4.4
+      env: INSTALL_BASH_VERSION=4.4
     - rvm: rbx-2
-      env: BASHVER=4.3
+      env: INSTALL_BASH_VERSION=4.3
     - rvm: rbx-2
-      env: BASHVER=4.4
+      env: INSTALL_BASH_VERSION=4.4
     - rvm: 2.3.1
       os: osx
-      env: BASHVER=
+      env: INSTALL_BASH_VERSION=
   allow_failures:
     - os: osx
     - rvm: ruby-head
     - rvm: rbx-2
-    - env: BASHVER=4.0
-    - env: BASHVER=4.1
+    - env: INSTALL_BASH_VERSION=4.0
+    - env: INSTALL_BASH_VERSION=4.1

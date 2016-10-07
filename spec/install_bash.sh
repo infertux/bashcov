@@ -1,21 +1,21 @@
 #!/bin/bash -ex
 
-if [ -z $BASHVER ]; then
-    echo "No \$BASHVER, using default Bash"
+if [ -z $INSTALL_BASH_VERSION ]; then
+    echo "No \$INSTALL_BASH_VERSION, using default Bash"
     exit
 fi
 
 set -u
 
-echo "Installing bash $BASHVER..."
+echo "Installing bash $INSTALL_BASH_VERSION..."
 
 lftp -e 'mirror --continue --delete --parallel=10 --verbose /gnu/bash/ ; quit' ftp.gnu.org
 cd bash
 
-tar xvf bash-$BASHVER.tar.gz
-pushd bash-$BASHVER
+tar xvf bash-$INSTALL_BASH_VERSION.tar.gz
+pushd bash-$INSTALL_BASH_VERSION
 
-patches="../bash-$BASHVER-patches/bash$(echo $BASHVER | tr -d .)-???"
+patches="../bash-$INSTALL_BASH_VERSION-patches/bash$(echo $INSTALL_BASH_VERSION | tr -d .)-???"
 for patch in $(find .. -wholename "$patches" | sort); do
     echo "Applying $patch"
     patch -f -p0 <$patch
@@ -26,4 +26,4 @@ make
 sudo make install
 
 popd
-rm -rf bash-$BASHVER
+rm -rf bash-$INSTALL_BASH_VERSION

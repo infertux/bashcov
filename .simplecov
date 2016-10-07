@@ -1,4 +1,4 @@
 SimpleCov.start do
-  minimum_coverage 98
+  minimum_coverage 95
   add_filter "/spec/"
 end
