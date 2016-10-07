@@ -6,15 +6,9 @@ module Bashcov
   #   runtime
   # @note receiver is expected to implement +bash_path+
   module BashInfo
-    # @return [Array<String>] An array representing the components of
-    #   +BASH_VERSINFO+
-    def bash_versinfo
-      `#{bash_path} -c 'echo "${BASH_VERSINFO[@]}"'`.chomp.split
-    end
-
     # @return [Boolean] Whether Bash supports +BASH_XTRACEFD+
     def bash_xtracefd?
-      bash_versinfo[0..1].join.to_i >= 41
+      BASH_VERSION >= "4.1"
     end
 
     # @param [Integer] length the number of bytes to test; default 128

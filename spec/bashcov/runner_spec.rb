@@ -120,7 +120,7 @@ describe Bashcov::Runner do
         let(:bad_path_coverage) { [nil, nil, 0] }
       end
 
-      context "given a version of Bash from 4.3 and up", if: BASHVER >= "4.3" do
+      context "given a version of Bash from 4.3 and up", if: Bashcov::BASH_VERSION >= "4.3" do
         it "indicates that no lines were executed" do
           tmprunner.run
 
@@ -132,7 +132,7 @@ describe Bashcov::Runner do
       end
     end
 
-    context "given a version of Bash prior to 4.1", if: BASHVER < "4.1" do
+    context "given a version of Bash prior to 4.1", if: Bashcov::BASH_VERSION < "4.1" do
       include_context "temporary script", "no_stderr" do
         let(:stderr_output) { "AIEEE!" }
 

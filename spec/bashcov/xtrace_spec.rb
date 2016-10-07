@@ -11,13 +11,13 @@ describe Bashcov::Xtrace do
       Bashcov::Xtrace.delimiter = stored_delimiter
     end
 
-    context "on Bash 4.2 and prior", if: BASHVER <= "4.2" do
+    context "on Bash 4.2 and prior", if: Bashcov::BASH_VERSION <= "4.2" do
       it "is the ASCII record separator character" do
         expect(Bashcov::Xtrace.delimiter).to eq("\x1E")
       end
     end
 
-    context "on Bash 4.3 and later", if: BASHVER >= "4.3" do
+    context "on Bash 4.3 and later", if: Bashcov::BASH_VERSION >= "4.3" do
       let(:uuid_match) { /\A[\dA-F]{8}-[\dA-F]{4}-4[\dA-F]{3}-[89AB][\dA-F]{3}-[\dA-F]{12}\z/i }
 
       it "is a UUID" do

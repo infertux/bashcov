@@ -6,10 +6,6 @@ require "coveralls"
 formatters = [SimpleCov::Formatter::HTMLFormatter, Coveralls::SimpleCov::Formatter]
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
 
-ENV["BASHVER"] ||= `bash -c 'echo ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}'`
-BASHVER = ENV["BASHVER"]
-puts "BASHVER=#{BASHVER}"
-
 require "bashcov"
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
@@ -26,3 +22,5 @@ RSpec.configure do |config|
     Bashcov.mute = true # don't print testsuite output
   end
 end
+
+puts "BASH_VERSION=#{Bashcov::BASH_VERSION}"

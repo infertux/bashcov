@@ -59,7 +59,7 @@ module Bashcov
     # @return [String] Program name including version for easy consistent output
     # @note +fullname+ instead of name to avoid clashing with +Module.name+
     def fullname
-      "#{program_name} v#{VERSION}"
+      "#{program_name} v#{VERSION} (bash #{BASH_VERSION})"
     end
 
     # Wipe the current options and reset default values
@@ -120,4 +120,7 @@ module Bashcov
       end
     end
   end
+
+  # Current Bash version (e.g. 4.2)
+  BASH_VERSION = `#{bash_path} -c 'echo -n ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}'`.freeze
 end
