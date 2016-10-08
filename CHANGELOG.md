@@ -1,6 +1,14 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.3.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.4.0...master))
 
   * TBD
+
+## v1.4.0, 2016-10-08 ([changes](https://github.com/infertux/bashcov/compare/v1.3.1...v1.4.0))
+
+  * [BUGFIX]  Fix incorrect coverage for case statements (#21)
+  * [BUGFIX]  Fix rare race condition leading to a crash when a file is deleted at the wrong moment
+  * [FEATURE] Add support for heredoc and multiline strings in general (#2)
+  * [MISC]    Set up Travis CI to test Bashcov with Bash 4.0 through 4.4
+  * [MISC]    Drop support for old Ruby versions (2.0 and 2.1)
 
 ## v1.3.1, 2016-02-19 ([changes](https://github.com/infertux/bashcov/compare/v1.3.0...v1.3.1))
 
