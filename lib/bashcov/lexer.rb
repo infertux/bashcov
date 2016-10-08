@@ -27,20 +27,37 @@ module Bashcov
       end
     end
 
-    # Yields uncovered relevant lines.
-    # @note Uses +@coverage+ to avoid wasting time parsing executed lines.
+    # Process and complete initial coverage.
     # @return [void]
-    def uncovered_relevant_lines
-      lineno = 0
-      File.open(@filename, "rb").each_line do |line|
-        if @coverage[lineno] == Bashcov::Line::IGNORED && relevant?(line)
-          yield lineno
-        end
-        lineno += 1
+    def complete_coverage
+      lines = File.read(@filename).lines
+
+      lines.each_with_index do |line, lineno|
+        mark_multiline(lines, lineno, /\A[^\n]+<<-?'?(\w+)'?\s*$.*\1/m) # heredoc
+        mark_multiline(lines, lineno, /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/) # multiline string
+
+        mark_line(line, lineno)
       end
     end
 
   private
+
+    def mark_multiline(lines, lineno, regexp)
+      seek_forward = lines[lineno..-1].join
+      return unless (multiline_match = seek_forward.match(regexp))
+
+      length = multiline_match.to_s.count($/)
+      (lineno + 1).upto(lineno + length).each do |sub_lineno|
+        # mark subsequent lines with the same coverage as the first line
+        @coverage[sub_lineno] = @coverage[lineno]
+      end
+    end
+
+    def mark_line(line, lineno)
+      return unless @coverage[lineno] == Bashcov::Line::IGNORED
+
+      @coverage[lineno] = Bashcov::Line::UNCOVERED if relevant?(line)
+    end
 
     def relevant?(line)
       line.sub!(/ #.*\Z/, "") # remove comments

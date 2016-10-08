@@ -19,11 +19,18 @@ fi # nil
   echo 'no!'
 # nil
 # nil
-variable=($( # nil
-  echo hi
-)) # 2
+variable=($(echo hi)) # 2
 # nil
 # nil
+echo "after 1" \
+  "after 2" \
+  "after 3" \
+  "after 4"
 # nil
-echo after1 # 1
-echo after2 # 1
+cat <<EOF
+this is
+        a cat!
+  actually it's a $SHELL
+EOF
+# nil
+echo the end # 1

@@ -146,9 +146,7 @@ module Bashcov
     def mark_relevant_lines!
       @coverage.each_pair do |filename, coverage|
         lexer = Lexer.new(filename, coverage)
-        lexer.uncovered_relevant_lines do |lineno|
-          @coverage[filename][lineno] = Bashcov::Line::UNCOVERED
-        end
+        lexer.complete_coverage
       end
     end
 

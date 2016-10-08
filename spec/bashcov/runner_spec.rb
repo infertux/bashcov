@@ -171,7 +171,14 @@ describe Bashcov::Runner do
   describe "#result" do
     it "returns the expected coverage hash" do
       runner.run
-      expect(runner.result).to eq expected_coverage
+      result = runner.result
+
+      expected_coverage.each do |file, expected_hits|
+        result[file].each_with_index do |actual_hit, lineno|
+          expected = expected_hits.fetch(lineno)
+          expect(actual_hit).to eq(expected), "#{file}:#{lineno.succ} expected #{expected.inspect}, got #{actual_hit.inspect}"
+        end
+      end
     end
 
     context "with skip_uncovered = true" do
