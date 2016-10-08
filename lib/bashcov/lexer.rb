@@ -43,6 +43,7 @@ module Bashcov
   private
 
     def relevant?(line)
+      line.sub!(/ #.*\Z/, "") # remove comments
       line.strip!
 
       !line.empty? &&

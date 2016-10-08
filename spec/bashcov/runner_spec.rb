@@ -174,13 +174,6 @@ describe Bashcov::Runner do
       expect(runner.result).to eq expected_coverage
     end
 
-    it "returns the correct coverage hash" do
-      runner.run
-
-      pending # TODO: need a context-aware lexer to parse multiline instructions
-      expect(runner.result).to eq correct_coverage
-    end
-
     context "with skip_uncovered = true" do
       before do
         Bashcov.skip_uncovered = true
