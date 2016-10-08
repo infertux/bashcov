@@ -46,11 +46,17 @@ module Bashcov
       line.sub!(/ #.*\Z/, "") # remove comments
       line.strip!
 
-      !line.empty? &&
-        !IGNORE_IS.include?(line) &&
-        !line.start_with?(*IGNORE_START_WITH) &&
-        !line.end_with?(*IGNORE_END_WITH) &&
-        line !~ /\A\w+\(\)/ # function declared without the 'function' keyword
+      relevant = true
+
+      relevant &= false if line.empty? ||
+                           IGNORE_IS.include?(line) ||
+                           line.start_with?(*IGNORE_START_WITH) ||
+                           line.end_with?(*IGNORE_END_WITH)
+
+      relevant &= false if line =~ /\A\w+\(\)/ # function declared without the `function` keyword
+      relevant &= false if line =~ /\A[^\)]+\)\Z/ # case statement selector, e.g. `--help)`
+
+      relevant
     end
   end
 end

@@ -2,11 +2,12 @@
 
 function switch() {
     case $1 in
-        -h|--help) echo help
+    -h|--help)
+        echo help
         ;;
-        -v|--version)
+    -v|--version)
         echo version;;
-        *) echo "what?";;
+    *) echo "what?";;
     esac
 }
 
