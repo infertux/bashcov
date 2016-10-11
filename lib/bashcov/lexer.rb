@@ -34,7 +34,8 @@ module Bashcov
 
       lines.each_with_index do |line, lineno|
         mark_multiline(lines, lineno, /\A[^\n]+<<-?'?(\w+)'?\s*$.*\1/m) # heredoc
-        mark_multiline(lines, lineno, /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/) # multiline string
+        mark_multiline(lines, lineno, /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/) # multiline string concatenated with backslashes
+        mark_multiline(lines, lineno, /\A[^\n]+\s+(['"])[^'"]*\1/m, forward: false) # multiline string concatenated with newlines
 
         mark_line(line, lineno)
       end
@@ -42,14 +43,18 @@ module Bashcov
 
   private
 
-    def mark_multiline(lines, lineno, regexp)
+    def mark_multiline(lines, lineno, regexp, forward: true)
       seek_forward = lines[lineno..-1].join
       return unless (multiline_match = seek_forward.match(regexp))
 
       length = multiline_match.to_s.count($/)
-      (lineno + 1).upto(lineno + length).each do |sub_lineno|
-        # mark subsequent lines with the same coverage as the first line
-        @coverage[sub_lineno] = @coverage[lineno]
+      first, last = lineno + 1, lineno + length
+      range = (forward ? first.upto(last) : (last - 1).downto(first - 1))
+      reference_lineno = (forward ? first - 1 : last)
+
+      range.each do |sub_lineno|
+        # mark related lines with the same coverage as the reference line
+        @coverage[sub_lineno] = @coverage[reference_lineno]
       end
     end
 

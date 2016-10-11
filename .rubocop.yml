@@ -7,6 +7,9 @@ Lint/UnneededSplatExpansion:
 Style/AccessModifierIndentation:
   EnforcedStyle: outdent
 
+Style/ParallelAssignment:
+  Enabled: false
+
 Style/StringLiterals:
   Enabled: false
 

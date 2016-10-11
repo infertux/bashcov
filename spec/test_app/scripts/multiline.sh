@@ -33,4 +33,9 @@ this is
   actually it's a $SHELL
 EOF
 # nil
+echo '
+hello
+there
+'
+# nil
 echo the end # 1
