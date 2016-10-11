@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.4.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.4.1...master))
 
   * TBD
+
+## v1.4.1, 2016-10-11 ([changes](https://github.com/infertux/bashcov/compare/v1.4.0...v1.4.1))
+
+  * [BUGFIX]  Fix incorrect coverage for some multiline strings (#22)
 
 ## v1.4.0, 2016-10-08 ([changes](https://github.com/infertux/bashcov/compare/v1.3.1...v1.4.0))
 
@@ -30,7 +34,7 @@
 
 ## v1.2.1, 2015-05-05 ([changes](https://github.com/infertux/bashcov/compare/v1.2.0...v1.2.1))
 
-  * [BUGFIX] Preserve original exit status when exiting Bashcov
+  * [BUGFIX]  Preserve original exit status when exiting Bashcov
 
 ## v1.2.0, 2015-05-04 ([changes](https://github.com/infertux/bashcov/compare/v1.1.0...v1.2.0))
 
@@ -44,8 +48,8 @@
 
 ## v1.0.1, 2013-03-21 ([changes](https://github.com/infertux/bashcov/compare/v1.0.0...v1.0.1))
 
-  * [BUGFIX] Allow to add SimpleCov filters
-  * [BUGFIX] Lines containing only `elif` should be ignored
+  * [BUGFIX]  Allow to add SimpleCov filters
+  * [BUGFIX]  Lines containing only `elif` should be ignored
 
 ## v1.0.0, 2013-03-16 ([changes](https://github.com/infertux/bashcov/compare/v0.0.9...v1.0.0))
 
