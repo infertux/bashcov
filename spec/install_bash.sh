@@ -1,5 +1,12 @@
 #!/bin/bash -ex
 
+if [ "$INSTALL_BASH_VERSION" = "sh" ]; then
+    echo "Uninstalling Bash, using POSIX-compliant sh"
+    echo 'Yes, do as I say!' | sudo apt-get --yes --force-yes purge bash
+    whereis bash
+    exit
+fi
+
 if [ -z $INSTALL_BASH_VERSION ]; then
     echo "No \$INSTALL_BASH_VERSION, using default Bash"
     exit

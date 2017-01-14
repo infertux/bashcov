@@ -9,39 +9,22 @@ cache:
     - bash
 before_script:
   - whereis bash
-  - bash --version
   - ./spec/install_bash.sh
-  - bash --version
 after_script:
   - cane --style-exclude 'spec/**/*.rb'
   - yard stats --list-undoc
 os:
   - linux
 rvm:
-  - 2.2.6
-  - 2.3.3
   - 2.4.0
-env:
-  matrix:
-    - INSTALL_BASH_VERSION=4.0
-    - INSTALL_BASH_VERSION=4.1
-    - INSTALL_BASH_VERSION=4.2
-    - INSTALL_BASH_VERSION=4.3
-    - INSTALL_BASH_VERSION=4.4
 matrix:
   include:
-    - rvm: ruby-head
-      env: INSTALL_BASH_VERSION=
-    - rvm: rbx-2
-      env: INSTALL_BASH_VERSION=
     - rvm: 2.4.0
-      os: osx
-      env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.0
-      env: INSTALL_BASH_VERSION=
+      env: INSTALL_BASH_VERSION=sh BASHCOV_BASH_PATH=/bin/sh
   allow_failures:
     - os: osx
     - rvm: ruby-head
     - rvm: rbx-2
     - env: INSTALL_BASH_VERSION=4.0
     - env: INSTALL_BASH_VERSION=4.1
+    - env: INSTALL_BASH_VERSION=sh
