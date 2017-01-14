@@ -124,10 +124,12 @@ describe Bashcov::Runner do
         it "indicates that no lines were executed" do
           tmprunner.run
 
-          # Hack to execute this line (and get it counted in the coverage
-          # stats) even if we're on Bash 4.2
-          expect(tmprunner.result[tmpscript.path]).to \
-            contain_exactly(*bad_path_coverage) unless Bashcov.truncated_ps4?
+          # Hack to execute this line (and get it counted in the coverage stats)
+          # even if we're on Bash 4.2
+          unless Bashcov.truncated_ps4?
+            expect(tmprunner.result[tmpscript.path]).to \
+              contain_exactly(*bad_path_coverage)
+          end
         end
       end
     end
