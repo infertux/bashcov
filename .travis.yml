@@ -13,8 +13,7 @@ before_script:
   - ./spec/install_bash.sh
   - bash --version
 after_script:
-  - cane --style-exclude 'spec/**/*.rb'
-  - yard stats --list-undoc
+  - test -z "$MUTANT" || bundle exec mutant --include lib --require bashcov --use rspec 'Bashcov*'
 os:
   - linux
 rvm:
@@ -39,6 +38,8 @@ matrix:
       env: INSTALL_BASH_VERSION=
     - rvm: 2.4.0
       env: INSTALL_BASH_VERSION=
+    - rvm: 2.4.0
+      env: INSTALL_BASH_VERSION= MUTANT=1
   allow_failures:
     - os: osx
     - rvm: ruby-head

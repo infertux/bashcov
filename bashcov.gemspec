@@ -24,9 +24,9 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
-  gem.add_development_dependency "guard-rspec"
-  gem.add_development_dependency "rb-inotify"
-  gem.add_development_dependency "cane"
+  gem.add_development_dependency "mutant-rspec"
+  # TODO: forcing version for Ruby 2.4 compat, remove when mutant Gem is fixed
+  gem.add_development_dependency "regexp_parser", ">= 0.4.2"
   gem.add_development_dependency "rubocop"
   gem.add_development_dependency "yard"
   gem.add_development_dependency "coveralls"
