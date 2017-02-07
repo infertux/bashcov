@@ -11,6 +11,8 @@ require "bashcov"
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
+  config.filter_run_excluding :slow
+
   config.around(:each) do |example|
     # XXX: https://github.com/mbj/mutant#mutations-with-infinite-runtimes
     Timeout.timeout(1, &example)

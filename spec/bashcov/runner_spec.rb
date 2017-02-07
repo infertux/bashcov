@@ -47,7 +47,7 @@ describe Bashcov::Runner do
       expect(Bashcov::Runner.new("ls -l").run).to be_success
     end
 
-    it "is fast", speed: :slow do
+    it "is fast", :slow do
       ratio = 0
 
       3.times do |iteration|
@@ -64,7 +64,7 @@ describe Bashcov::Runner do
         ratio = (ratio * iteration + t1 / t0) / (iteration + 1)
       end
 
-      puts "#{ratio} times longer with Bashcov"
+      puts "#{ratio} times slower with Bashcov"
       # XXX: no proper assertion - just outputs the ratio
     end
 
