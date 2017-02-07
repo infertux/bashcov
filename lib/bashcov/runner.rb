@@ -16,7 +16,7 @@ module Bashcov
     # Runs the command with appropriate xtrace settings.
     # @note Binds Bashcov +stdin+ to the program being executed.
     # @return [Process::Status] Status of the executed command
-    def run
+    def run # rubocop:disable Metrics/MethodLength
       # Clear out previous run
       @result = nil
 

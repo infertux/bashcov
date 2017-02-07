@@ -1,5 +1,15 @@
-Metrics:
-  Enabled: false
+Metrics/AbcSize:
+  Max: 30
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/BlockLength:
+  Exclude: ["spec/**/*.rb"]
+
+Metrics/LineLength:
+  Max: 100
+  Exclude: ["spec/**/*.rb"]
 
 Lint/UnneededSplatExpansion:
   Enabled: false

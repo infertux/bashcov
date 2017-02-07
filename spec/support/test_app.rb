@@ -12,7 +12,7 @@ def uncovered_files
   [test_app("never_called.sh")]
 end
 
-def expected_coverage
+def expected_coverage # rubocop:disable Metrics/MethodLength
   {
     "#{test_app}/never_called.sh" => [nil, nil, 0],
     "#{test_app}/scripts/case.sh" => [nil, nil, nil, 2, nil, 1, nil, nil, 0, 1, nil, nil, nil, 1, 1],

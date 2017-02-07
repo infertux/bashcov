@@ -14,7 +14,10 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/infertux/bashcov"
   gem.license       = "MIT"
 
-  gem.files         = `git ls-files -z`.split("\x0").reject { |f| f.start_with?(".") || f.match(%r{\A(test|spec|features)/}) }
+  gem.files         = `git ls-files -z`.split("\x0").reject do |file|
+    file.start_with?(".") || file.match(%r{\A(test|spec|features)/})
+  end
+
   gem.executables   = gem.files.grep(%r{\Abin/}).map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
 

@@ -85,8 +85,8 @@ module Bashcov
       HELP
     end
 
-    def option_parser
-      OptionParser.new do |opts|
+    def option_parser # rubocop:disable Metrics/MethodLength
+      OptionParser.new do |opts| # rubocop:disable Metrics/BlockLength
         opts.program_name = program_name
         opts.version = Bashcov::VERSION
         opts.banner = help

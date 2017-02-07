@@ -33,9 +33,24 @@ module Bashcov
       lines = File.read(@filename).lines
 
       lines.each_with_index do |line, lineno|
-        mark_multiline(lines, lineno, /\A[^\n]+<<-?'?(\w+)'?\s*$.*\1/m) # heredoc
-        mark_multiline(lines, lineno, /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/) # multiline string concatenated with backslashes
-        mark_multiline(lines, lineno, /\A[^\n]+\s+(['"])[^'"]*\1/m, forward: false) # multiline string concatenated with newlines
+        # heredoc
+        mark_multiline(
+          lines, lineno,
+          /\A[^\n]+<<-?'?(\w+)'?\s*$.*\1/m
+        )
+
+        # multiline string concatenated with backslashes
+        mark_multiline(
+          lines, lineno,
+          /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/
+        )
+
+        # multiline string concatenated with newlines
+        mark_multiline(
+          lines, lineno,
+          /\A[^\n]+\s+(['"])[^'"]*\1/m,
+          forward: false
+        )
 
         mark_line(line, lineno)
       end
@@ -64,7 +79,7 @@ module Bashcov
       @coverage[lineno] = Bashcov::Line::UNCOVERED if relevant?(line)
     end
 
-    def relevant?(line)
+    def relevant?(line) # rubocop:disable Metrics/CyclomaticComplexity
       line.sub!(/ #.*\Z/, "") # remove comments
       line.strip!
 
