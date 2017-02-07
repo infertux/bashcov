@@ -10,4 +10,18 @@ describe Bashcov::Lexer do
       end.to raise_error ArgumentError
     end
   end
+
+  describe "#complete_coverage" do
+    it "marks relevant lines" do
+      file = "#{test_app}/scripts/nested/simple.sh"
+      coverage = {}
+      expected = expected_coverage.fetch(file).each_with_index.map do |line, index|
+        index unless line.nil?
+      end.compact
+
+      Bashcov::Lexer.new(file, coverage).complete_coverage
+
+      expect(coverage.keys).to match_array expected
+    end
+  end
 end
