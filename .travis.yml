@@ -7,6 +7,7 @@ addons:
 cache:
   directories:
     - bash
+before_install: gem update --system --no-doc # https://github.com/sickill/rainbow/issues/49
 before_script:
   - whereis bash
   - bash --version
