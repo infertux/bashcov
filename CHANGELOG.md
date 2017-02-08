@@ -1,6 +1,11 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.4.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.5.0...master))
 
   * TBD
+
+## v1.5.0, 2017-02-08 ([changes](https://github.com/infertux/bashcov/compare/v1.4.1...v1.5.0))
+
+  * [BUGFIX]  Fix incorrect coverage for some multiline strings (#23)
+  * [FEATURE] Add support for Ruby 2.4
 
 ## v1.4.1, 2016-10-11 ([changes](https://github.com/infertux/bashcov/compare/v1.4.0...v1.4.1))
 
