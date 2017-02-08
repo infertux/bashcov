@@ -46,11 +46,13 @@ module Bashcov
         )
 
         # multiline string concatenated with newlines
-        mark_multiline(
-          lines, lineno,
-          /\A[^\n]+\s+(['"])[^'"]*\1/m,
-          forward: false
-        )
+        %w(' ").each do |char|
+          mark_multiline(
+            lines, lineno,
+            /\A[^\n]+\s+#{char}[^#{char}]*#{char}/m,
+            forward: false
+          )
+        end
 
         mark_line(line, lineno)
       end
@@ -69,7 +71,7 @@ module Bashcov
 
       range.each do |sub_lineno|
         # mark related lines with the same coverage as the reference line
-        @coverage[sub_lineno] = @coverage[reference_lineno]
+        @coverage[sub_lineno] ||= @coverage[reference_lineno]
       end
     end
 
