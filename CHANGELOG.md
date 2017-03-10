@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.5.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.5.1...master))
 
   * TBD
+
+## v1.5.1, 2017-03-10 ([changes](https://github.com/infertux/bashcov/compare/v1.5.0...v1.5.1))
+
+  * [BUGFIX]  Fix incorrect coverage for some multiline strings (#26)
 
 ## v1.5.0, 2017-02-08 ([changes](https://github.com/infertux/bashcov/compare/v1.4.1...v1.5.0))
 
