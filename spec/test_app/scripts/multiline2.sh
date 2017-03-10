@@ -25,3 +25,9 @@ You can use "fubar" to run it:
 
 Run "fubar" for more commands.
 '
+
+synopsis='
+Usage: fubar <PATH> [OPTIONS]
+'
+
+echo "$synopsis"

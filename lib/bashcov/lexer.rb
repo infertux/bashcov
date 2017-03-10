@@ -49,7 +49,7 @@ module Bashcov
         %w(' ").each do |char|
           mark_multiline(
             lines, lineno,
-            /\A[^\n]+\s+#{char}[^#{char}]*#{char}/m,
+            /\A[^\n]+[\s=]+#{char}[^#{char}]*#{char}/m,
             forward: false
           )
         end
