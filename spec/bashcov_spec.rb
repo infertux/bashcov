@@ -9,10 +9,10 @@ shared_examples "a fatal error" do
   end
 
   it "exits with non-zero" do
-    expect { subject }.to raise_error { |error|
+    expect { subject }.to raise_error do |error|
       expect(error).to be_a SystemExit
       expect(error.status).not_to eq(0)
-    }
+    end
   end
 end
 
@@ -117,10 +117,10 @@ describe Bashcov do
         end
 
         it "exits with zero" do
-          expect { subject }.to raise_error { |error|
+          expect { subject }.to raise_error do |error|
             expect(error).to be_a SystemExit
             expect(error.status).to eq(0)
-          }
+          end
         end
       end
     end
