@@ -30,7 +30,7 @@ describe Bashcov::Xtrace do
     let!(:subshell_ps4) do
       dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'
       basename = '$(basename "$BASH_SOURCE")'
-      Bashcov::Xtrace.make_ps4(*%W(${LINENO} #{[dirname, basename].join('/')} $(pwd) ${OLDPWD}))
+      Bashcov::Xtrace.make_ps4(*%W[${LINENO} #{[dirname, basename].join('/')} $(pwd) ${OLDPWD}])
     end
 
     let(:case_script) { test_app("scripts/case.sh") }

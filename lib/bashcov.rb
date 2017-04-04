@@ -14,7 +14,7 @@ module Bashcov
 
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
-    *%i(skip_uncovered mute bash_path root_directory command)
+    *%i[skip_uncovered mute bash_path root_directory command]
   )
 
   class << self
