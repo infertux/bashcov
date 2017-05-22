@@ -56,6 +56,10 @@ module Bashcov
         end
       end
 
+      if $?.exitstatus != 0
+        exit $?.exitstatus
+      end
+
       $?
     end
 
