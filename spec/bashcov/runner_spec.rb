@@ -72,13 +72,13 @@ describe Bashcov::Runner do
       include_context "temporary script", "unset_lineno" do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
-          <<-EOF.gsub(/\A\s+/, "")
+          <<-BASH.gsub(/\A\s+/, "")
             #!/bin/bash
 
             echo "Hello, world!"
             LINENO= echo "What line is this?"
             echo "Hello? Is anyone there?"
-          EOF
+          BASH
         end
 
         let(:unset_lineno_coverage) { [nil, nil, 1, 0, 0] }
@@ -110,11 +110,11 @@ describe Bashcov::Runner do
       include_context "temporary script", Bashcov::Xtrace.delimiter do
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
-          <<-EOF.gsub(/\A\s+/, "")
+          <<-BASH.gsub(/\A\s+/, "")
             #!/usr/bin/env bash
 
             echo "Oh no!"
-          EOF
+          BASH
         end
 
         let(:bad_path_coverage) { [nil, nil, 0] }
@@ -140,11 +140,11 @@ describe Bashcov::Runner do
 
         # @note "temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
-          <<-EOF.gsub(/\A\s+/, "")
+          <<-BASH.gsub(/\A\s+/, "")
             #!/usr/bin/env bash
 
             echo #{stderr_output} 1>&2
-          EOF
+          BASH
         end
 
         let(:xtracefd_warning) { Regexp.new(/warning:.*version of Bash/) }

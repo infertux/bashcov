@@ -9,9 +9,9 @@ set -u
 
 echo "Installing bash $INSTALL_BASH_VERSION..."
 
-lftp -e 'mirror --continue --delete --parallel=10 --verbose /gnu/bash/ ; quit' ftp.gnu.org
+mkdir -p bash
 cd bash
-
+wget -N https://git.savannah.gnu.org/cgit/bash.git/snapshot/bash-$INSTALL_BASH_VERSION.tar.gz
 tar xvf bash-$INSTALL_BASH_VERSION.tar.gz
 pushd bash-$INSTALL_BASH_VERSION
 

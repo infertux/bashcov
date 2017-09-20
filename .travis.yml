@@ -1,9 +1,5 @@
 sudo: required
 language: ruby
-addons:
-  apt:
-    packages:
-    - lftp
 cache:
   directories:
     - bash
@@ -18,9 +14,8 @@ after_script:
 os:
   - linux
 rvm:
-  - 2.4.1
-  - 2.3.4
-  - 2.2.7
+  - 2.4.2
+  - 2.3.5
 env:
   matrix:
     - INSTALL_BASH_VERSION=4.4
@@ -34,12 +29,12 @@ matrix:
       env: INSTALL_BASH_VERSION=
     - rvm: rbx-2
       env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.1
+    - rvm: 2.4.2
       os: osx
       env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.1
+    - rvm: 2.4.2
       env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.1
+    - rvm: 2.4.2
       env: INSTALL_BASH_VERSION= MUTANT=1
   allow_failures:
     - os: osx
