@@ -28,7 +28,7 @@ def expected_coverage # rubocop:disable Metrics/MethodLength
     "#{test_app}/scripts/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1],
     "#{test_app}/scripts/source.sh" => [nil, nil, 1, nil, 2],
     "#{test_app}/scripts/sourced.txt" => [nil, nil, 1],
-    "#{test_app}/scripts/unicode.sh" => [nil, nil, nil, 1],
+    "#{test_app}/scripts/unicode.sh" => [nil, nil, nil, 1, nil, 1],
     "#{test_app}/scripts/multiline.sh" => [nil, nil, nil, 1, nil, 0, nil, 1, nil, 1, nil, 0, nil, nil, 1, 2, 1, 1, 0, nil, nil, 2, nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1],
     "#{test_app}/scripts/multiline2.sh" => [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1],
     "#{test_app}/scripts/executable" => [nil, nil, 1],

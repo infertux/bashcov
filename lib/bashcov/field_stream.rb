@@ -19,7 +19,7 @@ module Bashcov
       return enum_for(__method__, delimiter) unless block_given?
 
       read.each_line(delimiter) do |line|
-        yield line.chomp(delimiter)
+        yield line.chomp(delimiter).encode("utf-8", invalid: :replace)
       end
     end
 

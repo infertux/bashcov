@@ -30,7 +30,7 @@ module Bashcov
     # Process and complete initial coverage.
     # @return [void]
     def complete_coverage
-      lines = File.read(@filename).lines
+      lines = IO.read(@filename).encode("utf-8", invalid: :replace).lines
 
       lines.each_with_index do |line, lineno|
         # heredoc
