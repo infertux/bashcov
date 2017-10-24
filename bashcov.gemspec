@@ -23,14 +23,12 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = ">= 2.2.7"
 
-  gem.add_dependency "simplecov", "~> 0.11"
+  gem.add_dependency "simplecov", "~> 0.15"
 
+  gem.add_development_dependency "coveralls"
+  gem.add_development_dependency "mutant-rspec"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
-  gem.add_development_dependency "mutant-rspec"
-  # TODO: forcing version for Ruby 2.4 compat, remove when mutant Gem is fixed
-  gem.add_development_dependency "regexp_parser", ">= 0.4.2"
   gem.add_development_dependency "rubocop"
   gem.add_development_dependency "yard"
-  gem.add_development_dependency "coveralls"
 end
