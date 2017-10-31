@@ -175,6 +175,8 @@ describe Bashcov::Runner do
       runner.run
       result = runner.result
 
+      expect(result.count).to eq(expected_coverage.count), "expected coverage for #{expected_coverage.count} file(s), got #{result.count}"
+
       expected_coverage.each do |file, expected_hits|
         expect(result).to include(file), "#{file} expected coverage stats but got none"
 
