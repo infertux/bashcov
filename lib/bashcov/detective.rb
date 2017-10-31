@@ -16,7 +16,7 @@ module Bashcov
     SHELLSCRIPT_EXTENSIONS = Set.new(%w[.bash .sh]).freeze
 
     # Create an object that can be used for inferring whether a file is or is
-    #   not a shell script.
+    # not a shell script.
     # @param [String] bash_path path to a Bash interpreter
     def initialize(bash_path)
       @bash_path = bash_path
