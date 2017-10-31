@@ -1,0 +1,3 @@
+#!/usr/local/bin/gawk -f
+
+BEGIN { print "Hello from /usr/local/bin/gawk!" }

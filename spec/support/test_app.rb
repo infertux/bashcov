@@ -33,6 +33,18 @@ def expected_coverage # rubocop:disable Metrics/MethodLength
     "#{test_app}/scripts/multiline2.sh" => [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1],
     "#{test_app}/scripts/executable" => [nil, nil, 1],
     "#{test_app}/scripts/exit_non_zero.sh" => [nil, nil, 1],
+    "#{test_app}/scripts/no_extension/bin_bash" => [nil, nil, 1],
+    "#{test_app}/scripts/no_extension/bin_dash" => [nil, nil, 1],
+    "#{test_app}/scripts/no_extension/bin_sh" => [nil, nil, 1],
+    "#{test_app}/scripts/no_extension/usr_bin_env_bash" => [nil, nil, 1],
     "#{test_app}/test_suite.sh" => [nil, nil, 2, nil, 1],
   }
+end
+
+def expected_missing
+  [
+    "#{test_app}/scripts/bad_syntax.sh",
+    "#{test_app}/scripts/no_extension/usr_bin_env_perl",
+    "#{test_app}/scripts/no_extension/usr_local_bin_gawk",
+  ]
 end
