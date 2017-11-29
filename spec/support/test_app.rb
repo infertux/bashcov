@@ -35,6 +35,7 @@ def expected_coverage # rubocop:disable Metrics/MethodLength
     "#{test_app}/scripts/exit_non_zero.sh" => [nil, nil, 1],
     "#{test_app}/scripts/no_shebang.sh" => [nil, nil, nil, nil, 0],
     "#{test_app}/scripts/no_extension/bin_bash" => [nil, nil, 0],
+    "#{test_app}/scripts/no_extension/bin_bash_with_args" => [nil, nil, 0],
     "#{test_app}/scripts/no_extension/bin_dash" => [nil, nil, 0],
     "#{test_app}/scripts/no_extension/bin_sh" => [nil, nil, 0],
     "#{test_app}/scripts/no_extension/usr_bin_env_bash" => [nil, nil, 0],
