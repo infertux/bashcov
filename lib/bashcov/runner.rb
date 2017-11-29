@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "bashcov/detective"
 require "bashcov/errors"
 require "bashcov/field_stream"
 require "bashcov/lexer"
@@ -11,6 +12,7 @@ module Bashcov
     # @param [String] command Command to run
     def initialize(command)
       @command = command
+      @detective = Detective.new(Bashcov.bash_path)
     end
 
     # Runs the command with appropriate xtrace settings.
@@ -123,8 +125,10 @@ module Bashcov
     def find_bash_files!
       return if Bashcov.skip_uncovered
 
-      Pathname.glob("#{Bashcov.root_directory}/**/*.sh").each do |filename|
-        @coverage[filename] = [] unless @coverage.include?(filename)
+      Pathname.new(Bashcov.root_directory).find do |filename|
+        if !@coverage.include?(filename) && @detective.shellscript?(filename)
+          @coverage[filename] = []
+        end
       end
     end
 

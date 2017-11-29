@@ -1,6 +1,8 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.6.0...master))
 
-  * TBD
+  * [FEATURE] Enhance shell script detection by parsing shebangs, checking
+              filename extensions, and running syntax checks with `bash -n`
+              (classes `Detective` & `Runner`)
 
 ## v1.6.0, 2017-10-24 ([changes](https://github.com/infertux/bashcov/compare/v1.5.1...v1.6.0))
 

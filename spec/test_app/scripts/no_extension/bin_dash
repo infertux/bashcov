@@ -1,0 +1,3 @@
+#!/bin/dash
+
+echo "Hello from /bin/dash!"

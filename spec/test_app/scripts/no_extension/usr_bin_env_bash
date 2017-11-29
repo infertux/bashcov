@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "Hello from /usr/bin/env bash!"
