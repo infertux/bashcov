@@ -1,10 +1,10 @@
 # Bashcov
 
-[![Build Status](https://secure.travis-ci.org/infertux/bashcov.png?branch=master)](https://travis-ci.org/infertux/bashcov)
-[![Dependency Status](https://gemnasium.com/infertux/bashcov.png)](https://gemnasium.com/infertux/bashcov)
-[![Code Climate](https://codeclimate.com/github/infertux/bashcov.png)](https://codeclimate.com/github/infertux/bashcov)
-[![Coverage Status](https://coveralls.io/repos/infertux/bashcov/badge.png?branch=master)](https://coveralls.io/r/infertux/bashcov)
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
+[![Build Status](https://secure.travis-ci.org/infertux/bashcov.png?branch=master)](https://travis-ci.org/infertux/bashcov)
+[![Coverage Status](https://coveralls.io/repos/infertux/bashcov/badge.png?branch=master)](https://coveralls.io/r/infertux/bashcov)
+[![Dependency Status](https://gemnasium.com/infertux/bashcov.png)](https://gemnasium.com/infertux/bashcov)
+[![Maintainability](https://api.codeclimate.com/v1/badges/083fdbba795049cd5f06/maintainability)](https://codeclimate.com/github/infertux/bashcov/maintainability)
 
 **Code coverage for Bash**
 
