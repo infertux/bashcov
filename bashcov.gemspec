@@ -21,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{\Abin/}).map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
-  gem.required_ruby_version = ">= 2.2.7"
+  gem.required_ruby_version = ">= 2.3.0"
 
   gem.add_dependency "simplecov", "~> 0.15"
 
