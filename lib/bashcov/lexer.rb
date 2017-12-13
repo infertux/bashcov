@@ -22,9 +22,7 @@ module Bashcov
       @filename = filename
       @coverage = coverage
 
-      unless File.file?(@filename) # rubocop:disable Style/GuardClause
-        raise ArgumentError, "#{@filename} is not a file"
-      end
+      raise ArgumentError, "#{@filename} is not a file" unless File.file?(@filename)
     end
 
     # Process and complete initial coverage.

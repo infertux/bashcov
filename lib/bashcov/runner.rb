@@ -76,8 +76,11 @@ module Bashcov
   private
 
     def write_warning(message)
-      warn format "%s: warning: %s", Bashcov.program_name,
-                  message.gsub(/^\s+/, "").lines.map(&:chomp).join(" ")
+      warn [
+        Bashcov.program_name,
+        ": warning: ",
+        message.gsub(/^\s+/, "").lines.map(&:chomp).join(" "),
+      ].join
     end
 
     def run_xtrace(fd, env, options)

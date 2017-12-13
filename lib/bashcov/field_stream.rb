@@ -34,9 +34,7 @@ module Bashcov
     #   since the last match, yields empty strings until +field_count+ is
     #   reached.
     def each(delimiter, field_count, start_match)
-      unless block_given?
-        return enum_for(__method__, delimiter, field_count, start_match)
-      end
+      return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
 
       # Whether the current field is the start-of-fields match
       matched_start = nil

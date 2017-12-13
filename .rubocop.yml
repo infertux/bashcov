@@ -1,21 +1,27 @@
+AllCops:
+  TargetRubyVersion: 2.3
+
 Metrics/AbcSize:
   Max: 30
 
-Metrics/MethodLength:
-  Max: 20
-
 Metrics/BlockLength:
   Exclude: ["spec/**/*.rb"]
+
+Metrics/ClassLength:
+  Max: 150
 
 Metrics/LineLength:
   Max: 100
   Exclude: ["spec/**/*.rb"]
 
+Metrics/MethodLength:
+  Max: 20
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
 Lint/UnneededSplatExpansion:
   Enabled: false
-
-Style/AccessModifierIndentation:
-  EnforcedStyle: outdent
 
 Style/ParallelAssignment:
   Enabled: false
