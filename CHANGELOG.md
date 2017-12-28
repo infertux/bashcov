@@ -1,8 +1,14 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.6.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.7.0...master))
 
+  * TBD
+
+## v1.7.0, 2017-12-28 ([changes](https://github.com/infertux/bashcov/compare/v1.6.0...v1.7.0))
+
+  * [MISC]    Add support for Ruby 2.5 and drop 2.2
+  * [BUGFIX]  Fix issue where coverage would be run twice and overwritten (#33)
   * [FEATURE] Enhance shell script detection by parsing shebangs, checking
               filename extensions, and running syntax checks with `bash -n`
-              (classes `Detective` & `Runner`)
+              (classes `Detective` & `Runner`) (#30)
 
 ## v1.6.0, 2017-10-24 ([changes](https://github.com/infertux/bashcov/compare/v1.5.1...v1.6.0))
 
