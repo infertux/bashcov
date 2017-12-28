@@ -14,8 +14,9 @@ after_script:
 os:
   - linux
 rvm:
-  - 2.4.2
-  - 2.3.5
+  - 2.5.0
+  - 2.4.3
+  - 2.3.6
 env:
   matrix:
     - INSTALL_BASH_VERSION=4.4
@@ -29,12 +30,12 @@ matrix:
       env: INSTALL_BASH_VERSION=
     - rvm: rbx-2
       env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.2
+    - rvm: 2.5.0
       os: osx
       env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.2
+    - rvm: 2.5.0
       env: INSTALL_BASH_VERSION=
-    - rvm: 2.4.2
+    - rvm: 2.5.0
       env: INSTALL_BASH_VERSION= MUTANT=1
   allow_failures:
     - os: osx
