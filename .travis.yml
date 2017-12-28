@@ -22,8 +22,9 @@ env:
     - INSTALL_BASH_VERSION=4.4
     - INSTALL_BASH_VERSION=4.3
     - INSTALL_BASH_VERSION=4.2
-    - INSTALL_BASH_VERSION=4.1
+    - INSTALL_BASH_VERSION=4.1.11
     - INSTALL_BASH_VERSION=4.0
+    - INSTALL_BASH_VERSION=devel
 matrix:
   include:
     - rvm: ruby-head
@@ -41,5 +42,7 @@ matrix:
     - os: osx
     - rvm: ruby-head
     - rvm: rbx-2
-    - env: INSTALL_BASH_VERSION=4.1
+    - env: INSTALL_BASH_VERSION= MUTANT=1
+    - env: INSTALL_BASH_VERSION=4.1.11
     - env: INSTALL_BASH_VERSION=4.0
+    - env: INSTALL_BASH_VERSION=devel
