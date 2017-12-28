@@ -16,6 +16,6 @@ require "simplecov"
 
 SimpleCov.command_name Bashcov.fullname
 SimpleCov.root Bashcov.root_directory
-SimpleCov::Result.new(coverage).format!
+SimpleCov.at_exit { SimpleCov::Result.new(coverage).format! }
 
 exit status.exitstatus
