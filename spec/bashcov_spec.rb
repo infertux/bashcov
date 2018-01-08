@@ -28,6 +28,14 @@ describe Bashcov do
     end
   end
 
+  describe ".command_name" do
+    before { Bashcov.command = ["touch", "/tmp/a/file"] }
+
+    it "Includes .command stringified" do
+      expect(Bashcov.command_name).to eq Bashcov.command.compact.join(" ")
+    end
+  end
+
   describe ".mute" do
     it "delegates to .options" do
       Bashcov.options.mute = true
