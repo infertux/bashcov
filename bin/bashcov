@@ -16,6 +16,13 @@ require "simplecov"
 
 SimpleCov.command_name Bashcov.command_name
 SimpleCov.root Bashcov.root_directory
-SimpleCov.at_exit { SimpleCov::Result.new(coverage).format! }
+
+result = SimpleCov::Result.new(coverage)
+if SimpleCov.use_merging
+  SimpleCov::ResultMerger.store_result(result)
+  result = SimpleCov::ResultMerger.merged_result
+end
+
+SimpleCov.at_exit { result.format! }
 
 exit status.exitstatus
