@@ -14,7 +14,7 @@ module Bashcov
 
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
-    *%i[skip_uncovered mute bash_path root_directory command]
+    *%i[skip_uncovered mute bash_path root_directory command command_name]
   )
 
   class << self
@@ -68,6 +68,16 @@ module Bashcov
       ].join(" ")
     end
 
+    # @return [String] The value to use as +SimpleCov.command_name+. Uses the
+    #   value of +--command-name+, if this flag was provided, or
+    #   +BASHCOV_COMMAND_NAME, if set, defaulting to a stringified
+    #   representation of {Bashcov#command}.
+    def command_name
+      return @options.command_name if @options.command_name
+      return ENV["BASHCOV_COMMAND_NAME"] unless ENV.fetch("BASHCOV_COMMAND_NAME", "").empty?
+      command.compact.join(" ")
+    end
+
     # Wipe the current options and reset default values
     def set_default_options!
       @options = Options.new
@@ -112,6 +122,9 @@ module Bashcov
         opts.on("--root PATH", "Project root directory") do |d|
           raise Errno::ENOENT, d unless File.directory? d
           options.root_directory = d
+        end
+        opts.on("--command-name NAME", "Value to use as SimpleCov.command_name") do |c|
+          options.command_name = c
         end
 
         opts.separator "\nCommon options:"
