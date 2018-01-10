@@ -60,6 +60,35 @@ your project's root (like [this](https://github.com/infertux/bashcov/blob/master
 See [SimpleCov README](https://github.com/colszowka/simplecov#readme) for more
 information.
 
+#### Controlling the command name
+
+Bashcov respects all of your `.simplecov` settings save one --
+[`SimpleCov.command_name`](http://www.rubydoc.info/gems/simplecov/SimpleCov/Configuration#command_name-instance_method),
+which is the tag that SimpleCov attaches to coverage results from a particular
+test suite. You can set the value of `SimpleCov.command_name` by using
+Bashcov's `--command-name` option, or by assigning a value to the environment
+variable `BASHCOV_COMMAND_NAME`. Otherwise, Bashcov will generate a command
+name for you based on the name of the currently-executing Bash script and any
+arguments passed to it. For example, assuming your Bash lives at `/bin/bash`
+and you run the command
+
+```
+$ bashcov -- ./test_suite.sh --and some --flags
+```
+
+Bashcov will set `SimpleCov.command_name` to `"/bin/bash ./test_suite.sh --and
+some --flags"`. Basing `SimpleCov.command_name` on the executing command helps
+to ensure that multiple coverage runs don't [overwrite each other's
+results](https://github.com/colszowka/simplecov#test-suite-names) due to
+SimpleCov identifying multiple runs by the same tag. The `--command-name` and
+`BASHCOV_COMMAND_NAME` knobs are there for you to twiddle in case your test
+suite runs the exact same `bashcov` command more than once, in which case the
+generated command name will not distinguish each invocation from the others.
+
+For more info on `SimpleCov.command_name` and its relation to SimpleCov's
+result-merging behavior, see the [SimpleCov
+README](https://github.com/colszowka/simplecov#merging-results).
+
 ### Some gory details
 
 Figuring out where an executing Bash script lives in the file system can be
