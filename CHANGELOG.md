@@ -1,6 +1,10 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.7.0...master))
 
-  * TBD
+  * [FEATURE] Merge coverage results from multiple runs when
+              `SimpleCov.use_merging` is set to `true`. Auto-generate
+              likely-unique values for `SimpleCov.command_name`, providing the
+              `--command-name` option and `BASHCOV_COMMAND_NAME` environment
+              variable for users to set a command name explicitly (#34)
 
 ## v1.7.0, 2017-12-28 ([changes](https://github.com/infertux/bashcov/compare/v1.6.0...v1.7.0))
 
