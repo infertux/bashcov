@@ -18,15 +18,6 @@ module Bashcov
   )
 
   class << self
-    # Define option accessors
-    Options.new.members.each do |option|
-      [option, "#{option}="].each do |method|
-        define_method method do |*args|
-          options.public_send(*[method, *args])
-        end
-      end
-    end
-
     # @return [Struct] The +Struct+ object representing Bashcov configuration
     def options
       set_default_options! unless defined?(@options)
@@ -86,6 +77,17 @@ module Bashcov
       @options.mute             = false
       @options.bash_path        = "/bin/bash"
       @options.root_directory   = Dir.getwd
+    end
+
+    # Define option accessors
+    Options.new.members.each do |option|
+      [option, "#{option}="].each do |method|
+        next if instance_methods(false).include?(method)
+
+        define_method method do |*args|
+          options.public_send(*[method, *args])
+        end
+      end
     end
 
   private
