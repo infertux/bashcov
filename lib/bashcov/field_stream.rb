@@ -36,9 +36,6 @@ module Bashcov
     def each(delimiter, field_count, start_match)
       return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
 
-      # Whether the current field is the start-of-fields match
-      matched_start = nil
-
       # The number of fields processed since passing the last start-of-fields
       # match
       seen_fields = 0
@@ -58,7 +55,6 @@ module Bashcov
           # Fill out any remaining (unparseable) fields with empty strings
           yield_remaining.call
 
-          matched_start = nil
           seen_fields = 0
         elsif seen_fields < field_count
           yield field
