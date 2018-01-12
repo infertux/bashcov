@@ -53,9 +53,9 @@ module Bashcov
       [
         program_name,
         VERSION,
-        "(with Bash #{BASH_VERSION},",
+        "with Bash #{BASH_VERSION},",
         "Ruby #{RUBY_VERSION},",
-        "and SimpleCov #{SimpleCov::VERSION})",
+        "and SimpleCov #{SimpleCov::VERSION}.",
       ].join(" ")
     end
 

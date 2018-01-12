@@ -23,6 +23,9 @@ if SimpleCov.use_merging
   result = SimpleCov::ResultMerger.merged_result
 end
 
-SimpleCov.at_exit { result.format! }
+SimpleCov.at_exit do
+  puts "Run completed using #{Bashcov.fullname}"
+  result.format!
+end
 
 exit status.exitstatus

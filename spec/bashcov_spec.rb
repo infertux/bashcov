@@ -31,7 +31,7 @@ describe Bashcov do
   describe ".command_name" do
     before { Bashcov.command = ["touch", "/tmp/a/file"] }
 
-    it "Includes .command stringified" do
+    it "includes .command stringified" do
       expect(Bashcov.command_name).to eq Bashcov.command.compact.join(" ")
     end
   end
