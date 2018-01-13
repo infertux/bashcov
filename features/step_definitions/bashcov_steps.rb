@@ -17,7 +17,7 @@ module StepHelpers
   end
 
   def simplecov_results_json
-    run_simple(<<-'COMMAND', fail_on_error: false)
+    run_simple(<<-'COMMAND')
       ruby -rjson -rsimplecov -e '
         SimpleCov.at_exit { } # noop to prevent output other than the desired JSON
         print SimpleCov::ResultMerger.results.map(&:to_hash).to_json
