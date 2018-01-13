@@ -1,4 +1,8 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.7.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.8.0...master))
+
+  * TBD
+
+## v1.8.0, 2018-01-13 ([changes](https://github.com/infertux/bashcov/compare/v1.7.0...v1.8.0))
 
   * [FEATURE] Merge coverage results from multiple runs when
               `SimpleCov.use_merging` is set to `true`. Auto-generate
