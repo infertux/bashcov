@@ -14,19 +14,10 @@ module Bashcov
 
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
-    *%i[skip_uncovered mute bash_path root_directory command]
+    *%i[skip_uncovered mute bash_path root_directory command command_name]
   )
 
   class << self
-    # Define option accessors
-    Options.new.members.each do |option|
-      [option, "#{option}="].each do |method|
-        define_method method do |*args|
-          options.public_send(*[method, *args])
-        end
-      end
-    end
-
     # @return [Struct] The +Struct+ object representing Bashcov configuration
     def options
       set_default_options! unless defined?(@options)
@@ -62,10 +53,20 @@ module Bashcov
       [
         program_name,
         VERSION,
-        "(with Bash #{BASH_VERSION},",
+        "with Bash #{BASH_VERSION},",
         "Ruby #{RUBY_VERSION},",
-        "and SimpleCov #{SimpleCov::VERSION})",
+        "and SimpleCov #{SimpleCov::VERSION}.",
       ].join(" ")
+    end
+
+    # @return [String] The value to use as +SimpleCov.command_name+. Uses the
+    #   value of +--command-name+, if this flag was provided, or
+    #   +BASHCOV_COMMAND_NAME, if set, defaulting to a stringified
+    #   representation of {Bashcov#command}.
+    def command_name
+      return @options.command_name if @options.command_name
+      return ENV["BASHCOV_COMMAND_NAME"] unless ENV.fetch("BASHCOV_COMMAND_NAME", "").empty?
+      command.compact.join(" ")
     end
 
     # Wipe the current options and reset default values
@@ -76,6 +77,17 @@ module Bashcov
       @options.mute             = false
       @options.bash_path        = "/bin/bash"
       @options.root_directory   = Dir.getwd
+    end
+
+    # Define option accessors
+    Options.new.members.each do |option|
+      [option, "#{option}="].each do |method|
+        next if instance_methods(false).include?(method)
+
+        define_method method do |*args|
+          options.public_send(*[method, *args])
+        end
+      end
     end
 
   private
@@ -112,6 +124,9 @@ module Bashcov
         opts.on("--root PATH", "Project root directory") do |d|
           raise Errno::ENOENT, d unless File.directory? d
           options.root_directory = d
+        end
+        opts.on("--command-name NAME", "Value to use as SimpleCov.command_name") do |c|
+          options.command_name = c
         end
 
         opts.separator "\nCommon options:"
