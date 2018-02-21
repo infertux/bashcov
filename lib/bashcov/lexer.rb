@@ -31,6 +31,13 @@ module Bashcov
       lines = IO.read(@filename).encode("utf-8", invalid: :replace).lines
 
       lines.each_with_index do |line, lineno|
+        # multi-line arrays
+        mark_multiline(
+          lines, lineno,
+          /\A[^\n]*\b=\([^()]*\)/,
+          forward: false
+        )
+
         # heredoc
         mark_multiline(
           lines, lineno,

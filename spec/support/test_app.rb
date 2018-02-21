@@ -15,6 +15,7 @@ end
 def expected_coverage # rubocop:disable Metrics/MethodLength
   {
     "#{test_app}/never_called.sh" => [nil, nil, 0],
+    "#{test_app}/scripts/array.sh" => [nil, nil, 1, 1, 1, 1, 1, 1],
     "#{test_app}/scripts/case.sh" => [nil, nil, nil, 2, nil, 1, nil, nil, 0, 1, nil, nil, nil, 1, 1],
     "#{test_app}/scripts/cd.sh" => [nil, nil, 1, 2, nil, 3, 1, 3, nil, 2, nil, nil, 1, nil, 3, nil, 6, nil, 1, nil, 1],
     "#{test_app}/scripts/delete.sh" => [nil, nil, 1, 1, 1, 1, nil, 1, 1],
