@@ -27,10 +27,17 @@ module Bashcov
 
     # Process and complete initial coverage.
     # @return [void]
-    def complete_coverage
+    def complete_coverage # rubocop:disable Metrics/MethodLength
       lines = IO.read(@filename).encode("utf-8", invalid: :replace).lines
 
       lines.each_with_index do |line, lineno|
+        # multi-line arrays
+        mark_multiline(
+          lines, lineno,
+          /\A[^\n]*\b=\([^()]*\)/,
+          forward: false
+        )
+
         # heredoc
         mark_multiline(
           lines, lineno,
@@ -41,6 +48,12 @@ module Bashcov
         mark_multiline(
           lines, lineno,
           /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/
+        )
+
+        # simple line continuations with backslashes
+        mark_multiline(
+          lines, lineno,
+          /\A([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/
         )
 
         # multiline string concatenated with newlines
