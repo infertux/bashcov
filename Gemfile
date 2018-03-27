@@ -2,6 +2,6 @@
 
 source "https://rubygems.org"
 
-# gem 'simplecov', path: '../simplecov'
+# gem "simplecov", path: "../simplecov"
 
 gemspec
