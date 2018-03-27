@@ -31,3 +31,18 @@ Usage: fubar <PATH> [OPTIONS]
 '
 
 echo "$synopsis"
+
+getTodayQuery() {
+  read -rd '' query <<-SQL || true
+SELECT
+  CASE
+    WHEN AREA.title IS NOT NULL THEN AREA.title
+  END,
+  TASK.title,
+  "things:///show?id=" || TASK.uuid
+FROM TASKTABLE as TASK
+SQL
+  echo "${query}"
+}
+
+getTodayQuery

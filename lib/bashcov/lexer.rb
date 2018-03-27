@@ -41,7 +41,7 @@ module Bashcov
         # heredoc
         mark_multiline(
           lines, lineno,
-          /\A[^\n]+<<-?'?(\w+)'?\s*$.*\1/m
+          /\A[^\n]+<<-?'?(\w+)'?.*$.*\1/m
         )
 
         # multiline string concatenated with backslashes
@@ -79,6 +79,9 @@ module Bashcov
       first, last = lineno + 1, lineno + length
       range = (forward ? first.upto(last) : (last - 1).downto(first - 1))
       reference_lineno = (forward ? first - 1 : last)
+
+      # don't seek backward if first line is already covered
+      return if !forward && @coverage[first]
 
       range.each do |sub_lineno|
         # mark related lines with the same coverage as the reference line
