@@ -3,5 +3,5 @@
 # :nodoc:
 module Bashcov
   # Current Bashcov version
-  VERSION = "1.8.1"
+  VERSION = "1.8.2"
 end

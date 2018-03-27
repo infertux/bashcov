@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.8.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...master))
 
   * TBD
+
+## v1.8.2, 2018-03-27 ([changes](https://github.com/infertux/bashcov/compare/v1.8.1...v1.8.2))
+
+  * [BUGFIX]  Fix coverage for complex heredoc constructions (#32)
 
 ## v1.8.1, 2018-03-01 ([changes](https://github.com/infertux/bashcov/compare/v1.8.0...v1.8.1))
 
