@@ -3,7 +3,6 @@
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
 [![Build Status](https://secure.travis-ci.org/infertux/bashcov.png?branch=master)](https://travis-ci.org/infertux/bashcov)
 [![Coverage Status](https://coveralls.io/repos/infertux/bashcov/badge.png?branch=master)](https://coveralls.io/r/infertux/bashcov)
-[![Dependency Status](https://gemnasium.com/infertux/bashcov.png)](https://gemnasium.com/infertux/bashcov)
 [![Maintainability](https://api.codeclimate.com/v1/badges/083fdbba795049cd5f06/maintainability)](https://codeclimate.com/github/infertux/bashcov/maintainability)
 
 **Code coverage for Bash**
@@ -14,7 +13,6 @@
   * [Changelog]
   * [Rubygem]
   * [Continuous Integration]
-  * [Dependencies]
   * [SimpleCov]
 
 [Source Code]: https://github.com/infertux/bashcov "Source Code on Github"
@@ -23,7 +21,6 @@
 [Changelog]: https://github.com/infertux/bashcov/blob/master/CHANGELOG.md "Project Changelog"
 [Rubygem]: https://rubygems.org/gems/bashcov "Bashcov on Rubygems"
 [Continuous Integration]: https://travis-ci.org/infertux/bashcov "Bashcov on Travis-CI"
-[Dependencies]: https://gemnasium.com/infertux/bashcov "Bashcov dependencies on Gemnasium"
 [Bashcov]: https://github.com/infertux/bashcov
 [SimpleCov]: https://github.com/colszowka/simplecov "Bashcov is backed by SimpleCov to generate awesome coverage report"
 [Test app demo]: https://infertux.github.com/bashcov/test_app/ "Coverage for the bundled test application"

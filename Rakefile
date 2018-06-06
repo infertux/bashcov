@@ -13,4 +13,7 @@ end
 require "rubocop/rake_task"
 RuboCop::RakeTask.new
 
-task default: %i[rubocop spec cucumber]
+require "bundler/audit/task"
+Bundler::Audit::Task.new
+
+task default: %i[bundle:audit rubocop spec cucumber]
