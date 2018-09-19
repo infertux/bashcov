@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def test_app(*maybe_paths)
-  File.join(File.expand_path("../../test_app", __FILE__), *maybe_paths)
+  File.join(File.expand_path("../test_app", __dir__), *maybe_paths)
 end
 
 def test_suite

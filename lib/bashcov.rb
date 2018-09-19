@@ -66,6 +66,7 @@ module Bashcov
     def command_name
       return @options.command_name if @options.command_name
       return ENV["BASHCOV_COMMAND_NAME"] unless ENV.fetch("BASHCOV_COMMAND_NAME", "").empty?
+
       command.compact.join(" ")
     end
 
@@ -119,10 +120,12 @@ module Bashcov
         end
         opts.on("--bash-path PATH", "Path to Bash executable") do |p|
           raise Errno::ENOENT, p unless File.file? p
+
           options.bash_path = p
         end
         opts.on("--root PATH", "Project root directory") do |d|
           raise Errno::ENOENT, d unless File.directory? d
+
           options.root_directory = d
         end
         opts.on("--command-name NAME", "Value to use as SimpleCov.command_name") do |c|

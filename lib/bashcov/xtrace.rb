@@ -93,6 +93,7 @@ module Bashcov
       # play nicely with +Enumerator+s backed by +IO+ objects.
       loop do
         break if (hit = (1..field_count).map { fields.next }).empty?
+
         parse_hit!(*hit)
       end
 

@@ -83,7 +83,7 @@ module Bashcov
       ].join
     end
 
-    def run_xtrace(fd, env, options)
+    def run_xtrace(fd, env, options) # rubocop:disable Naming/UncommunicativeMethodParamName
       # Older versions of Bash (< 4.1) don't have the BASH_XTRACEFD variable
       if Bashcov.bash_xtracefd?
         options[fd] = fd # bind FDs to the child process
