@@ -18,7 +18,7 @@ end
 
 describe Bashcov do
   it "preserves the exit status" do
-    system("./bin/bashcov ./spec/test_app/scripts/exit_non_zero.sh")
+    system("./bin/bashcov --root ./spec/test_app ./spec/test_app/scripts/exit_non_zero.sh")
     expect($?.exitstatus).not_to eq(0)
   end
 

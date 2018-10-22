@@ -46,9 +46,10 @@ describe Bashcov::Xtrace do
 
     context "when shell expansion triggers subshell execution" do
       it "causes extra hits to be reported" do
+        allow(Bashcov).to receive(:skip_uncovered).at_least(:once).and_return(true)
+
         result_without_subshell = case_result
 
-        allow(Bashcov).to receive(:skip_uncovered).and_return(true)
         allow(Bashcov::Xtrace).to receive(:ps4).and_return(subshell_ps4)
 
         result_with_subshell = case_result
