@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "simplecov"
+
 require "bashcov/detective"
 require "bashcov/errors"
 require "bashcov/field_stream"
@@ -126,12 +128,37 @@ module Bashcov
     # Add files which have not been executed at all (i.e. with no coverage)
     # @return [void]
     def find_bash_files!
-      return if Bashcov.skip_uncovered
-
-      Pathname.new(Bashcov.root_directory).find do |filename|
+      filtered_files.each do |filename|
         if !@coverage.include?(filename) && @detective.shellscript?(filename)
           @coverage[filename] = []
         end
+      end
+    end
+
+    # @return [Array<Pathname>] the list of files that should be included in
+    #   coverage results, unless filtered by one or more SimpleCov filters
+    def tracked_files
+      return @tracked_files if defined? @tracked_files
+
+      mandatory = SimpleCov.tracked_files ? Pathname.glob(SimpleCov.tracked_files) : []
+      under_root = Bashcov.skip_uncovered ? [] : Pathname.new(Bashcov.root_directory).find.to_a
+
+      @tracked_files = (mandatory + under_root).uniq
+    end
+
+    # @return [Array<Pathname>] the list of files that should be included in
+    #   coverage results
+    def filtered_files
+      return @filtered_files if defined? @filtered_files
+
+      source_files = tracked_files.map do |file|
+        SimpleCov::SourceFile.new(file.to_s, @coverage.fetch(file, []))
+      end
+
+      source_file_to_tracked_file = Hash[source_files.zip(tracked_files)]
+
+      @filtered_files = SimpleCov.filtered(source_files).map do |source_file|
+        source_file_to_tracked_file[source_file]
       end
     end
 

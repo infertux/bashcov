@@ -52,3 +52,23 @@ def expected_missing
     "#{test_app}/scripts/no_extension/usr_local_bin_gawk",
   ]
 end
+
+def expected_omitted
+  {
+    ->(source_file) { File.basename(File.dirname(source_file.project_filename)) != "scripts" } => [
+      "#{test_app}/never_called.sh",
+    ],
+    /multiline(?:\d)*/ => [
+      "#{test_app}/multiline.sh",
+      "#{test_app}/multiline2.sh",
+      "#{test_app}/multiline3.sh",
+    ],
+    "/no_extension/" => [
+      "#{test_app}/scripts/no_extension/bin_bash",
+      "#{test_app}/scripts/no_extension/bin_bash_with_args",
+      "#{test_app}/scripts/no_extension/bin_dash",
+      "#{test_app}/scripts/no_extension/bin_sh",
+      "#{test_app}/scripts/no_extension/usr_bin_env_bash",
+    ],
+  }
+end
