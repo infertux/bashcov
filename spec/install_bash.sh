@@ -11,7 +11,7 @@ echo "Installing bash $INSTALL_BASH_VERSION..."
 
 mkdir -p bash
 cd bash
-wget -N https://git.savannah.gnu.org/cgit/bash.git/snapshot/bash-$INSTALL_BASH_VERSION.tar.gz
+wget -N https://ftpmirror.gnu.org/bash/bash-$INSTALL_BASH_VERSION.tar.gz
 tar xvf bash-$INSTALL_BASH_VERSION.tar.gz
 pushd bash-$INSTALL_BASH_VERSION
 
