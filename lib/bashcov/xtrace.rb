@@ -50,7 +50,7 @@ module Bashcov
 
     # Regexp to match the beginning of the {.ps4}. {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
-    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m
+    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m.freeze
 
     # Creates a pipe for xtrace output.
     # @see http://stackoverflow.com/questions/6977562/pipe-vs-temporary-file
