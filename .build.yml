@@ -1,0 +1,11 @@
+image: archlinux
+packages:
+  - ruby-bundler
+  - bash
+sources:
+  - https://git.sr.ht/~infertux/bashcov
+tasks:
+  - rake: |
+      cd bashcov
+      bundle install
+      bundle exec rake
