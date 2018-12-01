@@ -12,6 +12,19 @@ describe Bashcov::Runner do
     end
   end
 
+  before(:each) do
+    # SimpleCov uses a block-based filter to reject from the coverage results
+    # any files that do not live under SimpleCov.root by matching filenames
+    # against a regular expression containing the value of SimpleCov.root.
+    # This regular expression is memoized during the first use of the filter in
+    # question, and is not re-initialized if SimpleCov.root changes. By mocking
+    # up an empty filter list, we ensure that no files are omitted from the
+    # runner's coverage results because they don't live under whatever
+    # directory happens to have been the value of SimpleCov.root at the time
+    # the filter was first run.
+    allow(SimpleCov).to receive(:filters).and_return([])
+  end
+
   describe "#with_xtrace_flag" do
     context "without a SHELLOPTS variable" do
       before do
@@ -204,6 +217,14 @@ describe Bashcov::Runner do
         runner.run
         expect(runner.result.keys & uncovered_files).to be_empty
       end
+
+      context "when SimpleCov.tracked_files is defined" do
+        it "includes matching files even if they are uncovered" do
+          expect(SimpleCov).to receive(:tracked_files).at_least(:once).and_return(uncovered_files.first)
+          runner.run
+          expect(runner.result.keys & uncovered_files).to contain_exactly(*uncovered_files.first)
+        end
+      end
     end
 
     context "with mute = true" do
@@ -217,6 +238,20 @@ describe Bashcov::Runner do
         end
 
         runner.run
+      end
+    end
+
+    context "with SimpleCov filters in effect" do
+      before(:each) do
+        SimpleCov.configure do
+          expected_omitted.each_key { |filter| add_filter(filter) }
+        end
+      end
+
+      it "omits files matching one or more SimpleCov filters from the results hash" do
+        runner.run
+        result = runner.result
+        expect(result.keys).to contain_exactly(*(expected_coverage.keys - expected_omitted.values.flatten))
       end
     end
   end
