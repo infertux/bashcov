@@ -1,10 +1,15 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v2.0.0...master))
+
+  * TBD
+
+## v2.0.0, 2018-12-?? ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v2.0.0))
 
   * [FEATURE] Bashcov omits from the coverage results any files that match one
-              or more of the filters in `SimpleCov.filters`.
+              or more of the filters in `SimpleCov.filters` (#38)
   * [FEATURE] Ensure that files matching the `SimpleCov.tracked_files` glob
               pattern are included in the coverage results, regardless of
-              whether `Bashcov.skip_uncovered` is enabled.
+              whether `Bashcov.skip_uncovered` is enabled (#38)
+  * [MISC]    Add support for Ruby 2.6 and drop 2.3
 
 ## v1.8.2, 2018-03-27 ([changes](https://github.com/infertux/bashcov/compare/v1.8.1...v1.8.2))
 
