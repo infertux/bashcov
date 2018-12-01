@@ -25,7 +25,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "simplecov", "0.15.1"
 
-  gem.add_development_dependency "aruba", "~> 0.14.3"
+  gem.add_development_dependency "aruba", "~> 0.14"
   gem.add_development_dependency "bundler-audit"
   gem.add_development_dependency "coveralls"
   gem.add_development_dependency "cucumber"
