@@ -116,7 +116,7 @@ module Bashcov
       # If +LINENO+ isn't a series of digits, something has gone wrong. Add
       # +@files+ to the exception in order to propagate the existing coverage
       # data back to the {Bashcov::Runner} instance.
-      if lineno =~ /\A\d+\z/
+      if /\A\d+\z/.match?(lineno)
         lineno = lineno.to_i
       else
         raise XtraceError.new(
