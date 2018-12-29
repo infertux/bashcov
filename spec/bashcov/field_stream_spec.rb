@@ -51,5 +51,25 @@ describe Bashcov::FieldStream do
           yield_successive_args(*expected)
       end
     end
+
+    context "when the stream is empty or already fully consumed" do
+      let(:read) { StringIO.new }
+
+      it "short-circuits without yielding anything" do
+        expect { |e| stream.each(delimiter, field_count, start_match, &e) }.not_to yield_control
+      end
+    end
+
+    context "when stream contains fields prior to the first start-of-fields match" do
+      let(:before_start) { %w[some junk data] }
+      let(:after_start)  { %w[the good stuff] }
+      let(:field_count)  { 3 }
+      let(:input)        { (before_start + [start] + after_start).join(delimiter) }
+
+      it "discards them" do
+        expect { |e| stream.each(delimiter, field_count, start_match, &e) }.to \
+          yield_successive_args(*after_start)
+      end
+    end
   end
 end

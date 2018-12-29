@@ -1,6 +1,8 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v2.0.0...master))
 
-  * TBD
+  * [BUGFIX]  Correctly handle empty scripts by short-circuiting
+              `FieldStream#each` if the reader stream is at end-of-file before
+              the start-of-fields pattern is encountered (#41)
 
 ## v2.0.0, 2018-12-?? ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v2.0.0))
 

@@ -97,6 +97,8 @@ module Bashcov
         parse_hit!(*hit)
       end
 
+      @read.close unless @read.closed?
+
       @files
     end
 
