@@ -147,6 +147,18 @@ describe Bashcov::Runner do
       end
     end
 
+    context "given an empty script" do
+      include_context "temporary script", "empty_script" do
+        let(:script_text) { "" }
+      end
+
+      it "returns empty coverage results" do
+        expect { tmprunner.run }.not_to raise_error
+        expect(tmprunner.result).to include(tmpscript.path)
+        expect(tmprunner.result[tmpscript.path]).to be_empty
+      end
+    end
+
     context "given a version of Bash prior to 4.1", if: Bashcov::BASH_VERSION < "4.1" do
       include_context "temporary script", "no_stderr" do
         let(:stderr_output) { "AIEEE!" }

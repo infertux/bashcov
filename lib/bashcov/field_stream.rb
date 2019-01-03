@@ -36,36 +36,48 @@ module Bashcov
     def each(delimiter, field_count, start_match)
       return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
 
-      # The number of fields processed since passing the last start-of-fields
-      # match
-      seen_fields = 0
+      chunked = each_field(delimiter).chunk(&chunk_matches(start_match))
 
-      fields = each_field(delimiter)
-
-      # Close over +field_count+ and +seen_fields+ to yield empty strings to
-      # the caller when we've already hit the next start-of-fields match
-      yield_remaining = -> { (field_count - seen_fields).times { yield "" } }
-
-      # Advance until the first start-of-fields match
-      loop { break if fields.next =~ start_match }
-
-      fields.each do |field|
-        # If the current field is the start-of-fields match...
-        if field.match?(start_match)
-          # Fill out any remaining (unparseable) fields with empty strings
-          yield_remaining.call
-
-          seen_fields = 0
-        elsif seen_fields < field_count
-          yield field
-          seen_fields += 1
-        end
+      yield_fields = lambda do |(_, chunk)|
+        chunk.each { |e| yield e }
+        (field_count - chunk.size).times { yield "" }
       end
 
-      # One last filling-out of empty fields if we're at the end of the stream
-      yield_remaining.call
+      # Skip junk that might appear before the first start-of-fields match
+      begin
+        n, chunk = chunked.next
+        yield_fields.call([n, chunk]) unless n.zero?
+      rescue StopIteration
+        return
+      end
 
-      read.close unless read.closed?
+      chunked.each(&yield_fields)
+    end
+
+  private
+
+    # @param [Regexp] start_match a +Regexp+ that, when matched against the
+    #   input stream, signifies the beginning of the next series of fields to
+    #   yield
+    # @return [Proc] a unary +Proc+ that returns +nil+ if the argument mathes
+    #   the +start_match+ +Regexp+, and otherwise returns the number of
+    #   start-of-fields signifiers so far encountered.
+    # @example
+    #   chunker = chunk_matches /<=>/
+    #   chunked = %w[foo fighters <=> bar none <=> baz luhrmann].chunk(&chunker)
+    #   chunked.to_a
+    #     #=> [[0, ["foo", "fighters"]], [1, ["bar", "none"]], [2, ["baz", "luhrmann"]]]
+    def chunk_matches(start_match)
+      i = 0
+
+      lambda do |e|
+        if e.match?(start_match)
+          i += 1
+          nil
+        else
+          i
+        end
+      end
     end
   end
 end
