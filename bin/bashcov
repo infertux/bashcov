@@ -8,26 +8,47 @@ require "bashcov"
 
 Bashcov.parse_options! ARGV
 
+result = nil
+
+# Load SimpleCov without applying its default configuration; defaults will be
+# loaded when the block exits (unless SIMPLECOV_NO_DEFAULTS is already set in
+# the controlling environment)
+#
+# NOTE that, as of SimpleCov version 0.15.1, some SimpleCov settings (e.g.
+# minimum_coverage) are memoized after the first call to the relevant accessor
+# method and *cannot be redefined afterward* (except by messing with instance
+# variables).  Luckily this does not apply to the setting we affect here --
+# `at_exit`, as of writing.  Before adding calls to other SimpleCov
+# configuration methods here, please check that doing so won't prevent the user
+# from overriding those settings as they might wish.
+Bashcov.preconfigure_simplecov do
+  at_exit do
+    puts "Run completed using #{Bashcov.fullname}"
+    result.format!
+  end
+end
+
+SimpleCov.start do
+  # Unlike `at_exit`, don't allow `root` to be overridden.  This prevents
+  # searching for uncovered shell scripts under a Bashcov.root_directory that
+  # no longer corresponds to SimpleCov.root.
+  root         Bashcov.root_directory
+
+  # `Bashcov.command_name == SimpleCov.command_name`, if the user explicitly
+  # defined `SimpleCov.command_name` in their .simplecov file, so we won't
+  # break the user's custom configuration by calling `SimpleCov.command_name`
+  # here.
+  command_name Bashcov.command_name
+end
+
 runner = Bashcov::Runner.new Bashcov.command
 status = runner.run
 coverage = runner.result
-
-require "simplecov"
-
-SimpleCov.start
-
-SimpleCov.command_name Bashcov.command_name
-SimpleCov.root Bashcov.root_directory
 
 result = SimpleCov::Result.new(coverage)
 if SimpleCov.use_merging
   SimpleCov::ResultMerger.store_result(result)
   result = SimpleCov::ResultMerger.merged_result
-end
-
-SimpleCov.at_exit do
-  puts "Run completed using #{Bashcov.fullname}"
-  result.format!
 end
 
 exit status.exitstatus

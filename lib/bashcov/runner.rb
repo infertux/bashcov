@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "simplecov"
-
 require "bashcov/detective"
 require "bashcov/errors"
 require "bashcov/field_stream"

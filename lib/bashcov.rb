@@ -5,12 +5,14 @@ require "pathname"
 
 require "bashcov/bash_info"
 require "bashcov/runner"
+require "bashcov/simplecov_loader"
 require "bashcov/version"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
   extend Bashcov::BashInfo
+  extend Bashcov::SimpleCovLoader
 
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
@@ -61,13 +63,27 @@ module Bashcov
 
     # @return [String] The value to use as +SimpleCov.command_name+. Uses the
     #   value of +--command-name+, if this flag was provided, or
-    #   +BASHCOV_COMMAND_NAME, if set, defaulting to a stringified
+    #   +BASHCOV_COMMAND_NAME, if set, or the value of
+    #   +SimpleCov.command_name+, so long as it is not the same as the value of
+    #   +SimpleCov::CommandGuesser.guess+.  It defaults to a stringified
     #   representation of {Bashcov#command}.
     def command_name
-      return @options.command_name if @options.command_name
-      return ENV["BASHCOV_COMMAND_NAME"] unless ENV.fetch("BASHCOV_COMMAND_NAME", "").empty?
+      first_nonempty(
+        @options.command_name,
+        ENV["BASHCOV_COMMAND_NAME"],
+        # Assume that, if SimpleCov.command_name is the same as what
+        # SimpleCov::CommandGuesser.guess returns, it wasn't explicitly
+        # overridden by the user
+        (SimpleCov.command_name == SimpleCov::CommandGuesser.guess ? nil : SimpleCov.command_name),
+        command.compact.join(" ")
+      )
+    end
 
-      command.compact.join(" ")
+    # @return [String] The value to use as +SimpleCov.root+. Uses the
+    #   value of +--root+, if this flag was provided, or +BASHCOV_ROOT, if set,
+    #   defaulting to the current value of +SimpleCov.root+.
+    def root_directory
+      first_nonempty(@options.root_directory, ENV["BASHCOV_ROOT"], SimpleCov.root)
     end
 
     # Wipe the current options and reset default values
@@ -148,3 +164,5 @@ module Bashcov
   # Current Bash version (e.g. 4.2)
   BASH_VERSION = `#{bash_path} -c 'echo -n ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}'`.freeze
 end
+
+Bashcov.safe_load_simplecov! unless defined? SimpleCov

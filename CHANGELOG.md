@@ -1,5 +1,12 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v2.0.0...master))
 
+  * [FEATURE] Add `$BASHCOV_ROOT` environment variable that corresponds to the
+              `--root` command-line  and `Bashcov.root_directory` setting.
+  * [FEATURE] Add utility methods for loading SimpleCov with and without
+              `ENV["SIMPLECOV_NO_DEFAULTS"]` in effect. Use these methods to
+              configure our special SimpleCov-related settings (`at_exit` and
+              `command_name`) as low-precedence defaults that can be overridden
+              by the user in their `.simplecov` file.
   * [BUGFIX]  Correctly handle empty scripts by short-circuiting
               `FieldStream#each` if the reader stream is at end-of-file before
               the start-of-fields pattern is encountered (#41)
