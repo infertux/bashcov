@@ -1,5 +1,9 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v2.0.0...master))
 
+  * [FEATURE] Add a new `--profile` command-line option and `$BASHCOV_PROFILE`
+              environment variable, plus corresponding `Bashcov.profile`
+              setting, that permits the user to select which SimpleCov profile
+              is loaded when `bashcov` invokes `SimpleCov.start`.
   * [BUGFIX]  Ensure that `SimpleCov.result?` returns `true` at process exit so
               that (e.g.) SimpleCov causes `bashcov` to exit with nonzero
               status if the coverage percentage is less than

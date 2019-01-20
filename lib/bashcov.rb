@@ -16,7 +16,7 @@ module Bashcov
 
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
-    *%i[skip_uncovered mute bash_path root_directory command command_name]
+    *%i[skip_uncovered mute bash_path root_directory command command_name profile]
   )
 
   class << self
@@ -86,6 +86,13 @@ module Bashcov
       first_nonempty(@options.root_directory, ENV["BASHCOV_ROOT"], SimpleCov.root)
     end
 
+    # @return [String,nil] Profile name to pass to +SimpleCov.start+. Uses the
+    #   value of +--profile+, if this flag was provided, or +BASHCOV_PROFILE,
+    #   if set, defaulting to +nil+.
+    def profile
+      first_nonempty(@options.profile, ENV["BASHCOV_PROFILE"])
+    end
+
     # Wipe the current options and reset default values
     def set_default_options!
       @options = Options.new
@@ -147,6 +154,9 @@ module Bashcov
         opts.on("--command-name NAME", "Value to use as SimpleCov.command_name") do |c|
           options.command_name = c
         end
+        opts.on("--profile PROFILE", "SimpleCov profile to load with SimpleCov.start") do |p|
+          options.profile = p
+        end
 
         opts.separator "\nCommon options:"
 
@@ -158,6 +168,10 @@ module Bashcov
           exit
         end
       end
+    end
+
+    def first_nonempty(*args)
+      args.find { |arg| !args.nil? && !arg.to_s.empty? }
     end
   end
 

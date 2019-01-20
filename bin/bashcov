@@ -29,7 +29,7 @@ Bashcov.preconfigure_simplecov do
   end
 end
 
-SimpleCov.start do
+SimpleCov.start(Bashcov.profile) do
   # Unlike `at_exit`, don't allow `root` to be overridden.  This prevents
   # searching for uncovered shell scripts under a Bashcov.root_directory that
   # no longer corresponds to SimpleCov.root.

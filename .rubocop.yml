@@ -17,6 +17,9 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 20
 
+Metrics/ModuleLength:
+  Exclude: ["lib/bashcov.rb"]
+
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 

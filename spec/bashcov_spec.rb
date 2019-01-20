@@ -127,6 +127,23 @@ describe Bashcov do
         end
       end
 
+      context "with the --profile option" do
+        context "given a profile name" do
+          before { @args += ["--profile", "low"] }
+
+          it "sets it properly" do
+            subject
+            expect(Bashcov.profile).to eq("low")
+          end
+        end
+
+        context "given no profile name" do
+          before { @args << "--profile" }
+
+          it_behaves_like "a fatal error"
+        end
+      end
+
       context "with the --help flag" do
         before { @args << "--help" }
 
