@@ -19,7 +19,7 @@ rvm:
   - 2.4.5
 env:
   matrix:
-    - INSTALL_BASH_VERSION=5.0-rc1
+    - INSTALL_BASH_VERSION=5.0
     - INSTALL_BASH_VERSION=4.4
     - INSTALL_BASH_VERSION=4.3
     - INSTALL_BASH_VERSION=4.2
@@ -43,6 +43,5 @@ matrix:
     - rvm: ruby-head
     - rvm: rbx-2
     - env: INSTALL_BASH_VERSION= MUTANT=1
-    - env: INSTALL_BASH_VERSION=5.0-rc1
     - env: INSTALL_BASH_VERSION=4.1
     - env: INSTALL_BASH_VERSION=4.0
