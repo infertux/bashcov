@@ -10,7 +10,7 @@ Bashcov is a **code coverage analysis tool for Bash**.
 
 In most cases, you'll want overall coverage results for your project from
 [shUnit2](https://github.com/kward/shunit2),
-[Bats](https://github.com/sstephenson/bats),
+[Bats](https://github.com/bats-core/bats-core),
 [bash_unit](https://github.com/pgrange/bash_unit),
 [assert.sh](https://github.com/lehmannro/assert.sh),
 etc.
