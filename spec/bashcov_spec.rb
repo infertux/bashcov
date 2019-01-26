@@ -110,6 +110,23 @@ describe Bashcov do
         end
       end
 
+      context "with the --command-name option" do
+        context "given a command name name" do
+          before { @args += ["--command-name", "mytestsuite"] }
+
+          it "sets it properly" do
+            subject
+            expect(Bashcov.command_name).to eq("mytestsuite")
+          end
+        end
+
+        context "given no command name" do
+          before { @args << "--command-name" }
+
+          it_behaves_like "a fatal error"
+        end
+      end
+
       context "with the --help flag" do
         before { @args << "--help" }
 
