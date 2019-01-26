@@ -49,6 +49,11 @@ Given(/^SimpleCov is configured(?: in ("[^"]"))? with:$/) do |config_dir, config
     Given a file named "#{simplecov_config_path}" with:
       """
       #{config_body}
+
+      # Ignore stuff Aruba might add to the `bin` directory, such as the
+      # scripts it generates behind the scenes to run the commands specified
+      # with "When I run the following [...]".
+      SimpleCov.add_filter "/bin/"
       """
     Then the file "#{simplecov_config_path}" should exist
   )
