@@ -90,7 +90,7 @@ Then(/^the file "([^"]*)" should have the following coverage:/) do |filename, ta
 
     expect(file_coverage[line_number - 1]).to(
       eq(coverage),
-      %(line #{line_number} of "#{filename}" has coverage `#{coverage}`)
+      %(line #{line_number} of "#{filename}" has coverage `#{coverage.inspect}`)
     )
   end
 end
