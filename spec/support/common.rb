@@ -4,6 +4,6 @@
 
 def ignore_exception(exception)
   yield
-rescue exception
+rescue exception # rubocop:disable Naming/RescuedExceptionsVariableName
   nil
 end
