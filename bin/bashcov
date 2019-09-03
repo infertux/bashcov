@@ -26,8 +26,18 @@ if SimpleCov.use_merging
 end
 
 SimpleCov.at_exit do
-  puts "Run completed using #{Bashcov.fullname}"
-  result.format!
+  puts "Run completed using #{Bashcov.fullname}" unless Bashcov.mute
+
+  begin
+    # XXX: suppress output from https://github.com/colszowka/simplecov-html/blob/9ec41504ab139fabfaddfc786dfdab5d6aca0bab/lib/simplecov-html.rb#L25
+    # See https://github.com/infertux/bashcov/issues/53
+    original_stdout = $stdout
+    $stdout = StringIO.new if Bashcov.mute
+
+    result.format!
+  ensure
+    $stdout = original_stdout
+  end
 end
 
 exit status.exitstatus
