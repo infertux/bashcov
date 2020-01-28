@@ -7,7 +7,7 @@ dir="$(cd "${BASH_SOURCE%/*}" || : ; pwd -P)"
 todir=''
 printf -v todir -- '%s' "$(find "$dir" -type d | head -n 1)"
 
-(cd ../.. || : ; cd "$HOME" || : )
+(cd ../.. || : ; cd "$OLDPWD" || :)
 
 
 cd ../.. || :
