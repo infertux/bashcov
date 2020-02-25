@@ -20,7 +20,7 @@ Metrics/MethodLength:
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
-Lint/UnneededSplatExpansion:
+Lint/RedundantSplatExpansion:
   Enabled: false
 
 Style/ParallelAssignment:

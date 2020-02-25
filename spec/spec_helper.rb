@@ -8,7 +8,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
 
 require "bashcov"
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |file| require file }
 
 RSpec.configure do |config|
   config.filter_run_excluding :slow
