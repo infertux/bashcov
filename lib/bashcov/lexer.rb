@@ -71,7 +71,7 @@ module Bashcov
 
   private
 
-    def mark_multiline(lines, lineno, regexp, forward: true)
+    def mark_multiline(lines, lineno, regexp, forward: true) # rubocop:disable Metrics/CyclomaticComplexity
       seek_forward = lines[lineno..-1].join
       return unless (multiline_match = seek_forward.match(regexp))
 
@@ -95,7 +95,7 @@ module Bashcov
       @coverage[lineno] = Bashcov::Line::UNCOVERED if relevant?(line)
     end
 
-    def relevant?(line) # rubocop:disable Metrics/CyclomaticComplexity
+    def relevant?(line)
       line.sub!(/ #.*\Z/, "") # remove comments
       line.strip!
 
