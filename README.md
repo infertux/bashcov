@@ -13,6 +13,7 @@ In most cases, you'll want overall coverage results for your project from
 [Bats](https://github.com/bats-core/bats-core),
 [bash_unit](https://github.com/pgrange/bash_unit),
 [assert.sh](https://github.com/lehmannro/assert.sh),
+[bashaspec](https://github.com/d10n/bashaspec),
 etc.
 Bashcov automatically takes care of this by caching and merging results when generating reports,
 so your report includes coverage across your test suites and thereby gives you a better picture of blank spots.
