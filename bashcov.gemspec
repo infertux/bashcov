@@ -21,11 +21,11 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{\Abin/}).map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
-  gem.required_ruby_version = ">= 2.4.0"
+  gem.required_ruby_version = ">= 2.5.8"
 
-  gem.add_dependency "simplecov", "0.15.1"
+  gem.add_dependency "simplecov", "~> 0.18.5"
 
-  gem.add_development_dependency "aruba", "~> 0.14"
+  gem.add_development_dependency "aruba"
   gem.add_development_dependency "bundler-audit"
   gem.add_development_dependency "coveralls"
   gem.add_development_dependency "cucumber"

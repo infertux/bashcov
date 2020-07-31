@@ -17,7 +17,7 @@ module StepHelpers
   end
 
   def simplecov_results_json
-    run_simple(<<-'COMMAND')
+    run_command_and_stop(<<-'COMMAND')
       ruby -rjson -rsimplecov -e '
         SimpleCov.at_exit { } # noop to prevent output other than the desired JSON
         print SimpleCov::ResultMerger.results.map(&:to_hash).to_json
@@ -86,11 +86,13 @@ Then(/^the file "([^"]*)" should have the following coverage:/) do |filename, ta
   table.raw.each do |line_number, coverage|
     line_number = line_number.to_i
 
-    coverage = coverage == "nil" ? nil : coverage.to_i
+    expected = coverage == "nil" ? nil : coverage.to_i
+    actual = file_coverage[line_number - 1]
 
-    expect(file_coverage[line_number - 1]).to(
-      eq(coverage),
-      %(line #{line_number} of "#{filename}" has coverage `#{coverage.inspect}`)
+    expect(actual).to(
+      eq(expected),
+      "#{filename}:#{line_number} has coverage `#{actual.inspect}` " \
+      "but `#{expected.inspect}` is expected"
     )
   end
 end
