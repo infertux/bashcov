@@ -70,13 +70,30 @@ module Bashcov
       command.compact.join(" ")
     end
 
+    def bash_path
+      # First attempt to use the value from `options`, but ignore all exceptions.
+      # This is used early for the `BASH_VERSION` definition, so first use will likely error.
+      begin
+        return @options.bash_path if @options.bash_path
+      rescue NoMethodError; end # rubocop:disable Lint/SuppressedException
+
+      # Support the same `BASHCOV_BASH_PATH` environment variable used in the spec tests.
+      return ENV["BASHCOV_BASH_PATH"] unless ENV.fetch("BASHCOV_BASH_PATH", "").empty?
+
+      # Fall back to standard Bash location.
+      "/bin/bash"
+    end
+
+    def bash_version
+      `#{bash_path} -c 'echo -n ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}'`
+    end
+
     # Wipe the current options and reset default values
     def set_default_options!
       @options = Options.new
 
       @options.skip_uncovered   = false
       @options.mute             = false
-      @options.bash_path        = "/bin/bash"
       @options.root_directory   = Dir.getwd
     end
 
@@ -122,6 +139,11 @@ module Bashcov
           raise Errno::ENOENT, p unless File.file? p
 
           options.bash_path = p
+
+          # Redefine `BASH_VERSION` constant with upated `bash_path`.
+          # This is hacky, but a lot of code references that constant and this should only have to be done once.
+          send(:remove_const, "BASH_VERSION")
+          const_set("BASH_VERSION", bash_version.freeze)
         end
         opts.on("--root PATH", "Project root directory") do |d|
           raise Errno::ENOENT, d unless File.directory? d
@@ -146,5 +168,5 @@ module Bashcov
   end
 
   # Current Bash version (e.g. 4.2)
-  BASH_VERSION = `#{bash_path} -c 'echo -n ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]}'`.freeze
+  BASH_VERSION = bash_version.freeze
 end
