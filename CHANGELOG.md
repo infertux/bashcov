@@ -1,10 +1,8 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v2.0.0...master))
 
-  * [BUGFIX]  Correctly handle empty scripts by short-circuiting
-              `FieldStream#each` if the reader stream is at end-of-file before
-              the start-of-fields pattern is encountered (#41)
+  * TBD
 
-## v2.0.0, 2018-12-?? ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v2.0.0))
+## v2.0.0, 2020-07-?? ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v2.0.0))
 
   * [FEATURE] Bashcov omits from the coverage results any files that match one
               or more of the filters in `SimpleCov.filters` (#38)
@@ -12,6 +10,9 @@
               pattern are included in the coverage results, regardless of
               whether `Bashcov.skip_uncovered` is enabled (#38)
   * [MISC]    Add support for Ruby 2.6 and drop 2.3
+  * [BUGFIX]  Correctly handle empty scripts by short-circuiting
+              `FieldStream#each` if the reader stream is at end-of-file before
+              the start-of-fields pattern is encountered (#41)
 
 ## v1.8.2, 2018-03-27 ([changes](https://github.com/infertux/bashcov/compare/v1.8.1...v1.8.2))
 
