@@ -96,7 +96,7 @@ module Bashcov
     end
 
     def relevant?(line)
-      line.sub!(/ #.*\Z/, "") # remove comments
+      line.sub!(/\s#.*\Z/, "") # remove comments
       line.strip!
 
       relevant = true
