@@ -24,11 +24,10 @@ module Bashcov
     class << self
       attr_writer :delimiter, :ps4
 
-      # [String] A randomly-generated UUID or the ASCII RS (record separator)
-      #   character, depending on whether the current Bash suffers from the
-      #   truncated +PS4+ bug. Used for delimiting the fields of the +PS4+.
+      # [String] A randomly-generated UUID used for delimiting the fields of
+      # the +PS4+.
       def delimiter
-        @delimiter ||= Bashcov.truncated_ps4? ? "\x1E" : SecureRandom.uuid
+        @delimiter ||= SecureRandom.uuid
       end
 
       # @return [String] +PS4+ variable used for xtrace output. Expands to
@@ -50,7 +49,7 @@ module Bashcov
 
     # Regexp to match the beginning of the {.ps4}. {DEPTH_CHAR} will be
     # repeated in proportion to the level of Bash call nesting.
-    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m.freeze
+    PS4_START_REGEXP = /#{Regexp.escape(DEPTH_CHAR)}+#{Regexp.escape(PREFIX)}$/m
 
     # Creates a pipe for xtrace output.
     # @see http://stackoverflow.com/questions/6977562/pipe-vs-temporary-file
@@ -120,6 +119,9 @@ module Bashcov
       # data back to the {Bashcov::Runner} instance.
       if /\A\d+\z/.match?(lineno)
         lineno = lineno.to_i
+      elsif lineno == "${LINENO-}"
+        # the variable doesn't expand on line misses so we can safely ignore it
+        return
       else
         raise XtraceError.new(
           "expected integer for LINENO, got #{lineno.inspect}", @files

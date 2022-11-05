@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-shared_context "temporary script" do |script_basename|
-  before(:each) do
+require "tmpdir" # Dir.mktmpdir
+
+shared_context "with a temporary script" do |script_basename|
+  before do
     raise NoMethodError, "You must define `script_text'" unless respond_to?(:script_text)
   end
 
   let(:tmpscript) do
-    script = File.open(File.join(Dir.getwd, script_basename + ".sh"), "w")
+    script = File.open(File.join(Dir.getwd, "#{script_basename}.sh"), "w")
     script.write(script_text)
     script.close
     script
@@ -23,7 +25,7 @@ shared_context "temporary script" do |script_basename|
   end
 end
 
-shared_context "delimited stream" do |field_count, start = "START>"|
+shared_context "with a delimited stream" do |field_count, start = "START>"| # rubocop:disable RSpec/MultipleMemoizedHelpers
   let(:field_count) { field_count }
   let(:start) { start }
   let(:start_match) { /#{Regexp.escape(start)}$/ }

@@ -1,24 +1,19 @@
 # frozen_string_literal: true
 
 require "simplecov"
-require "coveralls"
+# require "coveralls"
 
-formatters = [SimpleCov::Formatter::HTMLFormatter, Coveralls::SimpleCov::Formatter]
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
+# formatters = [SimpleCov::Formatter::HTMLFormatter, Coveralls::SimpleCov::Formatter]
+# SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
 
 require "bashcov"
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |file| require file }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   config.filter_run_excluding :slow
 
-  config.around(:each) do |example|
-    # XXX: https://github.com/mbj/mutant#mutations-with-infinite-runtimes
-    Timeout.timeout(1, &example)
-  end
-
-  config.before(:each) do
+  config.before do
     # Reset the options to, among other things, pick up on a new working
     # directory.
     Bashcov.set_default_options!

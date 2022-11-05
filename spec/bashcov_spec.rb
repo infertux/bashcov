@@ -24,32 +24,32 @@ describe Bashcov do
 
   describe ".fullname" do
     it "includes the version" do
-      expect(Bashcov.fullname).to include Bashcov::VERSION
+      expect(described_class.fullname).to include Bashcov::VERSION
     end
   end
 
   describe ".command_name" do
-    before { Bashcov.command = ["touch", "/tmp/a/file"] }
+    before { described_class.command = ["touch", "/tmp/a/file"] }
 
     it "includes .command stringified" do
-      expect(Bashcov.command_name).to eq Bashcov.command.compact.join(" ")
+      expect(described_class.command_name).to eq described_class.command.compact.join(" ")
     end
   end
 
   describe ".mute" do
     it "delegates to .options" do
-      Bashcov.options.mute = true
-      expect(Bashcov).to respond_to(:mute)
-      expect(Bashcov.mute).to be true
+      described_class.options.mute = true
+      expect(described_class).to respond_to(:mute)
+      expect(described_class.mute).to be true
 
-      expect { Bashcov.foo }.to raise_error(NoMethodError)
+      expect { described_class.foo }.to raise_error(NoMethodError)
     end
   end
 
   describe ".parse_options!" do
-    before { @args = [] }
+    subject { described_class.parse_options! @args }
 
-    subject { Bashcov.parse_options! @args }
+    before { @args = [] }
 
     context "without any options" do
       it_behaves_like "a fatal error"
@@ -63,7 +63,7 @@ describe Bashcov do
 
         it "sets it properly" do
           subject
-          expect(Bashcov.skip_uncovered).to be true
+          expect(described_class.skip_uncovered).to be true
         end
       end
 
@@ -72,55 +72,55 @@ describe Bashcov do
 
         it "sets it properly" do
           subject
-          expect(Bashcov.mute).to be true
+          expect(described_class.mute).to be true
         end
       end
 
       context "with the --bash-path option" do
-        context "given an existing path" do
+        context "with an existing path" do
           before { @args += ["--bash-path", "/bin/bash"] }
 
           it "sets it properly" do
             subject
-            expect(Bashcov.bash_path).to eq("/bin/bash")
+            expect(described_class.bash_path).to eq("/bin/bash")
           end
         end
 
-        context "given an non-existing path" do
-          before(:each) { @args += ["--bash-path", "/pretty/sure/this/is/not/bash"] }
+        context "with an non-existing path" do
+          before { @args += ["--bash-path", "/pretty/sure/this/is/not/bash"] }
 
           it_behaves_like "a fatal error"
         end
       end
 
       context "with the --root option" do
-        context "given an existing path" do
+        context "with an existing path" do
           before { @args += ["--root", "/etc"] }
 
           it "sets it properly" do
             subject
-            expect(Bashcov.root_directory).to eq("/etc")
+            expect(described_class.root_directory).to eq("/etc")
           end
         end
 
-        context "given an non-existing path" do
-          before(:each) { @args += ["--root", "/confident/this/does/not/exist/either"] }
+        context "with an non-existing path" do
+          before { @args += ["--root", "/confident/this/does/not/exist/either"] }
 
           it_behaves_like "a fatal error"
         end
       end
 
       context "with the --command-name option" do
-        context "given a command name name" do
+        context "with a command name name" do
           before { @args += ["--command-name", "mytestsuite"] }
 
           it "sets it properly" do
             subject
-            expect(Bashcov.command_name).to eq("mytestsuite")
+            expect(described_class.command_name).to eq("mytestsuite")
           end
         end
 
-        context "given no command name" do
+        context "with no command name" do
           before { @args << "--command-name" }
 
           it_behaves_like "a fatal error"

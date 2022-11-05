@@ -1,37 +1,43 @@
 # frozen_string_literal: true
 
-lib = File.expand_path("lib", __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "bashcov/version"
+require_relative "lib/bashcov/version"
 
-Gem::Specification.new do |gem|
-  gem.name          = "bashcov"
-  gem.version       = Bashcov::VERSION
-  gem.authors       = ["Cédric Félizard"]
-  gem.email         = ["cedric@felizard.fr"]
-  gem.description   = "Code coverage tool for Bash"
-  gem.summary       = gem.description
-  gem.homepage      = "https://github.com/infertux/bashcov"
-  gem.license       = "MIT"
+Gem::Specification.new do |spec|
+  spec.name          = "bashcov"
+  spec.version       = Bashcov::VERSION
+  spec.authors       = ["Cédric Félizard"]
+  spec.email         = ["cedric@felizard.fr"]
 
-  gem.files         = `git ls-files -z`.split("\x0").reject do |file|
-    file.start_with?(".") || file.match(%r{\A(test|spec|features)/})
+  spec.summary       = spec.description
+  spec.description   = "Code coverage tool for Bash"
+  spec.homepage      = "https://github.com/infertux/bashcov"
+  spec.license       = "MIT"
+  spec.required_ruby_version = ">= 3.0.0"
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "https://github.com/infertux/bashcov"
+  spec.metadata["changelog_uri"] = "https://github.com/infertux/bashcov/blob/master/CHANGELOG.md"
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
   end
+  spec.bindir        = "exe"
+  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
 
-  gem.executables   = gem.files.grep(%r{\Abin/}).map { |f| File.basename(f) }
-  gem.require_paths = ["lib"]
+  spec.add_dependency "simplecov", "~> 0.21.2"
 
-  gem.required_ruby_version = ">= 2.5.8"
-
-  gem.add_dependency "simplecov", "~> 0.18.5"
-
-  gem.add_development_dependency "aruba"
-  gem.add_development_dependency "bundler-audit"
-  gem.add_development_dependency "coveralls"
-  gem.add_development_dependency "cucumber"
-  gem.add_development_dependency "mutant-rspec"
-  gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec"
-  gem.add_development_dependency "rubocop"
-  gem.add_development_dependency "yard"
+  spec.add_development_dependency "aruba"
+  spec.add_development_dependency "bundler-audit"
+  # spec.add_development_dependency "coveralls"
+  spec.add_development_dependency "cucumber"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency "rubocop-rake"
+  spec.add_development_dependency "rubocop-rspec"
+  spec.add_development_dependency "yard"
+  spec.metadata["rubygems_mfa_required"] = "true"
 end

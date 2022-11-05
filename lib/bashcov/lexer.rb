@@ -27,8 +27,8 @@ module Bashcov
 
     # Process and complete initial coverage.
     # @return [void]
-    def complete_coverage # rubocop:disable Metrics/MethodLength
-      lines = IO.read(@filename).encode("utf-8", invalid: :replace).lines
+    def complete_coverage
+      lines = File.read(@filename).encode("utf-8", invalid: :replace).lines
 
       lines.each_with_index do |line, lineno|
         # multi-line arrays
@@ -71,8 +71,8 @@ module Bashcov
 
   private
 
-    def mark_multiline(lines, lineno, regexp, forward: true) # rubocop:disable Metrics/CyclomaticComplexity
-      seek_forward = lines[lineno..-1].join
+    def mark_multiline(lines, lineno, regexp, forward: true)
+      seek_forward = lines[lineno..].join
       return unless (multiline_match = seek_forward.match(regexp))
 
       length = multiline_match.to_s.count($/)
@@ -107,7 +107,7 @@ module Bashcov
                            line.end_with?(*IGNORE_END_WITH)
 
       relevant &= false if line =~ /\A\w+\(\)/ # function declared without the `function` keyword
-      relevant &= false if line =~ /\A[^\)]+\)\Z/ # case statement selector, e.g. `--help)`
+      relevant &= false if line =~ /\A[^)]+\)\Z/ # case statement selector, e.g. `--help)`
 
       relevant
     end

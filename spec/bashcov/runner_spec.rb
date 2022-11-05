@@ -4,15 +4,15 @@ require "spec_helper"
 require "benchmark"
 
 describe Bashcov::Runner do
-  let(:runner) { Bashcov::Runner.new([Bashcov.bash_path, test_suite]) }
+  let(:runner) { described_class.new([Bashcov.bash_path, test_suite]) }
 
-  around(:each) do |example|
+  around do |example|
     Dir.chdir File.dirname(test_suite) do
       example.run
     end
   end
 
-  before(:each) do
+  before do
     # SimpleCov uses a block-based filter to reject from the coverage results
     # any files that do not live under SimpleCov.root by matching filenames
     # against a regular expression containing the value of SimpleCov.root.
@@ -33,7 +33,7 @@ describe Bashcov::Runner do
 
       it "adds the flags" do
         runner.send(:with_xtrace_flag) do
-          expect(ENV["SHELLOPTS"]).to eq("xtrace")
+          expect(ENV.fetch("SHELLOPTS", nil)).to eq("xtrace")
         end
       end
     end
@@ -49,7 +49,7 @@ describe Bashcov::Runner do
 
       it "merges the flags" do
         runner.send(:with_xtrace_flag) do
-          expect(ENV["SHELLOPTS"]).to eq("posix:xtrace")
+          expect(ENV.fetch("SHELLOPTS", nil)).to eq("posix:xtrace")
         end
       end
     end
@@ -57,7 +57,7 @@ describe Bashcov::Runner do
 
   describe "#run" do
     it "finds commands in $PATH" do
-      expect(Bashcov::Runner.new("ls -l").run).to be_success
+      expect(described_class.new("ls -l").run).to be_success
     end
 
     it "is fast", :slow do
@@ -71,19 +71,19 @@ describe Bashcov::Runner do
         expect($?).to be_success
 
         run = nil
-        t1 = Benchmark.realtime { run = Bashcov::Runner.new(test_suite).run }
+        t1 = Benchmark.realtime { run = described_class.new(test_suite).run }
         expect(run).to be_success
 
-        ratio = (ratio * iteration + t1 / t0) / (iteration + 1)
+        ratio = ((ratio * iteration) + (t1 / t0)) / (iteration + 1)
       end
 
       puts "#{ratio} times slower with Bashcov"
       # XXX: no proper assertion - just outputs the ratio
     end
 
-    context "given a script that unsets $LINENO" do
-      include_context "temporary script", "unset_lineno" do
-        # @note "temporary script" context expects +script_text+ to be defined.
+    context "with a script that unsets $LINENO" do
+      include_context "with a temporary script", "unset_lineno" do
+        # @note "with a temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-BASH.gsub(/\A\s+/, "")
             #!/bin/bash
@@ -104,14 +104,14 @@ describe Bashcov::Runner do
       it "returns an incomplete coverage hash" do
         tmprunner.run
         expect(tmprunner.result[tmpscript.path]).to \
-          contain_exactly(*unset_lineno_coverage)
+          match_array(unset_lineno_coverage)
       end
     end
 
-    context "given a script whose path contains Xtrace.delimiter" do
+    context "with a script whose path contains Xtrace.delimiter" do
       # @note Due to the way that RSpec orders evaluation of contexts,
       # examples, and example hooks, {Bashcov::Xtrace.delimiter} in:
-      #   +include_context "temporary script", Bashcov::Xtrace.delimiter+
+      #   +include_context "with a temporary script", Bashcov::Xtrace.delimiter+
       # gets expanded prior to setting Bashcov.bash_path in +spec_helper.rb+,
       # which causes an inappropriate value for {Bashcov::Xtrace.delimiter} if the
       # default Bash (+/bin/bash+) does not suffer from the truncated +PS4+ bug
@@ -120,10 +120,10 @@ describe Bashcov::Runner do
       # value is set properly at the time the temporary script is created.
       Bashcov.bash_path = ENV["BASHCOV_BASH_PATH"] unless ENV["BASHCOV_BASH_PATH"].nil?
 
-      include_context "temporary script", Bashcov::Xtrace.delimiter do
-        # @note "temporary script" context expects +script_text+ to be defined.
+      include_context "with a temporary script", Bashcov::Xtrace.delimiter do
+        # @note "with a temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
-          <<-BASH.gsub(/\A\s+/, "")
+          <<~BASH
             #!/usr/bin/env bash
 
             echo "Oh no!"
@@ -133,22 +133,16 @@ describe Bashcov::Runner do
         let(:bad_path_coverage) { [nil, nil, 0] }
       end
 
-      context "given a version of Bash from 4.3 and up", if: Bashcov::BASH_VERSION >= "4.3" do
-        it "indicates that no lines were executed" do
-          tmprunner.run
+      it "indicates that no lines were executed" do
+        tmprunner.run
 
-          # Hack to execute this line (and get it counted in the coverage stats)
-          # even if we're on Bash 4.2
-          unless Bashcov.truncated_ps4?
-            expect(tmprunner.result[tmpscript.path]).to \
-              contain_exactly(*bad_path_coverage)
-          end
-        end
+        expect(tmprunner.result[tmpscript.path]).to \
+          match_array(bad_path_coverage)
       end
     end
 
-    context "given an empty script" do
-      include_context "temporary script", "empty_script" do
+    context "with an empty script" do
+      include_context "with a temporary script", "empty_script" do
         let(:script_text) { "" }
       end
 
@@ -158,41 +152,6 @@ describe Bashcov::Runner do
         expect(tmprunner.result[tmpscript.path]).to be_empty
       end
     end
-
-    context "given a version of Bash prior to 4.1", if: Bashcov::BASH_VERSION < "4.1" do
-      include_context "temporary script", "no_stderr" do
-        let(:stderr_output) { "AIEEE!" }
-
-        # @note "temporary script" context expects +script_text+ to be defined.
-        let(:script_text) do
-          <<-BASH.gsub(/\A\s+/, "")
-            #!/usr/bin/env bash
-
-            echo #{stderr_output} 1>&2
-          BASH
-        end
-
-        let(:xtracefd_warning) { Regexp.new(/warning:.*version of Bash/) }
-      end
-
-      context "when mute is true" do
-        it "does not print a warning about the lack of BASH_XTRACEFD" do
-          allow(Bashcov).to receive(:mute).and_return(true)
-          expect { tmprunner.run }.not_to output(xtracefd_warning).to_stderr
-        end
-      end
-
-      context "when mute is false" do
-        it "prints a warning about the lack of BASH_XTRACEFD" do
-          allow(Bashcov).to receive(:mute).and_return(false)
-          expect { tmprunner.run }.to output(xtracefd_warning).to_stderr
-        end
-      end
-
-      it "does not pass script output to standard error" do
-        expect { tmprunner.run }.not_to output(stderr_output).to_stderr
-      end
-    end
   end
 
   describe "#result" do
@@ -200,7 +159,7 @@ describe Bashcov::Runner do
       runner.run
       result = runner.result
 
-      expect(result.count).to eq(expected_coverage.count), "expected coverage for #{expected_coverage.count} file(s), got #{result.count}"
+      expect(result.count).to eq(expected_coverage.count), "expected coverage for #{expected_coverage.count} files, got #{result.count}"
 
       expected_coverage.each do |file, expected_hits|
         expect(result).to include(file), "#{file} expected coverage stats but got none"
@@ -234,7 +193,7 @@ describe Bashcov::Runner do
         it "includes matching files even if they are uncovered" do
           expect(SimpleCov).to receive(:tracked_files).at_least(:once).and_return(uncovered_files.first)
           runner.run
-          expect(runner.result.keys & uncovered_files).to contain_exactly(*uncovered_files.first)
+          expect(runner.result.keys & uncovered_files).to match_array(uncovered_files.first)
         end
       end
     end
@@ -254,7 +213,7 @@ describe Bashcov::Runner do
     end
 
     context "with SimpleCov filters in effect" do
-      before(:each) do
+      before do
         SimpleCov.configure do
           expected_omitted.each_key { |filter| add_filter(filter) }
         end
@@ -263,7 +222,7 @@ describe Bashcov::Runner do
       it "omits files matching one or more SimpleCov filters from the results hash" do
         runner.run
         result = runner.result
-        expect(result.keys).to contain_exactly(*(expected_coverage.keys - expected_omitted.values.flatten))
+        expect(result.keys).to match_array((expected_coverage.keys - expected_omitted.values.flatten))
       end
     end
   end

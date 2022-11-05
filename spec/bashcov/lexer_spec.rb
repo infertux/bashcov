@@ -6,7 +6,7 @@ describe Bashcov::Lexer do
   describe "#initialize" do
     it "raises if the file is invalid" do
       expect do
-        Bashcov::Lexer.new "inexistent_file.exe", nil
+        described_class.new "inexistent_file.exe", nil
       end.to raise_error ArgumentError
     end
   end
@@ -19,7 +19,7 @@ describe Bashcov::Lexer do
         index unless line.nil?
       end.compact
 
-      Bashcov::Lexer.new(file, coverage).complete_coverage
+      described_class.new(file, coverage).complete_coverage
 
       expect(coverage.keys).to match_array expected
     end

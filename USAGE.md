@@ -64,11 +64,3 @@ it may yield a path that doesn't refer to the currently-running script.
 However, it performs well under the various working directory changes performed
 in the [test app demo] and avoids the spurious extra hits caused by using
 subshells in the `PS4`.
-
-One final note on innards: Bash 4.3 fixed a bug in which `PS4` expansion is
-truncated to a maximum of 128 characters. On platforms whose Bash version
-suffers from this bug, Bashcov uses the ASCII record separator character to
-delimit the `PS4` fields, whereas it uses a long random string on Bash 4.3 and
-above. When the field delimiter appears in the path of a script under test or
-in a command the script executes, Bashcov won't correctly parse the `PS4` and
-will abort early with incomplete coverage results.

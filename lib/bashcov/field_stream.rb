@@ -23,7 +23,7 @@ module Bashcov
       end
     end
 
-    # Yields fields extracted from a input stream
+    # Yields fields extracted from an input stream
     # @param [String, nil] delimiter   the field separator
     # @param [Integer]     field_count the number of fields to extract
     # @param [Regexp]      start_match a +Regexp+ that, when matched against the
@@ -33,13 +33,13 @@ module Bashcov
     #   +start_match+ is matched with fewer than +field_count+ fields yielded
     #   since the last match, yields empty strings until +field_count+ is
     #   reached.
-    def each(delimiter, field_count, start_match)
+    def each(delimiter, field_count, start_match, &block)
       return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
 
       chunked = each_field(delimiter).chunk(&chunk_matches(start_match))
 
       yield_fields = lambda do |(_, chunk)|
-        chunk.each { |e| yield e }
+        chunk.each(&block)
         (field_count - chunk.size).times { yield "" }
       end
 

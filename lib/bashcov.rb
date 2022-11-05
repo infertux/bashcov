@@ -3,15 +3,12 @@
 require "optparse"
 require "pathname"
 
-require "bashcov/bash_info"
 require "bashcov/runner"
 require "bashcov/version"
 
 # Bashcov default module
 # @note Keep it short!
 module Bashcov
-  extend Bashcov::BashInfo
-
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
     *%i[skip_uncovered mute bash_path root_directory command command_name]
@@ -55,8 +52,9 @@ module Bashcov
         VERSION,
         "with Bash #{BASH_VERSION},",
         "Ruby #{RUBY_VERSION},",
-        "and SimpleCov #{SimpleCov::VERSION}.",
-      ].join(" ")
+        "and SimpleCov #{SimpleCov::VERSION}",
+        (Process.uid.zero? ? " as root user (NOT recommended)" : nil),
+      ].compact.join(" ")
     end
 
     # @return [String] The value to use as +SimpleCov.command_name+. Uses the
@@ -65,7 +63,7 @@ module Bashcov
     #   representation of {Bashcov#command}.
     def command_name
       return @options.command_name if @options.command_name
-      return ENV["BASHCOV_COMMAND_NAME"] unless ENV.fetch("BASHCOV_COMMAND_NAME", "").empty?
+      return ENV.fetch("BASHCOV_COMMAND_NAME", nil) unless ENV.fetch("BASHCOV_COMMAND_NAME", "").empty?
 
       command.compact.join(" ")
     end
@@ -78,7 +76,7 @@ module Bashcov
       rescue NoMethodError; end # rubocop:disable Lint/SuppressedException
 
       # Support the same `BASHCOV_BASH_PATH` environment variable used in the spec tests.
-      return ENV["BASHCOV_BASH_PATH"] unless ENV.fetch("BASHCOV_BASH_PATH", "").empty?
+      return ENV.fetch("BASHCOV_BASH_PATH", nil) unless ENV.fetch("BASHCOV_BASH_PATH", "").empty?
 
       # Fall back to standard Bash location.
       "/bin/bash"
@@ -121,8 +119,8 @@ module Bashcov
       HELP
     end
 
-    def option_parser # rubocop:disable Metrics/MethodLength
-      OptionParser.new do |opts| # rubocop:disable Metrics/BlockLength
+    def option_parser
+      OptionParser.new do |opts|
         opts.program_name = program_name
         opts.version = Bashcov::VERSION
         opts.banner = help

@@ -1,26 +1,42 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 3.0
+  NewCops: enable
 
-Metrics/AbcSize:
-  Max: 30
+Metrics:
+  Enabled: false
 
-Metrics/BlockLength:
-  Exclude: ["spec/**/*.rb"]
-
-Metrics/ClassLength:
-  Max: 150
-
-Metrics/LineLength:
-  Max: 100
-  Exclude: ["spec/**/*.rb"]
-
-Metrics/MethodLength:
-  Max: 20
+Gemspec/DevelopmentDependencies:
+  Enabled: false
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
+Layout/LineLength:
+  Enabled: 100
+
 Lint/RedundantSplatExpansion:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
   Enabled: false
 
 Style/ParallelAssignment:

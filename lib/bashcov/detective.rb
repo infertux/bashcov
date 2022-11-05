@@ -34,7 +34,7 @@ module Bashcov
       return false unless File.exist?(filename) && File.readable?(filename) \
         && File.file?(File.realpath(filename))
 
-      shellscript_shebang?(filename) || \
+      shellscript_shebang?(filename) ||
         (shellscript_extension?(filename) && shellscript_syntax?(filename))
     end
 
@@ -54,10 +54,10 @@ module Bashcov
 
       return false unless shebang[0..1] == "#!"
 
-      shell, arg = shebang[2..-1].split(/\s+/, 2)
+      shell, arg = shebang[2..].split(/\s+/, 2)
       shell_basename = File.basename(shell)
 
-      SHELL_BASENAMES.include?(shell_basename) || \
+      SHELL_BASENAMES.include?(shell_basename) ||
         (OTHER_BASENAMES.include?(shell_basename) && SHELL_BASENAMES.include?(arg))
     end
 

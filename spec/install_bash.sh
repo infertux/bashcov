@@ -23,7 +23,7 @@ done
 
 ./configure --exec-prefix /
 make
-sudo make install
+make install
 
 popd
 rm -rf bash-$INSTALL_BASH_VERSION

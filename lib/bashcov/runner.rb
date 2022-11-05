@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tempfile"
+
 require "simplecov"
 
 require "bashcov/detective"
@@ -20,23 +22,40 @@ module Bashcov
     # Runs the command with appropriate xtrace settings.
     # @note Binds Bashcov +stdin+ to the program being executed.
     # @return [Process::Status] Status of the executed command
-    def run # rubocop:disable Metrics/MethodLength
+    def run
       # Clear out previous run
       @result = nil
 
       field_stream = FieldStream.new
       @xtrace = Xtrace.new(field_stream)
-
       fd = @xtrace.file_descriptor
-      env = { "PS4" => Xtrace.ps4 }
+
       options = { in: :in }
+      options[fd] = fd # bind FDs to the child process
 
       if Bashcov.options.mute
         options[:out] = "/dev/null"
         options[:err] = "/dev/null"
       end
 
-      run_xtrace(fd, env, options) do
+      env =
+        if Process.uid.zero?
+          # if running as root, Bash 4.4+ does not inherit $PS4 from the environment
+          # https://github.com/infertux/bashcov/issues/43#issuecomment-450605839
+          write_warning "running as root is NOT recommended, Bashcov may not work properly."
+
+          temp_file = Tempfile.new("bashcov_bash_env")
+          temp_file.write("export PS4='#{Xtrace.ps4}'\n")
+          temp_file.close
+
+          { "BASH_ENV" => temp_file.path }
+        else
+          { "PS4" => Xtrace.ps4 }
+        end
+
+      env["BASH_XTRACEFD"] = fd.to_s
+
+      with_xtrace_flag do
         command_pid = Process.spawn env, *@command, options # spawn the command
 
         begin
@@ -59,6 +78,8 @@ module Bashcov
           @coverage = e.files
         end
       end
+
+      temp_file&.unlink
 
       $?
     end
@@ -85,39 +106,13 @@ module Bashcov
       ].join
     end
 
-    def run_xtrace(fd, env, options) # rubocop:disable Naming/MethodParameterName
-      # Older versions of Bash (< 4.1) don't have the BASH_XTRACEFD variable
-      if Bashcov.bash_xtracefd?
-        options[fd] = fd # bind FDs to the child process
-
-        env["BASH_XTRACEFD"] = fd.to_s
-      else
-        # Send subprocess standard error to @xtrace.file_descriptor
-        options[:err] = fd
-
-        # Don't bother issuing warning if we're silencing output anyway
-        unless Bashcov.mute
-          write_warning <<-WARNING
-            you are using a version of Bash that does not support
-            BASH_XTRACEFD. All xtrace output will print to standard error, and
-            your script's output on standard error will not be printed to the
-            console.
-          WARNING
-        end
-      end
-
-      with_xtrace_flag do
-        yield
-      end
-    end
-
     # @note +SHELLOPTS+ must be exported so we use Ruby's {ENV} variable
     # @yield [void] adds "xtrace" to +SHELLOPTS+ and then runs the provided
     #   block
     # @return [Object, ...] the value returned by the calling block
     def with_xtrace_flag
-      existing_flags_s = ENV["SHELLOPTS"]
-      existing_flags = (existing_flags_s || "").split(":")
+      existing_flags_s = ENV.fetch("SHELLOPTS", "")
+      existing_flags = existing_flags_s.split(":")
       ENV["SHELLOPTS"] = (existing_flags | ["xtrace"]).join(":")
 
       yield
@@ -129,9 +124,7 @@ module Bashcov
     # @return [void]
     def find_bash_files!
       filtered_files.each do |filename|
-        if !@coverage.include?(filename) && @detective.shellscript?(filename)
-          @coverage[filename] = []
-        end
+        @coverage[filename] = [] if !@coverage.include?(filename) && @detective.shellscript?(filename)
       end
     end
 
@@ -155,7 +148,7 @@ module Bashcov
         SimpleCov::SourceFile.new(file.to_s, @coverage.fetch(file, []))
       end
 
-      source_file_to_tracked_file = Hash[source_files.zip(tracked_files)]
+      source_file_to_tracked_file = source_files.zip(tracked_files).to_h
 
       @filtered_files = SimpleCov.filtered(source_files).map do |source_file|
         source_file_to_tracked_file[source_file]
@@ -185,7 +178,7 @@ module Bashcov
     end
 
     def convert_coverage
-      Hash[@coverage.map { |filename, coverage| [filename.to_s, coverage] }]
+      @coverage.transform_keys(&:to_s)
     end
   end
 end

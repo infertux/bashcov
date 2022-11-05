@@ -1,0 +1,43 @@
+# Official language image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/ruby/tags/
+image: ruby:latest
+
+before_script:
+  - ruby -v
+  - bundle install -j $(nproc)
+  - ./spec/install_bash.sh
+  - bash --version
+  - id
+  - env
+
+# Bash versions can be found at https://git.savannah.gnu.org/cgit/bash.git
+rspec-bash-5.2:
+  variables:
+    INSTALL_BASH_VERSION: "5.2"
+  script: rspec
+
+rspec-bash-5.1:
+  variables:
+    INSTALL_BASH_VERSION: "5.1"
+  script: rspec
+
+rspec-bash-5.0:
+  variables:
+    INSTALL_BASH_VERSION: "5.0"
+  script: rspec
+
+rspec-bash-4.4:
+  variables:
+    INSTALL_BASH_VERSION: "4.4"
+  script: rspec
+
+rspec-bash-4.3:
+  variables:
+    INSTALL_BASH_VERSION: "4.3"
+  script: rspec
+
+rubocop:
+  script: rubocop
+
+yard:
+  script: yard stats --list-undoc

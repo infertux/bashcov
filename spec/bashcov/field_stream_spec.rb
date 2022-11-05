@@ -5,16 +5,16 @@ require "spec_helper"
 RSpec::Matchers.define_negated_matcher :not_end_with, :end_with
 
 describe Bashcov::FieldStream do
-  include_context "delimited stream", 10
+  include_context "with a delimited stream", 10
 
   describe "#each_field" do
     it "removes the field delimiter" do
       expect(stream.each_field(delimiter).to_a).to all(not_end_with(delimiter))
     end
 
-    context "given a block" do
+    context "with a block" do
       it "yields each field in the stream" do
-        expected = [start] + [String] * taken
+        expected = [start] + ([String] * taken)
         expect { |e| stream.each_field(delimiter, &e) }.to yield_successive_args(*expected)
       end
     end
@@ -27,7 +27,7 @@ describe Bashcov::FieldStream do
   end
 
   describe "#each" do
-    context "given a block" do
+    context "with a block" do
       it "yields each field in the stream" do
         expected = [String] * taken
         expect { |e| stream.each(delimiter, field_count, start_match, &e) }.to \
@@ -46,7 +46,7 @@ describe Bashcov::FieldStream do
       let(:empty_count) { field_count - taken }
 
       it "returns empty strings for the remaining fields" do
-        expected = [String] * taken + [""] * empty_count
+        expected = ([String] * taken) + ([""] * empty_count)
         expect { |e| stream.each(delimiter, field_count, start_match, &e) }.to \
           yield_successive_args(*expected)
       end

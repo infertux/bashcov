@@ -1,18 +1,24 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v2.0.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.0...master))
 
   * TBD
 
-## v2.0.0, 2020-07-?? ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v2.0.0))
+## v3.0.0, 2023-04-10 ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v3.0.0))
 
+  * [MISC]    New minimum Bash version supported is 4.3
+  * [MISC]    New minimum Ruby version supported is 3.0
+  * [BUGFIX]  Running Bashcov as root is now working (especially useful with Docker) although it is not recommended (#31, #43 and #56)
+  * [BUGFIX]  Fix comments preceded by tabs not filtered out (#68)
+  * [BUGFIX]  Fix two-line multilines not being treated as related (#67)
+  * [BUGFIX]  Redefine `BASH_VERSION` when `bash_path` is read from command options (#57)
+  * [BUGFIX]  Mute output from Bashcov and SimpleCov when requested (#54)
+  * [BUGFIX]  Correctly handle empty scripts by short-circuiting
+              `FieldStream#each` if the reader stream is at end-of-file before
+              the start-of-fields pattern is encountered (#41)
   * [FEATURE] Bashcov omits from the coverage results any files that match one
               or more of the filters in `SimpleCov.filters` (#38)
   * [FEATURE] Ensure that files matching the `SimpleCov.tracked_files` glob
               pattern are included in the coverage results, regardless of
               whether `Bashcov.skip_uncovered` is enabled (#38)
-  * [MISC]    Add support for Ruby 2.6 and drop 2.3
-  * [BUGFIX]  Correctly handle empty scripts by short-circuiting
-              `FieldStream#each` if the reader stream is at end-of-file before
-              the start-of-fields pattern is encountered (#41)
 
 ## v1.8.2, 2018-03-27 ([changes](https://github.com/infertux/bashcov/compare/v1.8.1...v1.8.2))
 
