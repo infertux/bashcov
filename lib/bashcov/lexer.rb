@@ -81,7 +81,7 @@ module Bashcov
       reference_lineno = (forward ? first - 1 : last)
 
       # don't seek backward if first line is already covered
-      return if !forward && @coverage[first]
+      return if !forward && @coverage[first - 1]
 
       range.each do |sub_lineno|
         # mark related lines with the same coverage as the reference line
