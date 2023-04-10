@@ -37,7 +37,7 @@ def expected_coverage
     "#{test_app}/scripts/multiline4.sh" => [nil, nil, 1, 1],
     "#{test_app}/scripts/executable" => [nil, nil, 1],
     "#{test_app}/scripts/exit_non_zero.sh" => [nil, nil, 1],
-    "#{test_app}/scripts/no_shebang.sh" => [nil, nil, nil, nil, 0], # FIXME: should be covered
+    "#{test_app}/scripts/no_shebang.sh" => [nil, nil, nil, nil, 1],
     "#{test_app}/scripts/no_extension/bin_bash" => [nil, nil, 1],
     "#{test_app}/scripts/no_extension/bin_bash_with_args" => [nil, nil, 1],
     "#{test_app}/scripts/no_extension/bin_dash" => [nil, nil, 0],

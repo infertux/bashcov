@@ -158,13 +158,14 @@ module Bashcov
     # @return [void]
     def expunge_invalid_files!
       @coverage.each_key do |filename|
-        next if filename.file?
+        if !filename.file?
+          @coverage.delete filename
+          write_warning "#{filename} was executed but has been deleted since then - it won't be reported in coverage."
 
-        @coverage.delete filename
-        write_warning <<-WARNING
-          #{filename} was executed but has been deleted since then - it won't
-          be reported in coverage.
-        WARNING
+        elsif !@detective.shellscript?(filename)
+          @coverage.delete filename
+          write_warning "#{filename} was partially executed but has invalid Bash syntax - it won't be reported in coverage."
+        end
       end
     end
 
