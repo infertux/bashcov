@@ -10,34 +10,47 @@ before_script:
   - id
   - env
 
-# Bash versions can be found at https://git.savannah.gnu.org/cgit/bash.git
+audit:
+  script:
+    - bundle exec rake bundle:audit:update
+    - bundle exec rake bundle:audit:check
+
+build:
+  script:
+    - bundle exec rake build
+    - bundle exec rake build:checksum
+
+cucumber:
+  script: bundle exec rake cucumber
+
+# Current Bash versions can be found at https://git.savannah.gnu.org/cgit/bash.git
 rspec-bash-5.2:
   variables:
     INSTALL_BASH_VERSION: "5.2"
-  script: rspec
+  script: bundle exec rake spec
 
 rspec-bash-5.1:
   variables:
     INSTALL_BASH_VERSION: "5.1"
-  script: rspec
+  script: bundle exec rake spec
 
 rspec-bash-5.0:
   variables:
     INSTALL_BASH_VERSION: "5.0"
-  script: rspec
+  script: bundle exec rake spec
 
 rspec-bash-4.4:
   variables:
     INSTALL_BASH_VERSION: "4.4"
-  script: rspec
+  script: bundle exec rake spec
 
 rspec-bash-4.3:
   variables:
     INSTALL_BASH_VERSION: "4.3"
-  script: rspec
+  script: bundle exec rake spec
 
 rubocop:
-  script: rubocop
+  script: bundle exec rake rubocop
 
 yard:
-  script: yard stats --list-undoc
+  script: bundle exec yard stats --list-undoc
