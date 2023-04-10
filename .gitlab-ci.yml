@@ -19,6 +19,7 @@ build:
   script:
     - bundle exec rake build
     - bundle exec rake build:checksum
+    - cat checksums/*
 
 cucumber:
   script: bundle exec rake cucumber
