@@ -20,7 +20,7 @@ module StepHelpers
     run_command_and_stop(<<-COMMAND)
       ruby -rjson -rsimplecov -e '
         SimpleCov.at_exit { } # noop to prevent output other than the desired JSON
-        print SimpleCov::ResultMerger.results.map(&:to_hash).to_json
+        print SimpleCov::ResultMerger.merged_result.to_hash.to_json
       '
     COMMAND
 
@@ -28,7 +28,7 @@ module StepHelpers
   end
 
   def simplecov_results_from_json(doc)
-    JSON.parse(doc).map { |raw| SimpleCov::Result.from_hash(raw) }
+    SimpleCov::Result.from_hash(JSON.parse(doc))
   end
 
   def simplecov_results
@@ -36,7 +36,7 @@ module StepHelpers
   end
 
   def simplecov_merged_result
-    SimpleCov::ResultMerger.merge_results(*simplecov_results)
+    simplecov_results[0]
   end
 end
 
@@ -68,24 +68,21 @@ When(/I run the following commands with bashcov(?: using `([^`]+)`)?:$/) do |opt
 end
 
 Then(/^the results should contain the commands:$/) do |table|
-  results = simplecov_results
   commands = table.raw.flatten
-  expect(results.map(&:command_name)).to include(*commands)
+  result_command_names = simplecov_results.map(&:command_name).map { |name| name.split(", ") }.flatten
+  expect(result_command_names).to include(*commands)
 end
 
 Then(/^the file "([^"]*)" should have the following coverage:/) do |filename, table|
   filename = File.expand_path(filename, aruba_working_directory_expanded)
-
-  merged_result = simplecov_merged_result
-  original_result = merged_result.original_result
+  original_result = simplecov_merged_result.original_result
 
   expect(original_result).to include(filename), %(coverage includes results for "#{filename}")
 
-  file_coverage = original_result[filename]
+  file_coverage = original_result[filename].fetch("lines")
 
   table.raw.each do |line_number, coverage|
     line_number = line_number.to_i
-
     expected = coverage == "nil" ? nil : coverage.to_i
     actual = file_coverage[line_number - 1]
 
