@@ -3,237 +3,408 @@
   <head>
     <title>Code coverage for Test app</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <script src='./assets/0.10.0/application.js' type='text/javascript'></script>    
-    <link href='./assets/0.10.0/application.css' media='screen, projection, print' rel='stylesheet' type='text/css'>
-    <link rel="shortcut icon" type="image/png" href="./assets/0.10.0/favicon_yellow.png" />
-    <link rel="icon" type="image/png" href="./assets/0.10.0/favicon.png" />
+    <script src='./assets/0.12.3/application.js' type='text/javascript'></script>
+    <link href='./assets/0.12.3/application.css' media='screen, projection, print' rel='stylesheet' type='text/css' />
+    <link rel="shortcut icon" type="image/png" href="./assets/0.12.3/favicon_green.png" />
+    <link rel="icon" type="image/png" href="./assets/0.12.3/favicon.png" />
   </head>
-  
+
   <body>
     <div id="loading">
-      <img src="./assets/0.10.0/loading.gif" alt="loading"/>
+      <img src="./assets/0.12.3/loading.gif" alt="loading"/>
     </div>
-    <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2016-02-09T21:49:16+00:00">2016-02-09T21:49:16+00:00</abbr></div>
+    <div id="wrapper" class="hide">
+      <div class="timestamp">Generated <abbr class="timeago" title="2023-04-10T04:47:17+00:00">2023-04-10T04:47:17+00:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
         <div class="file_list_container" id="AllFiles">
   <h2>
     <span class="group_name">All Files</span>
-    (<span class="covered_percent"><span class="yellow">81.94%</span></span>
+    (<span class="covered_percent">
+      <span class="green">
+  90.79%
+</span>
+
+     </span>
      covered at
      <span class="covered_strength">
        <span class="green">
-         1.17
+         1.07
        </span>
-    </span> hits/line)
+    </span> hits/line
+    )
   </h2>
+
   <a name="AllFiles"></a>
+
   <div>
-    <b>18</b> files in total.
-    <b>72</b> relevant lines. 
-    <span class="green"><b>59</b> lines covered</span> and
-    <span class="red"><b>13</b> lines missed </span>
+    <b>30</b> files in total.
   </div>
-  <table class="file_list">
-    <thead>
-      <tr>
-        <th>File</th>
-        <th>% covered</th>
-        <th>Lines</th>
-        <th>Relevant Lines</th>
-        <th>Lines covered</th>
-        <th>Lines missed</th>
-        <th>Avg. Hits / Line</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr>
-        <td class="strong"><a href="#9144b6590a11f2e9b9a5bfd7254981e7e2769bda" class="src_link" title="never_called.sh">never_called.sh</a></td>
-        <td class="red strong">0.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1</td>
-        <td>0.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#0b2d93bf5c731f31bbea17c23a68bce3cdaed3e4" class="src_link" title="scripts/case.sh">scripts/case.sh</a></td>
-        <td class="red strong">71.43 %</td>
-        <td>15</td>
-        <td>7</td>
-        <td>5</td>
-        <td>2</td>
-        <td>0.9</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#e0dfce00f43661bbb246a5429d04bff158c60068" class="src_link" title="scripts/cd.sh">scripts/cd.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>21</td>
-        <td>11</td>
-        <td>11</td>
-        <td>0</td>
-        <td>2.2</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#27d712a02ebe2c6aeaa34a8f4b65bd680435b8a7" class="src_link" title="scripts/delete.sh">scripts/delete.sh</a></td>
-        <td class="red strong">60.0 %</td>
-        <td>9</td>
-        <td>5</td>
-        <td>3</td>
-        <td>2</td>
-        <td>0.6</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#e646ebfab93a6f92328dbfcebede276776164f1d" class="src_link" title="scripts/executable">scripts/executable</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#f7325ee760a2b404f0e4f3982030f7dbed4a4f86" class="src_link" title="scripts/exit_non_zero.sh">scripts/exit_non_zero.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>3</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#82f075bce48cedc8d2a7c07ec62ca56c339cf994" class="src_link" title="scripts/function.sh">scripts/function.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>20</td>
-        <td>7</td>
-        <td>7</td>
-        <td>0</td>
-        <td>1.1</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2a84a4e41eeaa6f4171288c4dfebee30a0b034c7" class="src_link" title="scripts/long_line.sh">scripts/long_line.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>7</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#19827c6f853b744804312fb6a6cf5d7d52728515" class="src_link" title="scripts/multiline.sh">scripts/multiline.sh</a></td>
-        <td class="red strong">69.23 %</td>
-        <td>24</td>
-        <td>13</td>
-        <td>9</td>
-        <td>4</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce" class="src_link" title="scripts/nested/simple.sh">scripts/nested/simple.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>13</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2be2cf1930216490edf31511d43e23165835234f" class="src_link" title="scripts/new
+
+  <div class="t-line-summary">
+    <b>152</b> relevant lines,
+    <span class="green"><b>138</b> lines covered</span> and
+    <span class="red"><b>14</b> lines missed. </span>
+    (<span class="green">
+  90.79%
+</span>
+)
+  </div>
+
+  
+
+  <div class="file_list--responsive">
+    <table class="file_list">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th class="cell--number">% covered</th>
+          <th class="cell--number">Lines</th>
+          <th class="cell--number">Relevant Lines</th>
+          <th class="cell--number">Lines covered</th>
+          <th class="cell--number">Lines missed</th>
+          <th class="cell--number">Avg. Hits / Line</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#9144b6590a11f2e9b9a5bfd7254981e7e2769bda" class="src_link" title="never_called.sh">never_called.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">0.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#262887567467e74963475a76df7f705713e5acbc" class="src_link" title="scripts/array.sh">scripts/array.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">8</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#e24c1ea749473759c8626cd9bf01baef5b11c0ba" class="src_link" title="scripts/bad_syntax.sh">scripts/bad_syntax.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">25.00 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">0.25</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#0b2d93bf5c731f31bbea17c23a68bce3cdaed3e4" class="src_link" title="scripts/case.sh">scripts/case.sh</a></td>
+            <td class="yellow strong cell--number t-file__coverage">83.33 %</td>
+            <td class="cell--number">16</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#e0dfce00f43661bbb246a5429d04bff158c60068" class="src_link" title="scripts/cd.sh">scripts/cd.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">21</td>
+            <td class="cell--number">11</td>
+            <td class="cell--number">11</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">2.18</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#3aefe7fe17ced534c0144d17b89df9eaf04511df" class="src_link" title="scripts/comments.sh">scripts/comments.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#27d712a02ebe2c6aeaa34a8f4b65bd680435b8a7" class="src_link" title="scripts/delete.sh">scripts/delete.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#e646ebfab93a6f92328dbfcebede276776164f1d" class="src_link" title="scripts/executable">scripts/executable</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#f7325ee760a2b404f0e4f3982030f7dbed4a4f86" class="src_link" title="scripts/exit_non_zero.sh">scripts/exit_non_zero.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#82f075bce48cedc8d2a7c07ec62ca56c339cf994" class="src_link" title="scripts/function.sh">scripts/function.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">20</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.14</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2a84a4e41eeaa6f4171288c4dfebee30a0b034c7" class="src_link" title="scripts/long_line.sh">scripts/long_line.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#19827c6f853b744804312fb6a6cf5d7d52728515" class="src_link" title="scripts/multiline.sh">scripts/multiline.sh</a></td>
+            <td class="yellow strong cell--number t-file__coverage">88.00 %</td>
+            <td class="cell--number">41</td>
+            <td class="cell--number">25</td>
+            <td class="cell--number">22</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">0.96</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#346505ddbd8d63a670f284f54aa36e1a5fe29abd" class="src_link" title="scripts/multiline2.sh">scripts/multiline2.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">48</td>
+            <td class="cell--number">37</td>
+            <td class="cell--number">37</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#143bdf263f67d54d50bdfceac7913a4268a645fe" class="src_link" title="scripts/multiline3.sh">scripts/multiline3.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#4c5a5a8a487860994dffba02d2d09c3111ec1e5d" class="src_link" title="scripts/multiline4.sh">scripts/multiline4.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce" class="src_link" title="scripts/nested/simple.sh">scripts/nested/simple.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2be2cf1930216490edf31511d43e23165835234f" class="src_link" title="scripts/new
 line.sh">scripts/new
 line.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>5</td>
-        <td>2</td>
-        <td>2</td>
-        <td>0</td>
-        <td>1.5</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#0e7789bb466ecf0cff3a50adb4c6fb6ca0a0434c" class="src_link" title="scripts/one_liner.sh">scripts/one_liner.sh</a></td>
-        <td class="red strong">66.67 %</td>
-        <td>9</td>
-        <td>3</td>
-        <td>2</td>
-        <td>1</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2a557ab6e2ead20f784653330c2c9d6868a42232" class="src_link" title="scripts/process_substitution.sh">scripts/process_substitution.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>9</td>
-        <td>3</td>
-        <td>3</td>
-        <td>0</td>
-        <td>2.3</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#1332320c4f78eebcbaee1878e3d399d4ca500d71" class="src_link" title="scripts/simple.sh">scripts/simple.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>13</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2ab047047ea76cfca4ce165b6842a422d671ff7a" class="src_link" title="scripts/source.sh">scripts/source.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>6</td>
-        <td>2</td>
-        <td>2</td>
-        <td>0</td>
-        <td>1.5</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#8b9a5459674ae3739f81dd5027011e7d0f47c530" class="src_link" title="scripts/sourced.txt">scripts/sourced.txt</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#60478794c517dd2e1b6c3124cf972da12f579cc9" class="src_link" title="scripts/unicode.sh">scripts/unicode.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#31860f46ad558674b3a43636e22c9c0b702ca142" class="src_link" title="test_suite.sh">test_suite.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>5</td>
-        <td>2</td>
-        <td>2</td>
-        <td>0</td>
-        <td>1.5</td>
-      </tr>
-      
-    </tbody>
-  </table>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.50</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#084cf61c0b6ae03e55c223d3ae42b16bfe7648ca" class="src_link" title="scripts/no_extension/bin_bash">scripts/no_extension/bin_bash</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#7c3e9a3762ccb93f496876d8f9fab76e69b0c04b" class="src_link" title="scripts/no_extension/bin_bash_with_args">scripts/no_extension/bin_bash_with_args</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#14da4af7ad2efb1f2c925c2cc32306dba7b98c32" class="src_link" title="scripts/no_extension/bin_dash">scripts/no_extension/bin_dash</a></td>
+            <td class="red strong cell--number t-file__coverage">0.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#fd6bcd169efe4e6622315c55f005e7bff3915a00" class="src_link" title="scripts/no_extension/usr_bin_env_bash">scripts/no_extension/usr_bin_env_bash</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#de3a06d9d0e279ff5fd9f44f6477f816327efdba" class="src_link" title="scripts/no_shebang.sh">scripts/no_shebang.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#fdac372bbf7243b0c5ed1c426e0d03f3c759016e" class="src_link" title="scripts/nounset.sh">scripts/nounset.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">66.67 %</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.67</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#0e7789bb466ecf0cff3a50adb4c6fb6ca0a0434c" class="src_link" title="scripts/one_liner.sh">scripts/one_liner.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">66.67 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2a557ab6e2ead20f784653330c2c9d6868a42232" class="src_link" title="scripts/process_substitution.sh">scripts/process_substitution.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">2.33</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#1332320c4f78eebcbaee1878e3d399d4ca500d71" class="src_link" title="scripts/simple.sh">scripts/simple.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2ab047047ea76cfca4ce165b6842a422d671ff7a" class="src_link" title="scripts/source.sh">scripts/source.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.50</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#8b9a5459674ae3739f81dd5027011e7d0f47c530" class="src_link" title="scripts/sourced.txt">scripts/sourced.txt</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#60478794c517dd2e1b6c3124cf972da12f579cc9" class="src_link" title="scripts/unicode.sh">scripts/unicode.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#31860f46ad558674b3a43636e22c9c0b702ca142" class="src_link" title="test_suite.sh">test_suite.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">8</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.25</td>
+            
+          </tr>
+        
+      </tbody>
+    </table>
+  </div>
 </div>
 
 
@@ -241,1690 +412,4870 @@ line.sh</a></td>
           <div class="file_list_container" id="BashScripts">
   <h2>
     <span class="group_name">Bash Scripts</span>
-    (<span class="covered_percent"><span class="yellow">81.43%</span></span>
+    (<span class="covered_percent">
+      <span class="green">
+  91.1%
+</span>
+
+     </span>
      covered at
      <span class="covered_strength">
        <span class="green">
-         1.17
+         1.08
        </span>
-    </span> hits/line)
+    </span> hits/line
+    )
   </h2>
+
   <a name="BashScripts"></a>
+
   <div>
-    <b>16</b> files in total.
-    <b>70</b> relevant lines. 
-    <span class="green"><b>57</b> lines covered</span> and
-    <span class="red"><b>13</b> lines missed </span>
+    <b>24</b> files in total.
   </div>
-  <table class="file_list">
-    <thead>
-      <tr>
-        <th>File</th>
-        <th>% covered</th>
-        <th>Lines</th>
-        <th>Relevant Lines</th>
-        <th>Lines covered</th>
-        <th>Lines missed</th>
-        <th>Avg. Hits / Line</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr>
-        <td class="strong"><a href="#9144b6590a11f2e9b9a5bfd7254981e7e2769bda" class="src_link" title="never_called.sh">never_called.sh</a></td>
-        <td class="red strong">0.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1</td>
-        <td>0.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#0b2d93bf5c731f31bbea17c23a68bce3cdaed3e4" class="src_link" title="scripts/case.sh">scripts/case.sh</a></td>
-        <td class="red strong">71.43 %</td>
-        <td>15</td>
-        <td>7</td>
-        <td>5</td>
-        <td>2</td>
-        <td>0.9</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#e0dfce00f43661bbb246a5429d04bff158c60068" class="src_link" title="scripts/cd.sh">scripts/cd.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>21</td>
-        <td>11</td>
-        <td>11</td>
-        <td>0</td>
-        <td>2.2</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#27d712a02ebe2c6aeaa34a8f4b65bd680435b8a7" class="src_link" title="scripts/delete.sh">scripts/delete.sh</a></td>
-        <td class="red strong">60.0 %</td>
-        <td>9</td>
-        <td>5</td>
-        <td>3</td>
-        <td>2</td>
-        <td>0.6</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#f7325ee760a2b404f0e4f3982030f7dbed4a4f86" class="src_link" title="scripts/exit_non_zero.sh">scripts/exit_non_zero.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>3</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#82f075bce48cedc8d2a7c07ec62ca56c339cf994" class="src_link" title="scripts/function.sh">scripts/function.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>20</td>
-        <td>7</td>
-        <td>7</td>
-        <td>0</td>
-        <td>1.1</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2a84a4e41eeaa6f4171288c4dfebee30a0b034c7" class="src_link" title="scripts/long_line.sh">scripts/long_line.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>7</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#19827c6f853b744804312fb6a6cf5d7d52728515" class="src_link" title="scripts/multiline.sh">scripts/multiline.sh</a></td>
-        <td class="red strong">69.23 %</td>
-        <td>24</td>
-        <td>13</td>
-        <td>9</td>
-        <td>4</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce" class="src_link" title="scripts/nested/simple.sh">scripts/nested/simple.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>13</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2be2cf1930216490edf31511d43e23165835234f" class="src_link" title="scripts/new
+
+  <div class="t-line-summary">
+    <b>146</b> relevant lines,
+    <span class="green"><b>133</b> lines covered</span> and
+    <span class="red"><b>13</b> lines missed. </span>
+    (<span class="green">
+  91.1%
+</span>
+)
+  </div>
+
+  
+
+  <div class="file_list--responsive">
+    <table class="file_list">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th class="cell--number">% covered</th>
+          <th class="cell--number">Lines</th>
+          <th class="cell--number">Relevant Lines</th>
+          <th class="cell--number">Lines covered</th>
+          <th class="cell--number">Lines missed</th>
+          <th class="cell--number">Avg. Hits / Line</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#9144b6590a11f2e9b9a5bfd7254981e7e2769bda" class="src_link" title="never_called.sh">never_called.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">0.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#262887567467e74963475a76df7f705713e5acbc" class="src_link" title="scripts/array.sh">scripts/array.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">8</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#e24c1ea749473759c8626cd9bf01baef5b11c0ba" class="src_link" title="scripts/bad_syntax.sh">scripts/bad_syntax.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">25.00 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">0.25</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#0b2d93bf5c731f31bbea17c23a68bce3cdaed3e4" class="src_link" title="scripts/case.sh">scripts/case.sh</a></td>
+            <td class="yellow strong cell--number t-file__coverage">83.33 %</td>
+            <td class="cell--number">16</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#e0dfce00f43661bbb246a5429d04bff158c60068" class="src_link" title="scripts/cd.sh">scripts/cd.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">21</td>
+            <td class="cell--number">11</td>
+            <td class="cell--number">11</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">2.18</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#3aefe7fe17ced534c0144d17b89df9eaf04511df" class="src_link" title="scripts/comments.sh">scripts/comments.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#27d712a02ebe2c6aeaa34a8f4b65bd680435b8a7" class="src_link" title="scripts/delete.sh">scripts/delete.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#f7325ee760a2b404f0e4f3982030f7dbed4a4f86" class="src_link" title="scripts/exit_non_zero.sh">scripts/exit_non_zero.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#82f075bce48cedc8d2a7c07ec62ca56c339cf994" class="src_link" title="scripts/function.sh">scripts/function.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">20</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.14</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2a84a4e41eeaa6f4171288c4dfebee30a0b034c7" class="src_link" title="scripts/long_line.sh">scripts/long_line.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#19827c6f853b744804312fb6a6cf5d7d52728515" class="src_link" title="scripts/multiline.sh">scripts/multiline.sh</a></td>
+            <td class="yellow strong cell--number t-file__coverage">88.00 %</td>
+            <td class="cell--number">41</td>
+            <td class="cell--number">25</td>
+            <td class="cell--number">22</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">0.96</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#346505ddbd8d63a670f284f54aa36e1a5fe29abd" class="src_link" title="scripts/multiline2.sh">scripts/multiline2.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">48</td>
+            <td class="cell--number">37</td>
+            <td class="cell--number">37</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#143bdf263f67d54d50bdfceac7913a4268a645fe" class="src_link" title="scripts/multiline3.sh">scripts/multiline3.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#4c5a5a8a487860994dffba02d2d09c3111ec1e5d" class="src_link" title="scripts/multiline4.sh">scripts/multiline4.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce" class="src_link" title="scripts/nested/simple.sh">scripts/nested/simple.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2be2cf1930216490edf31511d43e23165835234f" class="src_link" title="scripts/new
 line.sh">scripts/new
 line.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>5</td>
-        <td>2</td>
-        <td>2</td>
-        <td>0</td>
-        <td>1.5</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#0e7789bb466ecf0cff3a50adb4c6fb6ca0a0434c" class="src_link" title="scripts/one_liner.sh">scripts/one_liner.sh</a></td>
-        <td class="red strong">66.67 %</td>
-        <td>9</td>
-        <td>3</td>
-        <td>2</td>
-        <td>1</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2a557ab6e2ead20f784653330c2c9d6868a42232" class="src_link" title="scripts/process_substitution.sh">scripts/process_substitution.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>9</td>
-        <td>3</td>
-        <td>3</td>
-        <td>0</td>
-        <td>2.3</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#1332320c4f78eebcbaee1878e3d399d4ca500d71" class="src_link" title="scripts/simple.sh">scripts/simple.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>13</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#2ab047047ea76cfca4ce165b6842a422d671ff7a" class="src_link" title="scripts/source.sh">scripts/source.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>6</td>
-        <td>2</td>
-        <td>2</td>
-        <td>0</td>
-        <td>1.5</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#60478794c517dd2e1b6c3124cf972da12f579cc9" class="src_link" title="scripts/unicode.sh">scripts/unicode.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#31860f46ad558674b3a43636e22c9c0b702ca142" class="src_link" title="test_suite.sh">test_suite.sh</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>5</td>
-        <td>2</td>
-        <td>2</td>
-        <td>0</td>
-        <td>1.5</td>
-      </tr>
-      
-    </tbody>
-  </table>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.50</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#de3a06d9d0e279ff5fd9f44f6477f816327efdba" class="src_link" title="scripts/no_shebang.sh">scripts/no_shebang.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">5</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#fdac372bbf7243b0c5ed1c426e0d03f3c759016e" class="src_link" title="scripts/nounset.sh">scripts/nounset.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">66.67 %</td>
+            <td class="cell--number">7</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.67</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#0e7789bb466ecf0cff3a50adb4c6fb6ca0a0434c" class="src_link" title="scripts/one_liner.sh">scripts/one_liner.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">66.67 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2a557ab6e2ead20f784653330c2c9d6868a42232" class="src_link" title="scripts/process_substitution.sh">scripts/process_substitution.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">9</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">2.33</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#1332320c4f78eebcbaee1878e3d399d4ca500d71" class="src_link" title="scripts/simple.sh">scripts/simple.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#2ab047047ea76cfca4ce165b6842a422d671ff7a" class="src_link" title="scripts/source.sh">scripts/source.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.50</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#60478794c517dd2e1b6c3124cf972da12f579cc9" class="src_link" title="scripts/unicode.sh">scripts/unicode.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">6</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">2</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#31860f46ad558674b3a43636e22c9c0b702ca142" class="src_link" title="test_suite.sh">test_suite.sh</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">8</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.25</td>
+            
+          </tr>
+        
+      </tbody>
+    </table>
+  </div>
 </div>
 
         
           <div class="file_list_container" id="Nestedscripts">
   <h2>
     <span class="group_name">Nested scripts</span>
-    (<span class="covered_percent"><span class="red">75.0%</span></span>
+    (<span class="covered_percent">
+      <span class="red">
+  75.0%
+</span>
+
+     </span>
      covered at
      <span class="covered_strength">
        <span class="red">
-         0.8
+         0.75
        </span>
-    </span> hits/line)
+    </span> hits/line
+    )
   </h2>
+
   <a name="Nestedscripts"></a>
+
   <div>
     <b>1</b> files in total.
-    <b>4</b> relevant lines. 
-    <span class="green"><b>3</b> lines covered</span> and
-    <span class="red"><b>1</b> lines missed </span>
   </div>
-  <table class="file_list">
-    <thead>
-      <tr>
-        <th>File</th>
-        <th>% covered</th>
-        <th>Lines</th>
-        <th>Relevant Lines</th>
-        <th>Lines covered</th>
-        <th>Lines missed</th>
-        <th>Avg. Hits / Line</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr>
-        <td class="strong"><a href="#7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce" class="src_link" title="scripts/nested/simple.sh">scripts/nested/simple.sh</a></td>
-        <td class="red strong">75.0 %</td>
-        <td>13</td>
-        <td>4</td>
-        <td>3</td>
-        <td>1</td>
-        <td>0.8</td>
-      </tr>
-      
-    </tbody>
-  </table>
+
+  <div class="t-line-summary">
+    <b>4</b> relevant lines,
+    <span class="green"><b>3</b> lines covered</span> and
+    <span class="red"><b>1</b> lines missed. </span>
+    (<span class="red">
+  75.0%
+</span>
+)
+  </div>
+
+  
+
+  <div class="file_list--responsive">
+    <table class="file_list">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th class="cell--number">% covered</th>
+          <th class="cell--number">Lines</th>
+          <th class="cell--number">Relevant Lines</th>
+          <th class="cell--number">Lines covered</th>
+          <th class="cell--number">Lines missed</th>
+          <th class="cell--number">Avg. Hits / Line</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce" class="src_link" title="scripts/nested/simple.sh">scripts/nested/simple.sh</a></td>
+            <td class="red strong cell--number t-file__coverage">75.00 %</td>
+            <td class="cell--number">13</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.75</td>
+            
+          </tr>
+        
+      </tbody>
+    </table>
+  </div>
 </div>
 
         
           <div class="file_list_container" id="Ungrouped">
   <h2>
     <span class="group_name">Ungrouped</span>
-    (<span class="covered_percent"><span class="green">100.0%</span></span>
+    (<span class="covered_percent">
+      <span class="yellow">
+  83.33%
+</span>
+
+     </span>
      covered at
      <span class="covered_strength">
-       <span class="yellow">
-         1.0
+       <span class="red">
+         0.83
        </span>
-    </span> hits/line)
+    </span> hits/line
+    )
   </h2>
+
   <a name="Ungrouped"></a>
+
   <div>
-    <b>2</b> files in total.
-    <b>2</b> relevant lines. 
-    <span class="green"><b>2</b> lines covered</span> and
-    <span class="red"><b>0</b> lines missed </span>
+    <b>6</b> files in total.
   </div>
-  <table class="file_list">
-    <thead>
-      <tr>
-        <th>File</th>
-        <th>% covered</th>
-        <th>Lines</th>
-        <th>Relevant Lines</th>
-        <th>Lines covered</th>
-        <th>Lines missed</th>
-        <th>Avg. Hits / Line</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-      <tr>
-        <td class="strong"><a href="#e646ebfab93a6f92328dbfcebede276776164f1d" class="src_link" title="scripts/executable">scripts/executable</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-      <tr>
-        <td class="strong"><a href="#8b9a5459674ae3739f81dd5027011e7d0f47c530" class="src_link" title="scripts/sourced.txt">scripts/sourced.txt</a></td>
-        <td class="green strong">100.0 %</td>
-        <td>4</td>
-        <td>1</td>
-        <td>1</td>
-        <td>0</td>
-        <td>1.0</td>
-      </tr>
-      
-    </tbody>
-  </table>
+
+  <div class="t-line-summary">
+    <b>6</b> relevant lines,
+    <span class="green"><b>5</b> lines covered</span> and
+    <span class="red"><b>1</b> lines missed. </span>
+    (<span class="yellow">
+  83.33%
+</span>
+)
+  </div>
+
+  
+
+  <div class="file_list--responsive">
+    <table class="file_list">
+      <thead>
+        <tr>
+          <th>File</th>
+          <th class="cell--number">% covered</th>
+          <th class="cell--number">Lines</th>
+          <th class="cell--number">Relevant Lines</th>
+          <th class="cell--number">Lines covered</th>
+          <th class="cell--number">Lines missed</th>
+          <th class="cell--number">Avg. Hits / Line</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#e646ebfab93a6f92328dbfcebede276776164f1d" class="src_link" title="scripts/executable">scripts/executable</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#084cf61c0b6ae03e55c223d3ae42b16bfe7648ca" class="src_link" title="scripts/no_extension/bin_bash">scripts/no_extension/bin_bash</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#7c3e9a3762ccb93f496876d8f9fab76e69b0c04b" class="src_link" title="scripts/no_extension/bin_bash_with_args">scripts/no_extension/bin_bash_with_args</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#14da4af7ad2efb1f2c925c2cc32306dba7b98c32" class="src_link" title="scripts/no_extension/bin_dash">scripts/no_extension/bin_dash</a></td>
+            <td class="red strong cell--number t-file__coverage">0.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#fd6bcd169efe4e6622315c55f005e7bff3915a00" class="src_link" title="scripts/no_extension/usr_bin_env_bash">scripts/no_extension/usr_bin_env_bash</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">3</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+          <tr class="t-file">
+            <td class="strong t-file__name"><a href="#8b9a5459674ae3739f81dd5027011e7d0f47c530" class="src_link" title="scripts/sourced.txt">scripts/sourced.txt</a></td>
+            <td class="green strong cell--number t-file__coverage">100.00 %</td>
+            <td class="cell--number">4</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">1</td>
+            <td class="cell--number">0</td>
+            <td class="cell--number">1.00</td>
+            
+          </tr>
+        
+      </tbody>
+    </table>
+  </div>
 </div>
 
         
       </div>
-    
+
       <div id="footer">
-        Generated by <a href="http://github.com/colszowka/simplecov">simplecov</a> v0.11.2 
-        and simplecov-html v0.10.0<br/>
-        using bashcov v1.3.0
+        Generated by <a href="https://github.com/simplecov-ruby/simplecov">simplecov</a> v0.22.0
+        and simplecov-html v0.12.3<br/>
+        using /bin/bash ./test_suite.sh
       </div>
-    
+
       <div class="source_files">
       
         <div class="source_table" id="9144b6590a11f2e9b9a5bfd7254981e7e2769bda">
   <div class="header">
     <h3>never_called.sh</h3>
-    <h4><span class="red">0.0 %</span> covered</h4>
-    <div>
-      <b>1</b> relevant lines. 
+    <h4>
+      <span class="red">
+  0.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
       <span class="green"><b>0</b> lines covered</span> and
       <span class="red"><b>1</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="3">
-          
-          
-          <code class="ruby">echo &quot;I&#39;m never executed by any script&quot;</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">echo &quot;I&#39;m never executed by any script&quot;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
+      
+        <div class="source_table" id="262887567467e74963475a76df7f705713e5acbc">
+  <div class="header">
+    <h3>scripts/array.sh</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>6</b> relevant lines.
+      <span class="green"><b>6</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">arr=(</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">	foo</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">	bar</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">	baz</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="7">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">	quux</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">)</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="e24c1ea749473759c8626cd9bf01baef5b11c0ba">
+  <div class="header">
+    <h3>scripts/bad_syntax.sh</h3>
+    <h4>
+      <span class="red">
+  25.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
+      <span class="red"><b>3</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby"># Tests that Bashcov::Detective excludes shell scripts with</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby">#   1. A shellscript extension like .sh or .bash *and*</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">#   2. Contents that *do not* follow valid shell syntax</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">confused = true</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">if confused</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby">  puts &#39;I though this was supposed to be a shell script?&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">end</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
       
         <div class="source_table" id="0b2d93bf5c731f31bbea17c23a68bce3cdaed3e4">
   <div class="header">
     <h3>scripts/case.sh</h3>
-    <h4><span class="red">71.43 %</span> covered</h4>
-    <div>
-      <b>7</b> relevant lines. 
+    <h4>
+      <span class="yellow">
+  83.33%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>6</b> relevant lines.
       <span class="green"><b>5</b> lines covered</span> and
-      <span class="red"><b>2</b> lines missed.</span>
+      <span class="red"><b>1</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby">function switch() {</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">function switch() {</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="4">
-          <span class="hits">2</span>
-          
-          <code class="ruby">    case $1 in</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="4">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    case $1 in</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="5">
-          <span class="hits">1</span>
-          
-          <code class="ruby">        -h|--help) echo help</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby">    -h|--help)</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="6">
-          
-          
-          <code class="ruby">        ;;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">        echo help</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="7">
-          
-          
-          <code class="ruby">        -v|--version)</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">        ;;</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="8">
-          
-          
-          <code class="ruby">        echo version;;</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby">    -v|--version)</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="9">
-          <span class="hits">1</span>
-          
-          <code class="ruby">        *) echo &quot;what?&quot;;;</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">        echo version;;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="10">
-          
-          
-          <code class="ruby">    esac</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="10">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    *) echo &quot;what?&quot;;;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="11">
-          
-          
-          <code class="ruby">}</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="11">
+            
+            
+
+            
+
+            <code class="ruby">    esac</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="12">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby">}</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="13">
-          <span class="hits">1</span>
-          
-          <code class="ruby">switch -h</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="14">
-          <span class="hits">1</span>
-          
-          <code class="ruby">switch bug</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="14">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">switch -h</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="15">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="15">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">switch bug</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="16">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="e0dfce00f43661bbb246a5429d04bff158c60068">
   <div class="header">
     <h3>scripts/cd.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>11</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>11</b> relevant lines.
       <span class="green"><b>11</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">: &quot;${this:=that}&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">: &quot;${this:=that}&quot;</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="4">
-          <span class="hits">2</span>
-          
-          <code class="ruby">: &quot;${that:=thing}&quot; &amp;&amp; touch /dev/fd/1</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="4">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">: &quot;${that:=thing}&quot; &amp;&amp; touch /dev/fd/1</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="5">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="3" data-linenumber="6">
-          <span class="hits">3</span>
-          
-          <code class="ruby">dir=&quot;$(cd &quot;${BASH_SOURCE%/*}&quot; || : ; pwd -P)&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="6">
+            <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">dir=&quot;$(cd &quot;${BASH_SOURCE%/*}&quot; || : ; pwd -P)&quot;</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="7">
-          <span class="hits">1</span>
-          
-          <code class="ruby">todir=&#39;&#39;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="7">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">todir=&#39;&#39;</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="3" data-linenumber="8">
-          <span class="hits">3</span>
-          
-          <code class="ruby">printf -v todir -- &#39;%s&#39; &quot;$(find &quot;$dir&quot; -type d | head -n 1)&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="8">
+            <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">printf -v todir -- &#39;%s&#39; &quot;$(find &quot;$dir&quot; -type d | head -n 1)&quot;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="10">
-          <span class="hits">2</span>
-          
-          <code class="ruby">(cd ../.. || : ; cd &quot;$HOME&quot; || : )</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="10">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">(cd ../.. || : ; cd &quot;$HOME&quot; || : )</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="11">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="11">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="12">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="13">
-          <span class="hits">1</span>
-          
-          <code class="ruby">cd ../.. || :</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="13">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">cd ../.. || :</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="14">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="14">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="3" data-linenumber="15">
-          <span class="hits">3</span>
-          
-          <code class="ruby">it () { : ; }</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="3" data-linenumber="15">
+            <span class="hits">3</span>
+            
+
+            
+
+            <code class="ruby">it () { : ; }</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="16">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="16">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="6" data-linenumber="17">
-          <span class="hits">6</span>
-          
-          <code class="ruby">{ for _ in {1..3}; do it; done ; } || unset -f it</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="6" data-linenumber="17">
+            <span class="hits">6</span>
+            
+
+            
+
+            <code class="ruby">{ for _ in {1..3}; do it; done ; } || unset -f it</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="18">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="18">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="19">
-          <span class="hits">1</span>
-          
-          <code class="ruby">cd &quot;${todir}&quot; || :</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="19">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">cd &quot;${todir}&quot; || :</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="20">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="20">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="21">
-          <span class="hits">1</span>
-          
-          <code class="ruby">&amp;&gt;/dev/null md5sum &lt; &quot;$BASH_SOURCE&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="21">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&amp;&gt;/dev/null md5sum &lt; &quot;$BASH_SOURCE&quot;</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
+      
+        <div class="source_table" id="3aefe7fe17ced534c0144d17b89df9eaf04511df">
+  <div class="header">
+    <h3>scripts/comments.sh</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
+      <span class="green"><b>4</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">case &quot;space&quot; in</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby">  space) # comment</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo space</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">    ;;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">esac</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="9">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">case &quot;tab&quot; in</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
+            
+            
+
+            
+
+            <code class="ruby">  tab)	# comment</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="11">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo tab</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby">    ;;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby">esac</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
       
         <div class="source_table" id="27d712a02ebe2c6aeaa34a8f4b65bd680435b8a7">
   <div class="header">
     <h3>scripts/delete.sh</h3>
-    <h4><span class="red">60.0 %</span> covered</h4>
-    <div>
-      <b>5</b> relevant lines. 
-      <span class="green"><b>3</b> lines covered</span> and
-      <span class="red"><b>2</b> lines missed.</span>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>6</b> relevant lines.
+      <span class="green"><b>6</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">cat &gt; tmp.sh &lt;&lt;&#39;BASH&#39;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">cat &gt; tmp.sh &lt;&lt;&#39;BASH&#39;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="5">
-          
-          
-          <code class="ruby">rm -v $0</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">rm -v $0</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="6">
-          
-          
-          <code class="ruby">BASH</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">BASH</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="7">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="8">
-          <span class="hits">1</span>
-          
-          <code class="ruby">chmod +x tmp.sh</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">chmod +x tmp.sh</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="9">
-          <span class="hits">1</span>
-          
-          <code class="ruby">./tmp.sh</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="9">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">./tmp.sh</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="e646ebfab93a6f92328dbfcebede276776164f1d">
   <div class="header">
     <h3>scripts/executable</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>1</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
       <span class="green"><b>1</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &quot;Although I&#39;m extension-less, I am an executable Bash script&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;Although I&#39;m extension-less, I am an executable Bash script&quot;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="f7325ee760a2b404f0e4f3982030f7dbed4a4f86">
   <div class="header">
     <h3>scripts/exit_non_zero.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>1</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
       <span class="green"><b>1</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">exit 21</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">exit 21</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="82f075bce48cedc8d2a7c07ec62ca56c339cf994">
   <div class="header">
     <h3>scripts/function.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>7</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>7</b> relevant lines.
       <span class="green"><b>7</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby">function f1 {</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">function f1 {</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="4">
-          <span class="hits">2</span>
-          
-          <code class="ruby">    echo f1</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="4">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">    echo f1</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="5">
-          
-          
-          <code class="ruby">}</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby">}</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="6">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="7">
-          
-          
-          <code class="ruby">f2() {</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">f2() {</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="8">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    f1</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    f1</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="9">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    echo f2</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="9">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo f2</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="10">
-          
-          
-          <code class="ruby">}</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
+            
+            
+
+            
+
+            <code class="ruby">}</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="11">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="11">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="12">
-          
-          
-          <code class="ruby">__a_bc()</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby">__a_bc()</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="13">
-          
-          
-          <code class="ruby">{</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby">{</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="14">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    echo __a_bc</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="14">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo __a_bc</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="15">
-          
-          
-          <code class="ruby">}</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="15">
+            
+            
+
+            
+
+            <code class="ruby">}</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="16">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="16">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="17">
-          <span class="hits">1</span>
-          
-          <code class="ruby">f1</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="17">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">f1</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="18">
-          <span class="hits">1</span>
-          
-          <code class="ruby">f2</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="18">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">f2</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="19">
-          <span class="hits">1</span>
-          
-          <code class="ruby">__a_bc</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="19">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">__a_bc</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="20">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="20">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="2a84a4e41eeaa6f4171288c4dfebee30a0b034c7">
   <div class="header">
     <h3>scripts/long_line.sh</h3>
-    <h4><span class="red">75.0 %</span> covered</h4>
-    <div>
-      <b>4</b> relevant lines. 
+    <h4>
+      <span class="red">
+  75.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
       <span class="green"><b>3</b> lines covered</span> and
       <span class="red"><b>1</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo 1 &amp;&amp; \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo 1 &amp;&amp; \</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="4">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    echo 2 \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo 2 \</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="5">
-          <span class="hits">1</span>
-          
-          <code class="ruby">  &amp;&amp; echo 3 \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  &amp;&amp; echo 3 \</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="6">
-          
-          
-          <code class="ruby">|| echo 0</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">|| echo 0</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="7">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="19827c6f853b744804312fb6a6cf5d7d52728515">
   <div class="header">
     <h3>scripts/multiline.sh</h3>
-    <h4><span class="red">69.23 %</span> covered</h4>
-    <div>
-      <b>13</b> relevant lines. 
-      <span class="green"><b>9</b> lines covered</span> and
-      <span class="red"><b>4</b> lines missed.</span>
+    <h4>
+      <span class="yellow">
+  88.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>25</b> relevant lines.
+      <span class="green"><b>22</b> lines covered</span> and
+      <span class="red"><b>3</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby">if</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">if # nil</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="4">
-          <span class="hits">1</span>
-          
-          <code class="ruby">  [[ false = true ]]</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  [[ false = true ]] # 1</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="5">
-          
-          
-          <code class="ruby">then</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby">then # nil</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="6">
-          
-          
-          <code class="ruby">  echo 1</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">  echo 1 # 0</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="7">
-          
-          
-          <code class="ruby">elif</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">elif # nil</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="8">
-          <span class="hits">1</span>
-          
-          <code class="ruby">  [[ 2 ]]</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  [[ 2 ]] # 1</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby">then</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">then # nil</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="10">
-          <span class="hits">1</span>
-          
-          <code class="ruby">  echo 2</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="10">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  echo 2 # 1</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="11">
-          
-          
-          <code class="ruby">else</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="11">
+            
+            
+
+            
+
+            <code class="ruby">else # nil</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="12">
-          
-          
-          <code class="ruby">  echo 3</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby">  echo 3 # 0</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="13">
-          
-          
-          <code class="ruby">fi</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby">fi # nil</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="14">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="14">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="15">
-          <span class="hits">1</span>
-          
-          <code class="ruby">[ false = true ] || \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="15">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">[ false = true ] || \</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="16">
-          <span class="hits">2</span>
-          
-          <code class="ruby">  [[ 42 -eq 1337 ]] || [[ 1 -eq 1 ]] \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="16">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">  [[ 42 -eq 1337 ]] || [[ 1 -eq 1 ]] \</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="17">
-          <span class="hits">1</span>
-          
-          <code class="ruby">  &amp;&amp; true &amp;&amp; \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="17">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  &amp;&amp; true &amp;&amp; \</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="18">
-          <span class="hits">1</span>
-          
-          <code class="ruby">  echo &#39;what?&#39; || \</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="18">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  echo &#39;what?&#39; || \</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="19">
-          
-          
-          <code class="ruby">  echo &#39;no!&#39;</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="19">
+            
+            
+
+            
+
+            <code class="ruby">  echo &#39;no!&#39;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="20">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="20">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="21">
-          
-          
-          <code class="ruby">variable=($(</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="21">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="22">
-          
-          
-          <code class="ruby">  echo hi</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="22">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">variable=($(echo hi)) # 2</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="23">
-          <span class="hits">1</span>
-          
-          <code class="ruby">))</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="23">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="24">
-          <span class="hits">2</span>
-          
-          <code class="ruby">echo after</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="24">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="25">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;after 1&quot; \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="26">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  &quot;after 2&quot; \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="27">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  &quot;after 3&quot; \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="28">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  &quot;after 4&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="29">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="30">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">cat &lt;&lt;EOF</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="31">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">this is</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="32">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">        a cat!</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="33">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  actually it&#39;s a $SHELL</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="34">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">EOF</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="35">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="36">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="37">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">hello</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="38">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">there</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="39">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="40">
+            
+            
+
+            
+
+            <code class="ruby"># nil</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="41">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo the end # 1</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
+      
+        <div class="source_table" id="346505ddbd8d63a670f284f54aa36e1a5fe29abd">
+  <div class="header">
+    <h3>scripts/multiline2.sh</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>37</b> relevant lines.
+      <span class="green"><b>37</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">hello</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">there</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="9">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">Blah blah</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="10">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">Test</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="11">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="13">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="14">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">Try this command:</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="15">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="16">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    $ fubar baz</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="17">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="18">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="19">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="20">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="21">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">Your program has been compiled successfully.</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="22">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">You can use &quot;fubar&quot; to run it:</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="23">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="24">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    fubar baz</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="25">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="26">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">Run &quot;fubar&quot; for more commands.</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="27">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="28">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="29">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">synopsis=&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="30">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">Usage: fubar &lt;PATH&gt; [OPTIONS]</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="31">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="32">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="33">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;$synopsis&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="34">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="35">
+            
+            
+
+            
+
+            <code class="ruby">getTodayQuery() {</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="36">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  read -rd &#39;&#39; query &lt;&lt;-SQL || true</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="37">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">SELECT</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="38">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  CASE</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="39">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    WHEN AREA.title IS NOT NULL THEN AREA.title</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="40">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  END,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="41">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  TASK.title,</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="42">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  &quot;things:///show?id=&quot; || TASK.uuid</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="43">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">FROM TASKTABLE as TASK</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="44">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">SQL</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="45">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">  echo &quot;${query}&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="46">
+            
+            
+
+            
+
+            <code class="ruby">}</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="47">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="48">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">getTodayQuery</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="143bdf263f67d54d50bdfceac7913a4268a645fe">
+  <div class="header">
+    <h3>scripts/multiline3.sh</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
+      <span class="green"><b>4</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo 1 \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">     2 \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">     3 \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">     4</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="4c5a5a8a487860994dffba02d2d09c3111ec1e5d">
+  <div class="header">
+    <h3>scripts/multiline4.sh</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>2</b> relevant lines.
+      <span class="green"><b>2</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">var=&quot;foo \</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">     bar&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
       
         <div class="source_table" id="7cde1e47857d879f1faf74e4bfcbd4eb31f2d6ce">
   <div class="header">
     <h3>scripts/nested/simple.sh</h3>
-    <h4><span class="red">75.0 %</span> covered</h4>
-    <div>
-      <b>4</b> relevant lines. 
+    <h4>
+      <span class="red">
+  75.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
       <span class="green"><b>3</b> lines covered</span> and
       <span class="red"><b>1</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby"># basic test program</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby"># basic test program</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="5">
-          <span class="hits">1</span>
-          
-          <code class="ruby">if true; then</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">if true; then</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="6">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    echo 42</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo 42</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="7">
-          
-          
-          <code class="ruby">else</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">else</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="8">
-          
-          
-          <code class="ruby">    echo nope</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby">    echo nope</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby">fi</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">fi</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="10">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="11">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &quot;error on stderr&quot; &gt;&amp;2</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="11">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;error on stderr&quot; &gt;&amp;2</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="12">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="13">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="2be2cf1930216490edf31511d43e23165835234f">
   <div class="header">
     <h3>scripts/new
 line.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>2</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>2</b> relevant lines.
       <span class="green"><b>2</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/usr/bin/env bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/usr/bin/env bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &quot;Hello, world!&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;Hello, world!&quot;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="5">
-          <span class="hits">2</span>
-          
-          <code class="ruby">PWD= : whoa</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="5">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">PWD= : whoa</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
+      
+        <div class="source_table" id="084cf61c0b6ae03e55c223d3ae42b16bfe7648ca">
+  <div class="header">
+    <h3>scripts/no_extension/bin_bash</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;Hello from /bin/bash!&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="7c3e9a3762ccb93f496876d8f9fab76e69b0c04b">
+  <div class="header">
+    <h3>scripts/no_extension/bin_bash_with_args</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash -eux</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;Hello from /bin/bash -eux!&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="14da4af7ad2efb1f2c925c2cc32306dba7b98c32">
+  <div class="header">
+    <h3>scripts/no_extension/bin_dash</h3>
+    <h4>
+      <span class="red">
+  0.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
+      <span class="green"><b>0</b> lines covered</span> and
+      <span class="red"><b>1</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/dash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">echo &quot;Hello from /bin/dash!&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="fd6bcd169efe4e6622315c55f005e7bff3915a00">
+  <div class="header">
+    <h3>scripts/no_extension/usr_bin_env_bash</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/usr/bin/env bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;Hello from /usr/bin/env bash!&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="de3a06d9d0e279ff5fd9f44f6477f816327efdba">
+  <div class="header">
+    <h3>scripts/no_shebang.sh</h3>
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
+      <span class="green"><b>1</b> lines covered</span> and
+      <span class="red"><b>0</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby"># Tests that Bashcov::Detective properly detects shell scripts with</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby">#   1. A shellscript extension like .sh or .bash *and*</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">#   2. Contents that follow valid shell syntax</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;no shebang here!&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
+      
+        <div class="source_table" id="fdac372bbf7243b0c5ed1c426e0d03f3c759016e">
+  <div class="header">
+    <h3>scripts/nounset.sh</h3>
+    <h4>
+      <span class="red">
+  66.67%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>3</b> relevant lines.
+      <span class="green"><b>2</b> lines covered</span> and
+      <span class="red"><b>1</b> lines missed.</span>
+    </div>
+
+    
+
+  </div>
+
+  <pre>
+    <ol>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">set -o nounset</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;Well, now.&quot;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">echo &quot;Exiting because ${THIS} is unset.&quot;</code>
+          </li>
+        </div>
+      
+    </ol>
+  </pre>
+</div>
+
       
         <div class="source_table" id="0e7789bb466ecf0cff3a50adb4c6fb6ca0a0434c">
   <div class="header">
     <h3>scripts/one_liner.sh</h3>
-    <h4><span class="red">66.67 %</span> covered</h4>
-    <div>
-      <b>3</b> relevant lines. 
+    <h4>
+      <span class="red">
+  66.67%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>3</b> relevant lines.
       <span class="green"><b>2</b> lines covered</span> and
       <span class="red"><b>1</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="3">
-          <span class="hits">2</span>
-          
-          <code class="ruby">[ &quot;one&quot; = &quot;two&quot; ] &amp;&amp; echo nah || echo yup</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="3">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">[ &quot;one&quot; = &quot;two&quot; ] &amp;&amp; echo nah || echo yup</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="5">
-          <span class="hits">1</span>
-          
-          <code class="ruby">if false</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">if false</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="6">
-          
-          
-          <code class="ruby">then</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby">then</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="7">
-          
-          
-          <code class="ruby">    never</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">    never</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="8">
-          
-          
-          <code class="ruby">fi</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby">fi</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="2a557ab6e2ead20f784653330c2c9d6868a42232">
   <div class="header">
     <h3>scripts/process_substitution.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>3</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>3</b> relevant lines.
       <span class="green"><b>3</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby">function print_to_stderr {</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby">function print_to_stderr {</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="4">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    echo &quot;data&quot; &gt;&amp;2</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo &quot;data&quot; &gt;&amp;2</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="5">
-          
-          
-          <code class="ruby">}</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby">}</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="6">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="7">
-          <span class="hits">2</span>
-          
-          <code class="ruby">print_to_stderr 2&gt; &gt;(cat)</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="7">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">print_to_stderr 2&gt; &gt;(cat)</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="8">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="4" data-linenumber="9">
-          <span class="hits">4</span>
-          
-          <code class="ruby">diff &lt;(ls -l | head -n-1) &lt;(ls -l)</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="4" data-linenumber="9">
+            <span class="hits">4</span>
+            
+
+            
+
+            <code class="ruby">diff &lt;(ls -l | head -n-1) &lt;(ls -l)</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="1332320c4f78eebcbaee1878e3d399d4ca500d71">
   <div class="header">
     <h3>scripts/simple.sh</h3>
-    <h4><span class="red">75.0 %</span> covered</h4>
-    <div>
-      <b>4</b> relevant lines. 
+    <h4>
+      <span class="red">
+  75.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
       <span class="green"><b>3</b> lines covered</span> and
       <span class="red"><b>1</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby"># basic test program</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby"># basic test program</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="5">
-          <span class="hits">1</span>
-          
-          <code class="ruby">if true; then</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="5">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">if true; then</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="6">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    echo 42</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">    echo 42</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="7">
-          
-          
-          <code class="ruby">else</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby">else</code>
+          </li>
+        </div>
       
-        <li class="missed" data-hits="0" data-linenumber="8">
-          
-          
-          <code class="ruby">    echo nope</code>
-        </li>
+        <div>
+          <li class="missed" data-hits="0" data-linenumber="8">
+            
+            
+
+            
+
+            <code class="ruby">    echo nope</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="9">
-          
-          
-          <code class="ruby">fi</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="9">
+            
+            
+
+            
+
+            <code class="ruby">fi</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="10">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="10">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="11">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &quot;error on stderr&quot; &gt;&amp;2</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="11">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;error on stderr&quot; &gt;&amp;2</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="12">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="12">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="13">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="13">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="2ab047047ea76cfca4ce165b6842a422d671ff7a">
   <div class="header">
     <h3>scripts/source.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>2</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>2</b> relevant lines.
       <span class="green"><b>2</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &quot;I&#39;m sourcing sourced.txt&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;I&#39;m sourcing sourced.txt&quot;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="5">
-          <span class="hits">2</span>
-          
-          <code class="ruby">. $(dirname $0)/sourced.txt</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="5">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">. $(dirname $0)/sourced.txt</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="6">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="6">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="8b9a5459674ae3739f81dd5027011e7d0f47c530">
   <div class="header">
     <h3>scripts/sourced.txt</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>1</b> relevant lines. 
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>1</b> relevant lines.
       <span class="green"><b>1</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="3">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &quot;I&#39;m sourced.txt&quot;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;I&#39;m sourced.txt&quot;</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="4">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="60478794c517dd2e1b6c3124cf972da12f579cc9">
   <div class="header">
     <h3>scripts/unicode.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>1</b> relevant lines. 
-      <span class="green"><b>1</b> lines covered</span> and
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>2</b> relevant lines.
+      <span class="green"><b>2</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="3">
-          
-          
-          <code class="ruby"># ¹²³</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="3">
+            
+            
+
+            
+
+            <code class="ruby"># ¹²³</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="4">
-          <span class="hits">1</span>
-          
-          <code class="ruby">echo &#39;I am full of unicode characters! äéíóúü¿æ&#39;</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;I am full of unicode characters! äéíóúü¿æ&#39;</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="6">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &#39;Invalid unicode follows: Hall� Heimur!&#39;</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
         <div class="source_table" id="31860f46ad558674b3a43636e22c9c0b702ca142">
   <div class="header">
     <h3>test_suite.sh</h3>
-    <h4><span class="green">100.0 %</span> covered</h4>
-    <div>
-      <b>2</b> relevant lines. 
-      <span class="green"><b>2</b> lines covered</span> and
+    <h4>
+      <span class="green">
+  100.0%
+</span>
+
+      lines covered
+    </h4>
+
+    
+
+    <div class="t-line-summary">
+      <b>4</b> relevant lines.
+      <span class="green"><b>4</b> lines covered</span> and
       <span class="red"><b>0</b> lines missed.</span>
     </div>
+
+    
+
   </div>
-  
+
   <pre>
     <ol>
       
-        <li class="never" data-hits="" data-linenumber="1">
-          
-          
-          <code class="ruby">#!/bin/bash</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="1">
+            
+            
+
+            
+
+            <code class="ruby">#!/bin/bash</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="2">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="2">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="2" data-linenumber="3">
-          <span class="hits">2</span>
-          
-          <code class="ruby">cd $(dirname $0)</code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="3">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;UID=${UID}&quot; &gt;&amp;2</code>
+          </li>
+        </div>
       
-        <li class="never" data-hits="" data-linenumber="4">
-          
-          
-          <code class="ruby"></code>
-        </li>
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="4">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">echo &quot;PS4=${PS4}&quot; &gt;&amp;2</code>
+          </li>
+        </div>
       
-        <li class="covered" data-hits="1" data-linenumber="5">
-          <span class="hits">1</span>
-          
-          <code class="ruby">find scripts -type f -perm -111 -exec bash &#39;{}&#39; \;</code>
-        </li>
+        <div>
+          <li class="never" data-hits="" data-linenumber="5">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="2" data-linenumber="6">
+            <span class="hits">2</span>
+            
+
+            
+
+            <code class="ruby">cd $(dirname $0)</code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="never" data-hits="" data-linenumber="7">
+            
+            
+
+            
+
+            <code class="ruby"></code>
+          </li>
+        </div>
+      
+        <div>
+          <li class="covered" data-hits="1" data-linenumber="8">
+            <span class="hits">1</span>
+            
+
+            
+
+            <code class="ruby">find scripts -type f -perm -111 -print -exec &#39;{}&#39; \;</code>
+          </li>
+        </div>
       
     </ol>
   </pre>
 </div>
+
       
       </div>
     </div>
