@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "aruba"
   spec.add_development_dependency "bundler-audit"
-  # spec.add_development_dependency "coveralls"
   spec.add_development_dependency "cucumber"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"

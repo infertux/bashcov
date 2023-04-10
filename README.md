@@ -2,7 +2,6 @@
 
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
 [![Build Status](https://gitlab.com/infertux/bashcov/badges/master/pipeline.svg)](https://gitlab.com/infertux/bashcov/-/pipelines)
-[![Coverage Status](https://coveralls.io/repos/infertux/bashcov/badge.svg?branch=master)](https://coveralls.io/r/infertux/bashcov)
 [![Maintainability](https://api.codeclimate.com/v1/badges/083fdbba795049cd5f06/maintainability)](https://codeclimate.com/github/infertux/bashcov/maintainability)
 [![Inline docs](http://inch-ci.org/github/infertux/bashcov.svg)](http://inch-ci.org/github/infertux/bashcov)
 
