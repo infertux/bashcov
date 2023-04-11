@@ -1,5 +1,7 @@
 # Bashcov
 
+[![Funding](https://img.shields.io/liberapay/patrons/infertux.svg?logo=liberapay)](https://liberapay.com/infertux/donate)
+[![Sponsors](https://img.shields.io/liberapay/patrons/infertux)](https://liberapay.com/infertux)
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
 [![Build Status](https://gitlab.com/infertux/bashcov/badges/master/pipeline.svg)](https://gitlab.com/infertux/bashcov/-/pipelines)
 [![Maintainability](https://api.codeclimate.com/v1/badges/083fdbba795049cd5f06/maintainability)](https://codeclimate.com/github/infertux/bashcov/maintainability)
@@ -53,6 +55,10 @@ See [advanced usage](./USAGE.md) for more information.
 
 Bug reports and patches are most welcome.
 See the [contribution guidelines](https://github.com/infertux/bashcov/blob/master/CONTRIBUTING.md).
+
+## Sponsorship
+
+Bashcov was [created in 2012](https://github.com/infertux/bashcov/commit/f65e65e5aa3377beb334beee9924136a34a913e8) and it needs your help. I have been maintaining the project for over a decade and keeping it working with new releases of Bash and Ruby takes time. If you use Bashcov professionally, please considerer supporting it on [Liberapay](https://liberapay.com/infertux) through your employer or directly. Thank you for supporting *Free and Open-Source Software*.
 
 ## License
 

@@ -1,4 +1,4 @@
-Copyright (c) 2012-2019 Cédric Félizard
+Copyright (c) 2012-2023 Cédric Félizard
 
 MIT License
 
