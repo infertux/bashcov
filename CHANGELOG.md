@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.1...master))
 
   * TBD
+
+## v3.0.1, 2023-04-15 ([changes](https://github.com/infertux/bashcov/compare/v3.0.0...v3.0.1))
+
+  * [BUGFIX]  Fix incorrect executables path in gemspec
 
 ## v3.0.0, 2023-04-10 ([changes](https://github.com/infertux/bashcov/compare/v1.8.2...v3.0.0))
 
