@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.2...master))
 
   * TBD
+
+## v3.0.2, 2023-04-18 ([changes](https://github.com/infertux/bashcov/compare/v3.0.1...v3.0.2))
+
+  * [BUGFIX]  Match function names containing digits and colons
 
 ## v3.0.1, 2023-04-15 ([changes](https://github.com/infertux/bashcov/compare/v3.0.0...v3.0.1))
 

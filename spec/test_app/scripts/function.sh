@@ -1,20 +1,24 @@
 #!/bin/bash
 
 function f1 {
-    echo f1
+    echo f1 # 2
 }
 
 f2() {
-    f1
-    echo f2
+    f1 # 1
+    echo f2 # 1
 }
 
 __a_bc()
 {
-    echo __a_bc
+    echo __a_bc # 1
 }
 
-f1
-f2
-__a_bc
+abc::def() {
+    echo "${FUNCNAME[0]}" # 1
+}
 
+f1 # 1
+f2 # 1
+__a_bc # 1
+abc::def # 1
