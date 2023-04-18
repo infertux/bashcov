@@ -53,7 +53,7 @@ module Bashcov
         "with Bash #{BASH_VERSION},",
         "Ruby #{RUBY_VERSION},",
         "and SimpleCov #{SimpleCov::VERSION}",
-        (Process.uid.zero? ? " as root user (NOT recommended)" : nil),
+        (Process.uid.zero? ? "as root user (NOT recommended)" : nil),
       ].compact.join(" ")
     end
 
