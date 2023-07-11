@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "UID=${UID}" >&2
 echo "PS4=${PS4}" >&2

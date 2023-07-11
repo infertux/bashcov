@@ -17,7 +17,7 @@ Feature:
 
     And a file named "test.sh" with mode "0755" and with:
       """
-      #!/bin/bash
+      #!/usr/bin/env bash
       date
       """
 

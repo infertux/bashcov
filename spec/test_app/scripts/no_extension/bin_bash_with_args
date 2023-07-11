@@ -1,3 +1,3 @@
-#!/bin/bash -eux
+#!/usr/bin/env -S bash -eux
 
 echo "Hello from /bin/bash -eux!"
