@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 [ "one" = "two" ] && echo nah || echo yup
 
