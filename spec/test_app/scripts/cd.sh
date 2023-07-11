@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 : "${this:=that}"
 : "${that:=thing}" && touch /dev/fd/1
