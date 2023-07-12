@@ -8,10 +8,6 @@ module Bashcov
     # [Set<String>] Basenames of shell executables
     SHELL_BASENAMES = Set.new(%w[bash sh ash dash]).freeze
 
-    # [Set<String>] Basenames of executables commonly used to +exec+ other
-    #   processes, including shells
-    OTHER_BASENAMES = Set.new(%w[env]).freeze
-
     # [Set<String>] Filename extensions commonly used for shell scripts
     SHELLSCRIPT_EXTENSIONS = Set.new(%w[.bash .sh]).freeze
 

@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -ex
+#!/usr/bin/env bash
+
+set -ex
 
 if [ -z $INSTALL_BASH_VERSION ]; then
     echo "No \$INSTALL_BASH_VERSION, using default Bash"
