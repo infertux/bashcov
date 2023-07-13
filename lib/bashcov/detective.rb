@@ -53,8 +53,9 @@ module Bashcov
       end
 
       return false unless shebang[0..1] == "#!"
-
       shell, arg = shebang[2..].split(/\s+/, 2)
+
+      return false unless shell != nil
       shell_basename = File.basename(shell)
 
       SHELL_BASENAMES.include?(shell_basename) ||
