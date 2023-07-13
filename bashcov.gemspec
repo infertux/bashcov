@@ -23,7 +23,14 @@ Gem::Specification.new do |spec|
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").reject do |f|
+    git_ls_files_z = `git ls-files -z 2>/dev/null`
+
+    # Handle contexts (like the Nix build sandbox) where we are not in a git
+    # repository -- in such cases, include the entire current directory
+    # hierarchy.
+    files = $? == 0 ? git_ls_files_z.split("\x0") : Dir["**/*"]
+
+    files.reject do |f|
       (File.expand_path(f) == __FILE__) || f.start_with?(*%w[test/ spec/ features/ .git])
     end
   end
