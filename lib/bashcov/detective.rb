@@ -38,8 +38,6 @@ module Bashcov
         (shellscript_extension?(filename) && shellscript_syntax?(filename))
     end
 
-  private
-
     # @param [String,Pathname] filename the name of the file to be checked
     # @return [Boolean] whether +filename+'s first line is a valid shell
     #   shebang
@@ -52,13 +50,27 @@ module Bashcov
         return false
       end
 
-      return false unless shebang[0..1] == "#!"
+      shellscript_shebang_line?(shebang)
+    end
 
-      shell, arg = shebang[2..].split(/\s+/, 2)
+    # @param [String] shebang a line to test for shell shebang-itude
+    # @return [Boolean] whether the line is a valid shell shebang
+    def shellscript_shebang_line?(shebang)
+      scanner = StringScanner.new(shebang)
+
+      return false if scanner.scan(/#!\s*/).nil?
+
+      shell = scanner.scan(/\S+/)
+
+      return false if shell.nil?
+
+      args = scanner.skip(/\s+/).nil? ? [] : scanner.rest.split(/\s+/)
+
       shell_basename = File.basename(shell)
 
-      SHELL_BASENAMES.include?(shell_basename) ||
-        (OTHER_BASENAMES.include?(shell_basename) && SHELL_BASENAMES.include?(arg))
+      SHELL_BASENAMES.include?(shell_basename) || \
+        (OTHER_BASENAMES.include?(shell_basename) && \
+          args.any? { |arg| SHELL_BASENAMES.include?(File.basename(arg)) })
     end
 
     # @param [String,Pathname] filename the name of the file to be checked
