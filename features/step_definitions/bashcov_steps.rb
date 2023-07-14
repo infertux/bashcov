@@ -67,6 +67,10 @@ When(/I run the following commands with bashcov(?: using `([^`]+)`)?:$/) do |opt
   )
 end
 
+When(/`([^`]+)` is (not )?executable/) do |command, negation|
+  skip_this_scenario unless !negation.nil? ^ File.executable?(command)
+end
+
 Then(/^the results should contain the commands:$/) do |table|
   commands = table.raw.flatten
   result_command_names = simplecov_results.map(&:command_name).map { |name| name.split(", ") }.flatten
