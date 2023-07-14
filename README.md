@@ -1,7 +1,6 @@
 # Bashcov
 
 [![Funding](https://img.shields.io/liberapay/patrons/infertux.svg?logo=liberapay)](https://liberapay.com/infertux/donate)
-[![Sponsors](https://img.shields.io/liberapay/patrons/infertux)](https://liberapay.com/infertux)
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
 [![Build Status](https://gitlab.com/infertux/bashcov/badges/master/pipeline.svg)](https://gitlab.com/infertux/bashcov/-/pipelines)
 [![Maintainability](https://api.codeclimate.com/v1/badges/083fdbba795049cd5f06/maintainability)](https://codeclimate.com/github/infertux/bashcov/maintainability)

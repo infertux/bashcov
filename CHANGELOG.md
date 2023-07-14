@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.2...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.3...master))
 
   * TBD
+
+## v3.0.3, 2023-07-14 ([changes](https://github.com/infertux/bashcov/compare/v3.0.2...v3.0.3))
+
+  * [BUGFIX]  Improve shebang detection (#74)
 
 ## v3.0.2, 2023-04-18 ([changes](https://github.com/infertux/bashcov/compare/v3.0.1...v3.0.2))
 
