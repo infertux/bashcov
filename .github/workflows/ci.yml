@@ -1,0 +1,78 @@
+name: Run Bashcov CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/set-up-bashcov
+      - name: Run Bundle audit
+        id: bundle-audit
+        run: |
+          bundle exec rake bundle:audit:update
+          bundle exec rake bundle:audit:check
+  build:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/set-up-bashcov
+      - name: Build Bashcov
+        id: build-bashcov
+        run: |
+          bundle exec rake build
+          bundle exec rake build:checksum
+          cat checksums/*
+  cucumber:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/set-up-bashcov
+      - name: Run Cucumber scenarios
+        id: cucumber-scenarios
+        run: bundle exec rake cucumber
+  spec:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    strategy:
+      matrix:
+        bash-version:
+        - '5.2'
+        - '5.1'
+        - '5.0'
+        - '4.4'
+        - '4.3'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/set-up-bashcov
+        with:
+          bash-version: ${{ matrix.bash-version }}
+      - name: Run RSpec tests against Bash ${{ matrix.bash-version }}
+        run: |
+          bundle exec rake spec
+  rubocop:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/set-up-bashcov
+      - name: Lint with RuboCop
+        id: rubocop
+        run: |
+          bundle exec rake rubocop
+  yard:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/set-up-bashcov
+      - name: Generate documentation with YARD
+        id: yard
+        run: |
+          bundle exec yard stats --list-undoc
