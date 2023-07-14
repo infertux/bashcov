@@ -86,6 +86,8 @@ module Bashcov
       SHELLSCRIPT_EXTENSIONS.include? File.extname(filename)
     end
 
+  private
+
     # @param [String,Pathname] filename the name of the file to be checked
     # @return [Boolean] whether +filename+'s text matches valid shell syntax
     # @note assumes that +filename+ is readable and refers to a regular file
