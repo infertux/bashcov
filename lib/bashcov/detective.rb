@@ -58,13 +58,19 @@ module Bashcov
     def shellscript_shebang_line?(shebang)
       scanner = StringScanner.new(shebang)
 
-      return false if scanner.scan(/#!\s*/).nil?
+      begin
+        return false if scanner.scan(/#!\s*/).nil?
 
-      shell = scanner.scan(/\S+/)
+        shell = scanner.scan(/\S+/)
 
-      return false if shell.nil?
+        return false if shell.nil?
 
-      args = scanner.skip(/\s+/).nil? ? [] : scanner.rest.split(/\s+/)
+        args = scanner.skip(/\s+/).nil? ? [] : scanner.rest.split(/\s+/)
+      rescue ArgumentError
+        # Handle "invalid byte sequence in UTF-8" from `StringScanner`.  Can
+        # happen when trying to read binary data (e.g. .pngs).
+        return false
+      end
 
       shell_basename = File.basename(shell)
 
