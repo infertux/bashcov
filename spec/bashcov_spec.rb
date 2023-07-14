@@ -81,6 +81,7 @@ describe Bashcov do
           before { @args += ["--bash-path", "/bin/bash"] }
 
           it "sets it properly" do
+            skip("/bin/bash does not exist") unless File.executable?("/bin/bash")
             subject
             expect(described_class.bash_path).to eq("/bin/bash")
           end
