@@ -68,8 +68,8 @@ module Bashcov
 
       shell_basename = File.basename(shell)
 
-      SHELL_BASENAMES.include?(shell_basename) || \
-        (OTHER_BASENAMES.include?(shell_basename) && \
+      SHELL_BASENAMES.include?(shell_basename) ||
+        (OTHER_BASENAMES.include?(shell_basename) &&
           args.any? { |arg| SHELL_BASENAMES.include?(File.basename(arg)) })
     end
 

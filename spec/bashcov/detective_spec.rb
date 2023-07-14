@@ -5,7 +5,7 @@ require "spec_helper"
 describe Bashcov::Detective do
   let(:detective) { described_class.new("bash") }
 
-  describe "#shellscript_shebang_line?" do
+  describe "#shellscript_shebang_line?" do # rubocop:disable RSpec/MultipleMemoizedHelpers
     let(:whitespace)  { ["", " ", "   ", "\t"] }
     let(:bindirs)     { %w[bin usr/bin usr/local/bin].map { |d| "/#{d}/" } }
     let(:prefixes)    { [""] + bindirs }
@@ -27,7 +27,7 @@ describe Bashcov::Detective do
     end
 
     def combine_with_executors(candidates, executors: envs)
-      combine(candidates).yield_self do |base|
+      combine(candidates).then do |base|
         base + with_executors(base, executors: executors)
       end
     end
@@ -43,8 +43,8 @@ describe Bashcov::Detective do
     it "returns true for shell interpreters" do
       aggregate_failures "valid shebang handling" do
         valid.each do |s|
-          expect(detective.shellscript_shebang_line?(s)).to be(true),
-            "#{s.inspect} is a valid shell shebang"
+          expect(detective.shellscript_shebang_line?(s)).to \
+            be(true), "#{s.inspect} is a valid shell shebang"
         end
       end
     end
@@ -52,8 +52,8 @@ describe Bashcov::Detective do
     it "returns false for non-shell interpreters" do
       aggregate_failures "invalid shebang handling" do
         invalid.each do |s|
-          expect(detective.shellscript_shebang_line?(s)).to be(false),
-            "#{s.inspect} is not a valid shell shebang"
+          expect(detective.shellscript_shebang_line?(s)).to \
+            be(false), "#{s.inspect} is not a valid shell shebang"
         end
       end
     end
@@ -63,8 +63,8 @@ describe Bashcov::Detective do
     it "returns true for filenames with shell extensions" do
       aggregate_failures "shell extension handling" do
         %w[foo.sh wa.bash].each do |filename|
-          expect(detective.shellscript_extension?(filename)).to be(true),
-            "#{filename.inspect} has a shell filename extension"
+          expect(detective.shellscript_extension?(filename)).to \
+            be(true), "#{filename.inspect} has a shell filename extension"
         end
       end
     end
@@ -72,8 +72,8 @@ describe Bashcov::Detective do
     it "returns false for filenames without shell extensions" do
       aggregate_failures "shell extension handling" do
         %w[foo.py wa.rb .sh .bash sh bash].each do |filename|
-          expect(detective.shellscript_extension?(filename)).to be(false),
-            "#{filename.inspect} does not have a shell filename extension"
+          expect(detective.shellscript_extension?(filename)).to \
+            be(false), "#{filename.inspect} does not have a shell filename extension"
         end
       end
     end
