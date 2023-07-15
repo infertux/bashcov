@@ -59,9 +59,12 @@ When(/I run the following commands with bashcov(?: using `([^`]+)`)?:$/) do |opt
     options << " --root ."
   end
 
+  # Use `/bin/sh` as the interpreter for maximum portability.  None of the
+  # generated `bashcov` commands should require Bash-specific features.
   steps %(
     When I run the following commands:
       """
+      #!/bin/sh
       #{commands.each_line.map { |command| "bashcov #{options} -- #{command}" }.join("\n")}
       """
   )
