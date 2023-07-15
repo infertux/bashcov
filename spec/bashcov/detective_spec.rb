@@ -14,8 +14,10 @@ describe Bashcov::Detective do
     let(:envs)        { combine(["env", "env -S"]) }
     let(:notenvs)     { combine(["false", "hello --world"]) }
     let(:valid)       { make_shebangs(shells) }
+    let(:png)         { "\x89PNG\r\n" }
+
     let(:invalid) do
-      ["", "\n", "\t\n", "foo"] + make_shebangs(notshells) + shebangify(with_executors(combine(shells), executors: notenvs))
+      ["", "\n", "\t\n", "foo", png] + make_shebangs(notshells) + shebangify(with_executors(combine(shells), executors: notenvs))
     end
 
     def combine(candidates)
