@@ -1,0 +1,36 @@
+name: Set up Bashcov
+description: Install Ruby gem dependencies and a specified version of Bash
+inputs:
+  bash-version:
+    description: Version of Bash to install
+runs:
+  using: composite
+  steps:
+    - name: Display Ruby version
+      id: ruby-version
+      shell: bash
+      run: |
+        ruby -v || :
+    - name: Install Ruby gem dependencies
+      id: bundle-install
+      shell: bash
+      run: |
+        bundle install -j "$({ nproc || grep -c '^processor:' /proc/cpuinfo || echo 1 ; } 2>/dev/null)"
+    - name: Install Bash version ${{ inputs.bash-version }}
+      id: install-bash
+      shell: bash
+      run: |
+        ./spec/install_bash.sh
+      env:
+        INSTALL_BASH_VERSION: ${{ inputs.bash-version }}
+    - name: Display Bash version
+      id: bash-version
+      shell: bash
+      run: |
+        bash --version
+    - name: Display user and environment
+      id: user-and-environment
+      shell: bash
+      run: |
+        id
+        env
