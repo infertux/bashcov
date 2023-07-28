@@ -76,3 +76,13 @@ jobs:
         id: yard
         run: |
           bundle exec yard stats --list-undoc
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v22
+        with:
+          extra_nix_config: |
+            system-features = benchmark big-parallel kvm nixos-test uid-range
+      - name: run flake checks
+        run: nix flake check -L
