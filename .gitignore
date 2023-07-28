@@ -22,3 +22,6 @@ tmp
 result
 result-*
 repl-result-*
+
+# Bundler-installed gems
+/vendor/
