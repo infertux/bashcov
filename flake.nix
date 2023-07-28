@@ -75,6 +75,10 @@
         # `nix run '.#devshell' -- update-deps`, etc.
         apps.devshell = self'.devShells.default.flakeApp;
 
+        checks = {
+          inherit (config.packages) bashcov;
+        };
+
         devshells.default = {
           commands = [
             {
