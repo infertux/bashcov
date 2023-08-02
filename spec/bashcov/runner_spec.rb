@@ -159,23 +159,32 @@ describe Bashcov::Runner do
       runner.run
       result = runner.result
 
-      expect(result.count).to eq(expected_coverage.count), "expected coverage for #{expected_coverage.count} files, got #{result.count}"
+      aggregate_failures "expected coverage" do
+        # Summary view of mismatches when this fails
+        expect(result).to eq(expected_coverage)
 
-      expected_coverage.each do |file, expected_hits|
-        expect(result).to include(file), "#{file} expected coverage stats but got none"
+        expect(result.count).to eq(expected_coverage.count), "expected coverage for #{expected_coverage.count} files, got #{result.count}"
 
-        actual_hits = result[file]
+        expected_coverage.each do |file, expected_hits|
+          expect(result).to(include(file), "#{file} expected coverage stats but got none")
 
-        expect(actual_hits.count).to eq(expected_hits.count), "#{file} expected coverage for #{expected_hits.count} line(s), got #{actual_hits.count}"
+          next unless result.include? file
 
-        actual_hits.each_with_index do |actual_hit, lineno|
-          expected = expected_hits.fetch(lineno)
-          expect(actual_hit).to eq(expected), "#{file}:#{lineno.succ} expected #{expected.inspect}, got #{actual_hit.inspect}"
+          actual_hits = result[file]
+
+          expect({ file => actual_hits }).to eq({ file => expected_hits })
+
+          expect(actual_hits.count).to eq(expected_hits.count), "#{file} expected coverage for #{expected_hits.count} line(s), got #{actual_hits.count}"
+
+          actual_hits.each_with_index do |actual_hit, lineno|
+            expected = expected_hits.fetch(lineno)
+            expect(actual_hit).to eq(expected), "#{file}:#{lineno.succ} expected #{expected.inspect}, got #{actual_hit.inspect}"
+          end
         end
-      end
 
-      expected_missing.each do |file|
-        expect(result).not_to include(file), "#{file} should be absent from coverage stats but was not"
+        expected_missing.each do |file|
+          expect(result).not_to include(file), "#{file} should be absent from coverage stats but was not"
+        end
       end
     end
 
