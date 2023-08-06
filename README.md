@@ -57,6 +57,8 @@ See [advanced usage](./USAGE.md) for more information.
 Bug reports and patches are most welcome.
 See the [contribution guidelines](https://github.com/infertux/bashcov/blob/master/CONTRIBUTING.md).
 
+For development tips, see [the hacking guide](./HACKING.md).
+
 ## Sponsorship
 
 Bashcov was [created in 2012](https://github.com/infertux/bashcov/commit/f65e65e5aa3377beb334beee9924136a34a913e8) and it needs your help. I have been maintaining the project for over a decade and keeping it working with new releases of Bash and Ruby takes time. If you use Bashcov professionally, please considerer supporting it on [Liberapay](https://liberapay.com/infertux) through your employer or directly. Thank you for supporting *Free and Open-Source Software*.
