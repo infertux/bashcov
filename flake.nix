@@ -111,6 +111,28 @@
                 exec bundix --ruby ${lib.escapeShellArg rubyName} --lockfile="$lockfile" "$@"
               '';
             }
+
+            {
+              name = "update-deps-conservative";
+              category = "maintenance";
+              help = "Update dependencies with Bundler and Bundix (if necessary)";
+
+              # If `nix build` succeeds, then presume that the lockfiles do not
+              # need to be updated.  If `nix build` fails after updating the
+              # lockfile, out-of-date dependencies weren't to blame for the
+              # build failure.
+              command = ''
+                export NIX_PATH="nixpkgs=${toString pkgs.path}''${NIX_PATH:+:''${NIX_PATH}}"
+                nix build && exit
+                if update-deps; then
+                  nix build || {
+                    rc="$?"
+                    git restore "''${PRJ_ROOT}/Gemfile.nix.lock" "''${PRJ_ROOT}/gemset.nix"
+                    exit "$rc"
+                  }
+                fi
+              '';
+            }
           ];
 
           # Needed for compiling native extensions
