@@ -367,10 +367,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "17c94wl2abqzf4fj469mdxzap1sd3410x421nl6mh2w49jsgvpki";
+      sha256 = "0s9p5qaqq68h5s3ys8xlk9swccma7arjif1w58987n6gicrsprrm";
       type = "gem";
     };
-    version = "1.55.0";
+    version = "1.55.1";
   };
   rubocop-ast = {
     dependencies = ["parser"];
@@ -422,10 +422,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "00rsflhijcr0q838fgbdmk7knm5kcjpimn6x0k9qmiw15hi96x1d";
+      sha256 = "0l364y00bw1zcs3grdxcxpn48vfrjds2khsiaxjqq3r9grvbprfy";
       type = "gem";
     };
-    version = "2.22.0";
+    version = "2.23.0";
   };
   ruby-progressbar = {
     groups = ["default" "development"];
