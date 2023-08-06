@@ -5,6 +5,8 @@ on:
     # Sunday and Wednesday
     - cron: '42 4 * * 0,3'
   workflow_dispatch:
+  push:
+  pull_request:
 
 jobs:
   update-deps-conservative:
@@ -21,7 +23,7 @@ jobs:
           extra_nix_config: |
             system-features = benchmark big-parallel kvm nixos-test uid-range
       - name: update lockfiles
-        run: nix run '.#devshell' -- update-deps-conservative
+        run: nix run '.#devshell' -- update-deps
       - name: create PR
         uses: peter-evans/create-pull-request@v5
         with:
