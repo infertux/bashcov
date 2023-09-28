@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.1...master))
 
   * TBD
+
+## v3.1.1, 2023-09-28 ([changes](https://github.com/infertux/bashcov/compare/v3.1.0...v3.1.1))
+
+  * [BUGFIX] Make sure StringIO is loaded when `--mute` is used
 
 ## v3.1.0, 2023-09-28 ([changes](https://github.com/infertux/bashcov/compare/v3.0.3...v3.1.0))
 
