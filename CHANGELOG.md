@@ -1,6 +1,15 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.0.3...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.0...master))
 
   * TBD
+
+## v3.1.0, 2023-09-28 ([changes](https://github.com/infertux/bashcov/compare/v3.0.3...v3.1.0))
+
+  * [FEATURE] Better diagnostics for runner result specs
+  * [BUGFIX]  Use `/usr/bin/env bash`
+  * [FEATURE] Initialize GitHub Actions workflow
+  * [MISC]    Make `Detective#shellscript_syntax?` private
+  * [BUGFIX]  Handle binary data
+  * [BUGFIX]  Fix Rubocop violations
 
 ## v3.0.3, 2023-07-14 ([changes](https://github.com/infertux/bashcov/compare/v3.0.2...v3.0.3))
 
