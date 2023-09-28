@@ -32,7 +32,11 @@ SimpleCov.at_exit do
     # XXX: suppress output from https://github.com/colszowka/simplecov-html/blob/9ec41504ab139fabfaddfc786dfdab5d6aca0bab/lib/simplecov-html.rb#L25
     # See https://github.com/infertux/bashcov/issues/53
     original_stdout = $stdout
-    $stdout = StringIO.new if Bashcov.mute
+
+    if Bashcov.mute
+      require "stringio"
+      $stdout = StringIO.new
+    end
 
     result.format!
   ensure
