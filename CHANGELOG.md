@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.2...master))
 
   * TBD
+
+## v3.1.2, 2024-02-29 ([changes](https://github.com/infertux/bashcov/compare/v3.1.1...v3.1.2))
+
+  * [BUGFIX] Upgrade `simplecov` to [calling twice bug fix](https://github.com/simplecov-ruby/simplecov/issues/1003)
 
 ## v3.1.1, 2023-09-28 ([changes](https://github.com/infertux/bashcov/compare/v3.1.0...v3.1.1))
 
