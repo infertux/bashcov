@@ -5,6 +5,26 @@ require:
 AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
+  # Ignore files ignored by Git.  Improved version of the template shown here:
+  # https://docs.rubocop.org/rubocop/configuration.html#pre-processing
+  # Properly handles symlinks-to-directories, which `git status --ignored
+  # --porcelain` displays without a trailing slash.
+  Exclude:
+    <% git_ignored_file_status = `git status --ignored --porcelain 2>/dev/null` %>
+    <% if $? == 0 %>
+      <% git_ignored_file_status.each_line(chomp: true).grep(/^!! /).map { |p| p.sub(/^!! /, '') }.each do |path| %>
+        <% if File.directory?(path) && ! path.end_with?('/') %>
+    - <%= path + '/**/*' %>
+        <% else %>
+    - <%= path.sub(/\/$/, '/**/*') %>
+        <% end %>
+      <% end %>
+    <% else %>
+    - 'vendor/**/*'
+    - 'result/**/*'
+    - 'result-*/**/*'
+    - 'repl-result-*/**/*'
+    <% end %>
 
 Metrics:
   Enabled: false

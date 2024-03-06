@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # nil
 if # nil
   [[ false = true ]] # 1

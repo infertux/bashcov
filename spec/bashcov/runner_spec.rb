@@ -86,7 +86,7 @@ describe Bashcov::Runner do
         # @note "with a temporary script" context expects +script_text+ to be defined.
         let(:script_text) do
           <<-BASH.gsub(/\A\s+/, "")
-            #!/bin/bash
+            #!/usr/bin/env bash
 
             echo "Hello, world!"
             LINENO= echo "What line is this?"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # ¹²³
 echo 'I am full of unicode characters! äéíóúü¿æ'

@@ -17,19 +17,31 @@ Feature:
 
     And a file named "test.sh" with mode "0755" and with:
       """
-      #!/bin/bash
+      #!/usr/bin/env bash
       date
       """
 
-  Scenario: no explicit command name is provided
+  Scenario: no explicit command name is provided and /bin/bash is executable
+    When `/bin/bash` is executable
 
-    When I run the following commands with bashcov:
+    And I run the following commands with bashcov:
       """
       ./test.sh
       """
 
     Then the results should contain the commands:
       | /bin/bash ./test.sh |
+
+  Scenario: no explicit command name is provided and /bin/bash is not executable
+    When `/bin/bash` is not executable
+
+    And I run the following commands with bashcov:
+      """
+      ./test.sh
+      """
+
+    Then the results should contain the commands:
+      | bash ./test.sh |
 
   Scenario: the command name is set with `--command-name`
 

@@ -18,7 +18,7 @@ Feature:
 
     And a file named "simple.sh" with mode "0755" and with:
       """
-      #!/bin/bash
+      #!/usr/bin/env bash
       tr '[[:lower:]]' '[[:upper:]]' <<<'shhh'
       """
 

@@ -59,12 +59,19 @@ When(/I run the following commands with bashcov(?: using `([^`]+)`)?:$/) do |opt
     options << " --root ."
   end
 
+  # Use `/bin/sh` as the interpreter for maximum portability.  None of the
+  # generated `bashcov` commands should require Bash-specific features.
   steps %(
     When I run the following commands:
       """
+      #!/bin/sh
       #{commands.each_line.map { |command| "bashcov #{options} -- #{command}" }.join("\n")}
       """
   )
+end
+
+When(/`([^`]+)` is (not )?executable/) do |command, negation|
+  skip_this_scenario unless !negation.nil? ^ File.executable?(command)
 end
 
 Then(/^the results should contain the commands:$/) do |table|

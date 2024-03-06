@@ -78,8 +78,11 @@ module Bashcov
       # Support the same `BASHCOV_BASH_PATH` environment variable used in the spec tests.
       return ENV.fetch("BASHCOV_BASH_PATH", nil) unless ENV.fetch("BASHCOV_BASH_PATH", "").empty?
 
-      # Fall back to standard Bash location.
-      "/bin/bash"
+      # Fall back to standard Bash location, if available.
+      return "/bin/bash" if File.executable?("/bin/bash")
+
+      # Otherwise, try to execute a Bash from `PATH`.
+      "bash"
     end
 
     def bash_version

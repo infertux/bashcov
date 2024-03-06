@@ -1,6 +1,6 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.2...master))
 
-  * TBD
+  * [FEATURE] Support building Bashcov with [the Nix package manager](https://nixos.org) (#78)
 
 ## v3.1.2, 2024-02-29 ([changes](https://github.com/infertux/bashcov/compare/v3.1.1...v3.1.2))
 
