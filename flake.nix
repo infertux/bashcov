@@ -80,6 +80,12 @@
         };
 
         devshells.default = {
+          imports = [
+            # Ruby support, including prerequisites for compiling native
+            # extensions.
+            "${inputs.devshell}/extra/language/ruby.nix"
+          ];
+
           commands = [
             {
               name = "fmt";
@@ -134,9 +140,6 @@
               '';
             }
           ];
-
-          # Needed for compiling native extensions
-          devshell.packages = with pkgs; [gcc gnumake];
         };
 
         overlayAttrs = {
