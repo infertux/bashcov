@@ -17,3 +17,11 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+
+# Nix output links
+result
+result-*
+repl-result-*
+
+# Bundler-installed gems
+/vendor/
