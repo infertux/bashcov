@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Abin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "simplecov", "~> 0.22.0"
+  spec.add_dependency "simplecov", "~> 0.21"
 
   spec.add_development_dependency "aruba"
   spec.add_development_dependency "bundler-audit"
