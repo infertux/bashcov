@@ -1,6 +1,10 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.2...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.3...master))
 
   * TBD
+
+## v3.1.3, 2024-08-29 ([changes](https://github.com/infertux/bashcov/compare/v3.1.2...v3.1.3))
+
+  * [BUGFIX] Relax simplecov version constrain for [codecov compatibility](https://github.com/infertux/bashcov/issues/88)
 
 ## v3.1.2, 2024-02-29 ([changes](https://github.com/infertux/bashcov/compare/v3.1.1...v3.1.2))
 
