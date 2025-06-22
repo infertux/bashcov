@@ -34,8 +34,8 @@ module Bashcov
       options[fd] = fd # bind FDs to the child process
 
       if Bashcov.options.mute
-        options[:out] = "/dev/null"
-        options[:err] = "/dev/null"
+        options[:out] = File::NULL
+        options[:err] = File::NULL
       end
 
       env =

@@ -231,7 +231,7 @@ describe Bashcov::Runner do
       it "omits files matching one or more SimpleCov filters from the results hash" do
         runner.run
         result = runner.result
-        expect(result.keys).to match_array((expected_coverage.keys - expected_omitted.values.flatten))
+        expect(result.keys).to match_array(expected_coverage.keys - expected_omitted.values.flatten)
       end
     end
   end
