@@ -2,8 +2,8 @@
 
 [![Funding](https://img.shields.io/liberapay/patrons/infertux.svg?logo=liberapay)](https://liberapay.com/infertux/donate)
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
+[![Build Status](https://github.com/infertux/bashcov/actions/workflows/ci.yml/badge.svg)](https://github.com/infertux/bashcov/actions/workflows/ci.yml)
 [![Build Status](https://gitlab.com/infertux/bashcov/badges/master/pipeline.svg)](https://gitlab.com/infertux/bashcov/-/pipelines)
-[![Maintainability](https://api.codeclimate.com/v1/badges/083fdbba795049cd5f06/maintainability)](https://codeclimate.com/github/infertux/bashcov/maintainability)
 [![Inline docs](http://inch-ci.org/github/infertux/bashcov.svg)](http://inch-ci.org/github/infertux/bashcov)
 
 Bashcov is a **code coverage analysis tool for Bash**.
