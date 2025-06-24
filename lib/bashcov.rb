@@ -3,7 +3,6 @@
 require "optparse"
 require "pathname"
 
-require "bashcov/runner"
 require "bashcov/version"
 
 # Bashcov default module

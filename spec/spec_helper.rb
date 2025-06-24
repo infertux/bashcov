@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "bashcov"
+require "bashcov/runner"
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 
