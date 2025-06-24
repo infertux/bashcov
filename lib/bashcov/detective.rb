@@ -43,7 +43,7 @@ module Bashcov
     #   shebang
     # @note assumes that +filename+ is readable and refers to a regular file
     def shellscript_shebang?(filename)
-      # Handle empty files that cause an immediate EOFError
+      # handle empty files that cause an immediate EOFError
       begin
         shebang = File.open(filename) { |f| f.readline.chomp }
       rescue EOFError
@@ -67,8 +67,8 @@ module Bashcov
 
         args = scanner.skip(/\s+/).nil? ? [] : scanner.rest.split(/\s+/)
       rescue ArgumentError
-        # Handle "invalid byte sequence in UTF-8" from `StringScanner`.  Can
-        # happen when trying to read binary data (e.g. .pngs).
+        # handle "invalid byte sequence in UTF-8" from `StringScanner`, this can
+        # happen when trying to read binary data (e.g. .png)
         return false
       end
 

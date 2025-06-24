@@ -69,19 +69,19 @@ module Bashcov
     end
 
     def bash_path
-      # First attempt to use the value from `options`, but ignore all exceptions.
-      # This is used early for the `BASH_VERSION` definition, so first use will likely error.
+      # first attempt to use the value from `options`, but ignore all exceptions
+      # this is used early for the `BASH_VERSION` definition, so first use will likely error
       begin
         return @options.bash_path if @options.bash_path
       rescue NoMethodError; end # rubocop:disable Lint/SuppressedException
 
-      # Support the same `BASHCOV_BASH_PATH` environment variable used in the spec tests.
+      # support the same `BASHCOV_BASH_PATH` environment variable used in the spec tests
       return ENV.fetch("BASHCOV_BASH_PATH", nil) unless ENV.fetch("BASHCOV_BASH_PATH", "").empty?
 
-      # Fall back to standard Bash location, if available.
+      # fall back to standard Bash location, if available
       return "/bin/bash" if File.executable?("/bin/bash")
 
-      # Otherwise, try to execute a Bash from `PATH`.
+      # otherwise, try to execute a Bash from `PATH`
       "bash"
     end
 
@@ -112,7 +112,7 @@ module Bashcov
   private
 
     def help
-      <<-HELP.gsub(/^ +/, "").gsub("\t", " " * 4)
+      <<~HELP.gsub("\t", " " * 4)
         Usage: #{program_name} [options] [--] <command> [options]
         Examples:
         \t#{program_name} ./script.sh
@@ -141,8 +141,9 @@ module Bashcov
 
           options.bash_path = p
 
-          # Redefine `BASH_VERSION` constant with upated `bash_path`.
-          # This is hacky, but a lot of code references that constant and this should only have to be done once.
+          # redefine `BASH_VERSION` constant with updated `bash_path`, this is
+          # hacky, but a lot of code references that constant and this should
+          # only have to be done once
           send(:remove_const, "BASH_VERSION")
           const_set("BASH_VERSION", bash_version.freeze)
         end

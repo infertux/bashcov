@@ -23,8 +23,7 @@ module Bashcov
     # @note Binds Bashcov +stdin+ to the program being executed.
     # @return [Process::Status] Status of the executed command
     def run
-      # Clear out previous run
-      @result = nil
+      @result = nil # clear out previous run
 
       field_stream = FieldStream.new
       @xtrace = Xtrace.new(field_stream)

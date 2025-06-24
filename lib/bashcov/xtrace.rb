@@ -114,9 +114,9 @@ module Bashcov
     # @raise [XtraceError] when +lineno+ is not composed solely of digits,
     #   indicating that something has gone wrong with parsing the +PS4+ fields
     def parse_hit!(lineno, *paths)
-      # If +LINENO+ isn't a series of digits, something has gone wrong. Add
-      # +@files+ to the exception in order to propagate the existing coverage
-      # data back to the {Bashcov::Runner} instance.
+      # if +LINENO+ isn't a series of digits, add +@files+ to the exception in
+      # order to propagate the existing coverage data back to the
+      # {Bashcov::Runner} instance
       if /\A\d+\z/.match?(lineno)
         lineno = lineno.to_i
       elsif lineno == "${LINENO-}"
@@ -128,15 +128,14 @@ module Bashcov
         )
       end
 
-      # The next three fields will be $BASH_SOURCE, $PWD, $OLDPWD, and $LINENO
       bash_source, pwd, oldpwd = paths.map { |p| Pathname.new(p) }
 
       update_wd_stacks!(pwd, oldpwd)
 
       script = find_script(bash_source)
 
-      # For one-liners, +LINENO+ == 0. Do this to avoid an +IndexError+;
-      # one-liners will be culled from the coverage results later on.
+      # for one-liners, +LINENO+ == 0, do this to avoid an +IndexError+
+      # one-liners will be culled from the coverage results later on
       index = (lineno > 1 ? lineno - 1 : 0)
 
       @files[script] ||= []
@@ -172,16 +171,16 @@ module Bashcov
       @pwd_stack[0] ||= pwd
       @oldpwd_stack[0] ||= oldpwd unless oldpwd.to_s.empty?
 
-      # We haven't changed working directories; short-circuit.
+      # return if we haven't changed working directories
       return if pwd == @pwd_stack[-1]
 
-      # If the current +pwd+ is identical to the top of the +@oldpwd_stack+ and
+      # if the current +pwd+ is identical to the top of the +@oldpwd_stack+ and
       # the current +oldpwd+ is identical to the second-to-top entry, then a
-      # previous cd/pushd has been undone.
+      # previous cd/pushd has been undone
       if pwd == @oldpwd_stack[-1] && oldpwd == @oldpwd_stack[-2]
         @pwd_stack.pop
         @oldpwd_stack.pop
-      else # New cd/pushd
+      else # new cd/pushd
         @pwd_stack << pwd
         @oldpwd_stack << oldpwd
       end

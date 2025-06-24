@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Bashcov
-  # Classes for streaming token-delimited fields
+  # Class for streaming token-delimited fields
   class FieldStream
     attr_accessor :read
 
@@ -43,7 +43,7 @@ module Bashcov
         (field_count - chunk.size).times { yield "" }
       end
 
-      # Skip junk that might appear before the first start-of-fields match
+      # skip junk that might appear before the first start-of-fields match
       begin
         n, chunk = chunked.next
         yield_fields.call([n, chunk]) unless n.zero?
