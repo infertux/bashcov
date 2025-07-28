@@ -1,18 +1,27 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.1.3...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.2.0...master))
 
+  * TBD
+
+## v3.2.0, 2025-07-28 ([changes](https://github.com/infertux/bashcov/compare/v3.1.3...v3.2.0))
+
+  * [BUGFIX]  Support function names containing dots (#97)
+  * [BUXFIX]  Disable write access to repository from CI
+  * [BUGFIX]  Don't require Runner until actually needed
+  * [BUGFIX]  Fix Rubocop violations
+  * [BUGFIX]  Add support for function name containing dashes
   * [FEATURE] Support building Bashcov with [the Nix package manager](https://nixos.org) (#78)
 
 ## v3.1.3, 2024-08-29 ([changes](https://github.com/infertux/bashcov/compare/v3.1.2...v3.1.3))
 
-  * [BUGFIX] Relax simplecov version constrain for [codecov compatibility](https://github.com/infertux/bashcov/issues/88)
+  * [BUGFIX]  Relax simplecov version constrain for [codecov compatibility](https://github.com/infertux/bashcov/issues/88)
 
 ## v3.1.2, 2024-02-29 ([changes](https://github.com/infertux/bashcov/compare/v3.1.1...v3.1.2))
 
-  * [BUGFIX] Upgrade `simplecov` to [calling twice bug fix](https://github.com/simplecov-ruby/simplecov/issues/1003)
+  * [BUGFIX]  Upgrade `simplecov` to [calling twice bug fix](https://github.com/simplecov-ruby/simplecov/issues/1003)
 
 ## v3.1.1, 2023-09-28 ([changes](https://github.com/infertux/bashcov/compare/v3.1.0...v3.1.1))
 
-  * [BUGFIX] Make sure StringIO is loaded when `--mute` is used
+  * [BUGFIX]  Make sure StringIO is loaded when `--mute` is used
 
 ## v3.1.0, 2023-09-28 ([changes](https://github.com/infertux/bashcov/compare/v3.0.3...v3.1.0))
 
