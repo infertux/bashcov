@@ -104,7 +104,7 @@ module Bashcov
                       line.start_with?(*IGNORE_START_WITH) ||
                       line.end_with?(*IGNORE_END_WITH)
 
-      return false if line =~ /\A[a-zA-Z_][a-zA-Z0-9_\-:\.]*\(\)/ # function declared without the `function` keyword
+      return false if line =~ /\A[a-zA-Z_@][a-zA-Z0-9_@\-:\.]*\(\)/ # function declared without the `function` keyword
       return false if line =~ /\A[^)]+\)\Z/ # case statement selector, e.g. `--help)`
 
       true

@@ -20,7 +20,7 @@ def expected_coverage
     "#{test_app}/scripts/cd.sh" => [nil, nil, 1, 2, nil, 3, 1, 3, nil, 2, nil, nil, 1, nil, 3, nil, 6, nil, 1, nil, 1],
     "#{test_app}/scripts/comments.sh" => [nil, nil, 1, nil, 1, nil, nil, nil, 1, nil, 1],
     "#{test_app}/scripts/delete.sh" => [nil, nil, 1, 1, 1, 1, nil, 1, 1],
-    "#{test_app}/scripts/function.sh" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, nil, nil, 1, nil, nil, nil, 0, nil, nil, nil, 1, nil, nil, 1, 1, 1, 1],
+    "#{test_app}/scripts/function.sh" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, nil, nil, 1, nil, nil, nil, 0, nil, nil, nil, 0, nil, nil, 1, 1, 1, 1],
     "#{test_app}/scripts/long_line.sh" => [nil, nil, 1, 1, 1, 0],
     "#{test_app}/scripts/nested/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1],
     "#{test_app}/scripts/new\nline.sh" => [nil, nil, 1, nil, 2],
