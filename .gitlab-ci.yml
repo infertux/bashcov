@@ -25,6 +25,11 @@ cucumber:
   script: bundle exec rake cucumber
 
 # Current Bash versions can be found at https://git.savannah.gnu.org/cgit/bash.git
+rspec-bash-5.3:
+  variables:
+    INSTALL_BASH_VERSION: "5.3"
+  script: bundle exec rake spec
+
 rspec-bash-5.2:
   variables:
     INSTALL_BASH_VERSION: "5.2"
