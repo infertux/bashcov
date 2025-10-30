@@ -38,4 +38,6 @@ hello
 there
 '
 # nil
-echo the end # 1
+( # nil
+  echo the end # 1
+) # nil

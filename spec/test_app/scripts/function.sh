@@ -18,11 +18,11 @@ put-team-key() {
   echo put-team-key # 0
 }
 
-abc::def.fn() {
+abc::def.@fn() {
     echo "${FUNCNAME[0]}" # 1
 }
 
 f1 # 1
 f2 # 1
 __a-bc # 1
-abc::def.fn # 1
+abc::def.@fn # 1
