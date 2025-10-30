@@ -6,11 +6,16 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Display gcc version
+      id: gcc-version
+      shell: bash
+      run: |
+        gcc -v
     - name: Display Ruby version
       id: ruby-version
       shell: bash
       run: |
-        ruby -v || :
+        ruby -v
     - name: Install Ruby gem dependencies
       id: bundle-install
       shell: bash

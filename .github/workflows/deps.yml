@@ -2,8 +2,7 @@ name: Update Nix dependencies
 
 on:
   schedule:
-    # Sunday and Wednesday
-    - cron: '42 4 * * 0,3'
+    - cron: "0 0 * * 3" # run weekly on Wednesdays
   workflow_dispatch:
 
 jobs:
@@ -26,7 +25,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           branch: create-pull-request/update-nix-deps
-          title: '[create-pull-request] Update Nix dependencies'
+          title: "[create-pull-request] Update Nix dependencies"
           body: |
             Update Nix dependencies in `Gemfile.nix.lock` and `gemset.nix`.
 

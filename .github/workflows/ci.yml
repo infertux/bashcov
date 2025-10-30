@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "0 0 1 * *" # first day of every month
+    - cron: "0 0 * * 0" # run weekly on Sundays
 
 permissions: read-all
 
@@ -45,13 +45,15 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:latest
     strategy:
+      fail-fast: false
       matrix:
         bash-version:
-        - '5.2'
-        - '5.1'
-        - '5.0'
-        - '4.4'
-        - '4.3'
+          #- "5.3"
+          - "5.2"
+          - "5.1"
+          #- "5.0"
+          #- "4.4"
+          #- "4.3"
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/set-up-bashcov

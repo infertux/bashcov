@@ -13,8 +13,8 @@ echo "Installing bash $INSTALL_BASH_VERSION..."
 
 mkdir -p bash
 cd bash
-wget -N https://ftpmirror.gnu.org/bash/bash-$INSTALL_BASH_VERSION.tar.gz
-tar xvf bash-$INSTALL_BASH_VERSION.tar.gz
+wget -qN https://ftpmirror.gnu.org/bash/bash-$INSTALL_BASH_VERSION.tar.gz
+tar xf bash-$INSTALL_BASH_VERSION.tar.gz
 pushd bash-$INSTALL_BASH_VERSION
 
 patches="../bash-$INSTALL_BASH_VERSION-patches/bash$(echo $INSTALL_BASH_VERSION | tr -d .)-???"
@@ -23,6 +23,7 @@ for patch in $(find .. -wholename "$patches" | sort); do
     patch -f -p0 <$patch
 done
 
+gcc -v
 ./configure --exec-prefix /
 make
 make install
