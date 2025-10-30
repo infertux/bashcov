@@ -3,6 +3,8 @@ name: Run Bashcov CI
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "0 0 1 * *" # first day of every month
 
 permissions: read-all
 
