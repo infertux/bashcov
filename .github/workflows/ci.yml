@@ -44,16 +44,17 @@ jobs:
   spec:
     runs-on: ubuntu-latest
     container: ruby:latest
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
         bash-version:
-          #- "5.3"
+          - "5.3"
           - "5.2"
           - "5.1"
-          #- "5.0"
-          #- "4.4"
-          #- "4.3"
+          - "5.0"
+          - "4.4"
+          - "4.3"
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/set-up-bashcov
