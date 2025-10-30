@@ -72,7 +72,9 @@ module Bashcov
       # this is used early for the `BASH_VERSION` definition, so first use will likely error
       begin
         return @options.bash_path if @options.bash_path
-      rescue NoMethodError; end # rubocop:disable Lint/SuppressedException
+      rescue NoMethodError
+        nil
+      end
 
       # support the same `BASHCOV_BASH_PATH` environment variable used in the spec tests
       return ENV.fetch("BASHCOV_BASH_PATH", nil) unless ENV.fetch("BASHCOV_BASH_PATH", "").empty?
