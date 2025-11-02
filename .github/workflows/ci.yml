@@ -6,7 +6,8 @@ on:
   schedule:
     - cron: "0 0 * * 0" # run weekly on Sundays
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   audit:
