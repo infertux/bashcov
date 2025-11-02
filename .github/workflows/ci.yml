@@ -43,7 +43,7 @@ jobs:
         run: bundle exec rake cucumber
   spec:
     runs-on: ubuntu-latest
-    container: ruby:latest
+    container: ruby:bookworm
     continue-on-error: true
     strategy:
       fail-fast: false
