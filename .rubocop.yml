@@ -3,7 +3,7 @@ plugins:
   - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2
   NewCops: enable
   # Ignore files ignored by Git.  Improved version of the template shown here:
   # https://docs.rubocop.org/rubocop/configuration.html#pre-processing
