@@ -102,7 +102,7 @@ module Bashcov
     # Define option accessors
     Options.new.members.each do |option|
       [option, "#{option}="].each do |method|
-        next if instance_methods(false).include?(method)
+        next if method_defined?(method, false)
 
         define_method method do |*args|
           options.public_send(*[method, *args])
