@@ -6,8 +6,6 @@ require "bashcov/runner"
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
-  config.filter_run_excluding :slow
-
   config.before do
     # Reset the options to, among other things, pick up on a new working
     # directory.
@@ -19,5 +17,3 @@ RSpec.configure do |config|
     Bashcov.mute = true # don't print testsuite output
   end
 end
-
-puts "BASH_VERSION=#{Bashcov::BASH_VERSION}"

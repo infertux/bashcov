@@ -60,7 +60,7 @@ describe Bashcov::Runner do
       expect(described_class.new("ls -l").run).to be_success
     end
 
-    it "is fast", :slow do
+    it "is fast" do
       ratio = 0
 
       3.times do |iteration|
@@ -77,8 +77,8 @@ describe Bashcov::Runner do
         ratio = ((ratio * iteration) + (t1 / t0)) / (iteration + 1)
       end
 
-      puts "#{ratio} times slower with Bashcov"
-      # XXX: no proper assertion - just outputs the ratio
+      # allow script to be up to 2 times slower with Bashcov
+      expect(ratio).to be < 2
     end
 
     context "with a script that unsets $LINENO" do
