@@ -41,7 +41,7 @@ module Bashcov
         # heredoc
         mark_multiline(
           lines, lineno,
-          /\A[^\n]+<<-?'?(\w+)'?.*$.*\1/m
+          /\A[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m
         )
 
         # multiline string concatenated with backslashes
