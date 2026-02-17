@@ -1,0 +1,24 @@
+name: Ruby Gem
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby # latest stable release
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Build Gem
+        run: |
+          gem build *.gemspec
