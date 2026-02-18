@@ -1,6 +1,21 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.2.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.3.0...master))
 
   * TBD
+
+## v3.3.0, 2026-02-18 ([changes](https://github.com/infertux/bashcov/compare/v3.2.0...v3.3.0))
+
+  * [MISC]    Add workflow to build Gem
+  * [BUGFIX]  Fix heredoc with space not reported as covered (fixes #102)
+  * [BUGFIX]  Do not write to stdout in specs
+  * [MISC]    Update dependencies for Nix
+  * [BUXFIX]  Add missing test dependencies for Ruby 4.0
+  * [MISC]    Bump minimal Ruby version to 3.2
+  * [MISC]    Test with Debian 12
+  * [MISC]    Test against all Bash versions
+  * [MISC]    Run GitHub CI monthly
+  * [BUGFIX]  Fix Rubocop violations
+  * [FEATURE] Support multiline subshells
+  * [FEATURE] Support function names containing the at sign
 
 ## v3.2.0, 2025-07-28 ([changes](https://github.com/infertux/bashcov/compare/v3.1.3...v3.2.0))
 
