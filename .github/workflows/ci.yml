@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
       - name: Run Bundle audit
         id: bundle-audit
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
       - name: Build Bashcov
         id: build-bashcov
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
       - name: Run Cucumber scenarios
         id: cucumber-scenarios
@@ -57,7 +57,7 @@ jobs:
           - "4.4"
           - "4.3"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
         with:
           bash-version: ${{ matrix.bash-version }}
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
       - name: Lint with RuboCop
         id: rubocop
@@ -78,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
       - name: Generate documentation with YARD
         id: yard
@@ -89,7 +89,7 @@ jobs:
     # Don't fail the build if this job fails
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v22
         with:
           extra_nix_config: |
