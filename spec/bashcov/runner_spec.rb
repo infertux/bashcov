@@ -103,7 +103,7 @@ describe Bashcov::Runner do
 
       it "returns an incomplete coverage hash" do
         tmprunner.run
-        expect(tmprunner.result[tmpscript.path]).to \
+        expect(tmprunner.result[tmpscript]).to \
           match_array(unset_lineno_coverage)
       end
     end
@@ -136,7 +136,7 @@ describe Bashcov::Runner do
       it "indicates that no lines were executed" do
         tmprunner.run
 
-        expect(tmprunner.result[tmpscript.path]).to \
+        expect(tmprunner.result[tmpscript]).to \
           match_array(bad_path_coverage)
       end
     end
@@ -148,8 +148,8 @@ describe Bashcov::Runner do
 
       it "returns empty coverage results" do
         expect { tmprunner.run }.not_to raise_error
-        expect(tmprunner.result).to include(tmpscript.path)
-        expect(tmprunner.result[tmpscript.path]).to be_empty
+        expect(tmprunner.result).to include(tmpscript)
+        expect(tmprunner.result[tmpscript]).to be_empty
       end
     end
   end

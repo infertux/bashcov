@@ -8,13 +8,12 @@ shared_context "with a temporary script" do |script_basename|
   end
 
   let(:tmpscript) do
-    script = File.open(File.join(Dir.getwd, "#{script_basename}.sh"), "w")
-    script.write(script_text)
-    script.close
-    script
+    path = File.join(Dir.getwd, "#{script_basename}.sh")
+    File.write(path, script_text)
+    path
   end
 
-  let(:tmprunner) { Bashcov::Runner.new([Bashcov.bash_path, tmpscript.path]) }
+  let(:tmprunner) { Bashcov::Runner.new([Bashcov.bash_path, tmpscript]) }
 
   around do |example|
     Dir.mktmpdir script_basename do |tmpdir|
