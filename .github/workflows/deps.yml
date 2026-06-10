@@ -22,7 +22,7 @@ jobs:
       - name: update lockfiles
         run: nix run '.#devshell' -- update-deps-conservative
       - name: create PR
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: create-pull-request/update-nix-deps
           title: "[create-pull-request] Update Nix dependencies"
