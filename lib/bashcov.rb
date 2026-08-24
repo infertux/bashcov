@@ -10,7 +10,7 @@ require "bashcov/version"
 module Bashcov
   # A +Struct+ to store Bashcov configuration
   Options = Struct.new(
-    *%i[skip_uncovered mute bash_path root_directory command command_name]
+    *%i[skip_uncovered mute bash_path root_directory command command_name],
   )
 
   class << self

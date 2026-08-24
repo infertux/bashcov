@@ -96,7 +96,7 @@ Then(/^the file "([^"]*)" should have the following coverage:/) do |filename, ta
     expect(actual).to(
       eq(expected),
       "#{filename}:#{line_number} has coverage `#{actual.inspect}` " \
-      "but `#{expected.inspect}` is expected"
+      "but `#{expected.inspect}` is expected",
     )
   end
 end

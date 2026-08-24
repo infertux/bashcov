@@ -85,7 +85,7 @@ module Bashcov
 
       field_count = FIELDS.length
       fields = @field_stream.each(
-        self.class.delimiter, field_count, PS4_START_REGEXP
+        self.class.delimiter, field_count, PS4_START_REGEXP,
       )
 
       # +take(field_count)+ would be more natural here, but doesn't seem to
@@ -124,7 +124,7 @@ module Bashcov
         return
       else
         raise XtraceError.new(
-          "expected integer for LINENO, got #{lineno.inspect}", @files
+          "expected integer for LINENO, got #{lineno.inspect}", @files,
         )
       end
 

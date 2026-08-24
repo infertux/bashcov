@@ -35,25 +35,25 @@ module Bashcov
         mark_multiline(
           lines, lineno,
           /\A[^\n]*\b=\([^()]*\)/,
-          forward: false
+          forward: false,
         )
 
         # heredoc
         mark_multiline(
           lines, lineno,
-          /\A[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m
+          /\A[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m,
         )
 
         # multiline string concatenated with backslashes
         mark_multiline(
           lines, lineno,
-          /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/
+          /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/,
         )
 
         # simple line continuations with backslashes
         mark_multiline(
           lines, lineno,
-          /\A([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/
+          /\A([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/,
         )
 
         # multiline string concatenated with newlines
