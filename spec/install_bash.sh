@@ -13,7 +13,7 @@ echo "Installing bash $INSTALL_BASH_VERSION..."
 
 mkdir -p bash
 cd bash
-wget -qN https://ftpmirror.gnu.org/bash/bash-$INSTALL_BASH_VERSION.tar.gz
+wget -qN https://mirror.cyberbits.eu/gnu/bash/bash-$INSTALL_BASH_VERSION.tar.gz
 tar xf bash-$INSTALL_BASH_VERSION.tar.gz
 pushd bash-$INSTALL_BASH_VERSION
 
