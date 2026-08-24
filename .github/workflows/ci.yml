@@ -36,10 +36,18 @@ jobs:
   cucumber:
     runs-on: ubuntu-latest
     container: ruby:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        bash-version:
+          - "5.3"
+          - "5.2"
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
-      - name: Run Cucumber scenarios
+        with:
+          bash-version: ${{ matrix.bash-version }}
+      - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }}
         id: cucumber-scenarios
         run: bundle exec rake cucumber
   spec:
