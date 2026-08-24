@@ -556,10 +556,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "198kcbrjxhhzca19yrdcd6jjj9sb51aaic3b0sc3pwjghg3j49py";
+      sha256 = "1d71ra19cf6bcg9c7yp1bw1kg45g1sjn6m1d83ppghsrlqqjzw9h";
       type = "gem";
     };
-    version = "0.22.0";
+    version = "1.1.0";
   };
   simplecov-html = {
     groups = ["default"];

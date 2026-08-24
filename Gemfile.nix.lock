@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     bashcov (3.3.0)
-      simplecov (~> 0.21)
+      simplecov (~> 1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -120,7 +120,7 @@ GEM
       lint_roller (~> 1.1)
       rubocop (~> 1.81)
     ruby-progressbar (1.13.0)
-    simplecov (0.22.0)
+    simplecov (1.1.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
