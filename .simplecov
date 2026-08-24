@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-SimpleCov.start do
+SimpleCov.configure do
   minimum_coverage 95
-  add_filter "/features/"
-  add_filter "/spec/"
-  add_filter "/tmp/"
-  add_filter "/.git/"
+  skip "/features/"
+  skip "/spec/"
+  skip "/tmp/"
+  skip "/.git/"
 end

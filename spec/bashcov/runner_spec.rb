@@ -224,7 +224,7 @@ describe Bashcov::Runner do
     context "with SimpleCov filters in effect" do
       before do
         SimpleCov.configure do
-          expected_omitted.each_key { |filter| add_filter(filter) }
+          expected_omitted.each_key { |filter| skip(filter) }
         end
       end
 

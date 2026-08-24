@@ -22,7 +22,7 @@ SimpleCov.command_name Bashcov.command_name
 SimpleCov.root Bashcov.root_directory
 
 result = SimpleCov::Result.new(coverage)
-if SimpleCov.use_merging
+if SimpleCov.merging
   SimpleCov::ResultMerger.store_result(result)
   result = SimpleCov::ResultMerger.merged_result
 end
