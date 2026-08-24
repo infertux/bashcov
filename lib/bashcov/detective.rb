@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "strscan" # for StringScanner
+
 module Bashcov
   # Detect shell scripts
   class Detective
