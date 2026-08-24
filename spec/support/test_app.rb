@@ -46,7 +46,7 @@ def expected_coverage
     "#{test_app}/scripts/no_extension/bin_bash_with_args" => [nil, nil, 1],
     "#{test_app}/scripts/no_extension/bin_dash" => [nil, nil, 0],
     "#{test_app}/scripts/no_extension/usr_bin_env_bash" => [nil, nil, 1],
-    "#{test_app}/test_suite.sh" => [nil, nil, 1, 1, nil, 2, nil, 1],
+    "#{test_app}/test_suite.sh" => [nil, nil, 1, nil, 1, 1, nil, 2, nil, 56, 27, 6, nil, 1],
   }
 end
 
