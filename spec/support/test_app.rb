@@ -32,9 +32,14 @@ def expected_coverage
     "#{test_app}/scripts/sourced.txt" => [nil, nil, 1],
     "#{test_app}/scripts/unicode.sh" => [nil, nil, nil, 1, nil, 1],
     "#{test_app}/scripts/multiline.sh" => [nil, nil, nil, 1, nil, 0, nil, 1, nil, 1, nil, 0, nil, nil, 1, 2, 1, 1, 0, nil, nil, 2, nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, nil, 1],
-    "#{test_app}/scripts/multiline2.sh" => [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nil, nil, 1],
+    "#{test_app}/scripts/multiline2.sh" => (
+      if Bashcov::BASH_VERSION >= "5.3" # Bash 5.3+ is actually more accurate and reports lines executed twice as it should
+        [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, nil, nil, 1]
+      else
+        [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nil, nil, 1]
+      end
+    ),
     "#{test_app}/scripts/multiline3.sh" => [nil, nil, 1, 1, 1, 1],
-    "#{test_app}/scripts/multiline4.sh" => [nil, nil, 1, 1],
     "#{test_app}/scripts/executable" => [nil, nil, 1],
     "#{test_app}/scripts/exit_non_zero.sh" => [nil, nil, 1],
     "#{test_app}/scripts/no_extension/bin_bash" => [nil, nil, 1],

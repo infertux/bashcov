@@ -57,12 +57,14 @@ module Bashcov
         )
 
         # multiline string concatenated with newlines
-        %w[' "].each do |char|
-          mark_multiline(
-            lines, lineno,
-            /\A[^\n]+[\s=]+#{char}[^#{char}]*#{char}/m,
-            forward: false
-          )
+        [false, true].each do |direction|
+          %w[' "].each do |char|
+            mark_multiline(
+              lines, lineno,
+              /\A[^\n]+[\s=]+#{char}[^#{char}]*#{char}/m,
+              forward: direction,
+            )
+          end
         end
 
         mark_line(line, lineno)
@@ -72,6 +74,9 @@ module Bashcov
   private
 
     def mark_multiline(lines, lineno, regexp, forward: true)
+      # skip if we are already inside marked multiline string
+      return unless @coverage[lineno + 1].nil?
+
       seek_forward = lines[lineno..].join
       return unless (multiline_match = seek_forward.match(regexp))
 

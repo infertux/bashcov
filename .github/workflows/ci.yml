@@ -45,7 +45,6 @@ jobs:
   spec:
     runs-on: ubuntu-latest
     container: ruby:bookworm
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
