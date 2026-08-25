@@ -15,7 +15,7 @@ describe Bashcov::Lexer do
     it "marks relevant lines" do
       file = "#{test_app}/scripts/nested/simple.sh"
       coverage = {}
-      expected = expected_coverage.fetch(file).each_with_index.map do |line, index|
+      expected = expected_coverage.fetch(file).fetch("lines").each_with_index.map do |line, index|
         index unless line.nil?
       end.compact
 

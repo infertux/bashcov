@@ -14,39 +14,39 @@ end
 
 def expected_coverage
   {
-    "#{test_app}/never_called.sh" => [nil, nil, 0],
-    "#{test_app}/scripts/array.sh" => [nil, nil, 1, 1, 1, 1, 1, 1],
-    "#{test_app}/scripts/case.sh" => [nil, nil, nil, 2, nil, 1, nil, nil, 0, 1, nil, nil, nil, 1, 1],
-    "#{test_app}/scripts/cd.sh" => [nil, nil, 1, 2, nil, 3, 1, 3, nil, 2, nil, nil, 1, nil, 3, nil, 6, nil, 1, nil, 1],
-    "#{test_app}/scripts/comments.sh" => [nil, nil, 1, nil, 1, nil, nil, nil, 1, nil, 1],
-    "#{test_app}/scripts/delete.sh" => [nil, nil, 1, 1, 1, 1, nil, 1, 1],
-    "#{test_app}/scripts/function.sh" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, nil, nil, 1, nil, nil, nil, 0, nil, nil, nil, 1, nil, nil, 1, 1, 1, 1],
-    "#{test_app}/scripts/long_line.sh" => [nil, nil, 1, 1, 1, 0],
-    "#{test_app}/scripts/nested/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1],
-    "#{test_app}/scripts/new\nline.sh" => [nil, nil, 1, nil, 2],
-    "#{test_app}/scripts/nounset.sh" => [nil, nil, 1, nil, 1, nil, 0],
-    "#{test_app}/scripts/one_liner.sh" => [nil, nil, 2, nil, 1, nil, 0],
-    "#{test_app}/scripts/process_substitution.sh" => [nil, nil, nil, 1, nil, nil, 2, nil, 4],
-    "#{test_app}/scripts/simple.sh" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1],
-    "#{test_app}/scripts/source.sh" => [nil, nil, 1, nil, 2],
-    "#{test_app}/scripts/sourced.txt" => [nil, nil, 1],
-    "#{test_app}/scripts/unicode.sh" => [nil, nil, nil, 1, nil, 1],
-    "#{test_app}/scripts/multiline.sh" => [nil, nil, nil, 1, nil, 0, nil, 1, nil, 1, nil, 0, nil, nil, 1, 2, 1, 1, 0, nil, nil, 2, nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, nil, 1],
-    "#{test_app}/scripts/multiline2.sh" => (
+    "#{test_app}/never_called.sh" => { "lines" => [nil, nil, 0] },
+    "#{test_app}/scripts/array.sh" => { "lines" => [nil, nil, 1, 1, 1, 1, 1, 1] },
+    "#{test_app}/scripts/case.sh" => { "lines" => [nil, nil, nil, 2, nil, 1, nil, nil, 0, 1, nil, nil, nil, 1, 1] },
+    "#{test_app}/scripts/cd.sh" => { "lines" => [nil, nil, 1, 2, nil, 3, 1, 3, nil, 2, nil, nil, 1, nil, 3, nil, 6, nil, 1, nil, 1] },
+    "#{test_app}/scripts/comments.sh" => { "lines" => [nil, nil, 1, nil, 1, nil, nil, nil, 1, nil, 1] },
+    "#{test_app}/scripts/delete.sh" => { "lines" => [nil, nil, 1, 1, 1, 1, nil, 1, 1] },
+    "#{test_app}/scripts/function.sh" => { "lines" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, nil, nil, 1, nil, nil, nil, 0, nil, nil, nil, 1, nil, nil, 1, 1, 1, 1] },
+    "#{test_app}/scripts/long_line.sh" => { "lines" => [nil, nil, 1, 1, 1, 0] },
+    "#{test_app}/scripts/nested/simple.sh" => { "lines" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1] },
+    "#{test_app}/scripts/new\nline.sh" => { "lines" => [nil, nil, 1, nil, 2] },
+    "#{test_app}/scripts/nounset.sh" => { "lines" => [nil, nil, 1, nil, 1, nil, 0] },
+    "#{test_app}/scripts/one_liner.sh" => { "lines" => [nil, nil, 2, nil, 1, nil, 0] },
+    "#{test_app}/scripts/process_substitution.sh" => { "lines" => [nil, nil, nil, 1, nil, nil, 2, nil, 4] },
+    "#{test_app}/scripts/simple.sh" => { "lines" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1] },
+    "#{test_app}/scripts/source.sh" => { "lines" => [nil, nil, 1, nil, 2] },
+    "#{test_app}/scripts/sourced.txt" => { "lines" => [nil, nil, 1] },
+    "#{test_app}/scripts/unicode.sh" => { "lines" => [nil, nil, nil, 1, nil, 1] },
+    "#{test_app}/scripts/multiline.sh" => { "lines" => [nil, nil, nil, 1, nil, 0, nil, 1, nil, 1, nil, 0, nil, nil, 1, 2, 1, 1, 0, nil, nil, 2, nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, nil, 1] },
+    "#{test_app}/scripts/multiline2.sh" => { "lines" => (
       if Bashcov::BASH_VERSION >= "5.3" # Bash 5.3+ is actually more accurate and reports lines executed twice as it should
         [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, nil, nil, 1]
       else
         [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nil, nil, 1]
       end
-    ),
-    "#{test_app}/scripts/multiline3.sh" => [nil, nil, 1, 1, 1, 1],
-    "#{test_app}/scripts/executable" => [nil, nil, 1],
-    "#{test_app}/scripts/exit_non_zero.sh" => [nil, nil, 1],
-    "#{test_app}/scripts/no_extension/bin_bash" => [nil, nil, 1],
-    "#{test_app}/scripts/no_extension/bin_bash_with_args" => [nil, nil, 1],
-    "#{test_app}/scripts/no_extension/bin_dash" => [nil, nil, 0],
-    "#{test_app}/scripts/no_extension/usr_bin_env_bash" => [nil, nil, 1],
-    "#{test_app}/test_suite.sh" => [nil, nil, 1, nil, 1, 1, nil, 2, nil, 56, 27, 6, nil, 1],
+    ) },
+    "#{test_app}/scripts/multiline3.sh" => { "lines" => [nil, nil, 1, 1, 1, 1] },
+    "#{test_app}/scripts/executable" => { "lines" => [nil, nil, 1] },
+    "#{test_app}/scripts/exit_non_zero.sh" => { "lines" => [nil, nil, 1] },
+    "#{test_app}/scripts/no_extension/bin_bash" => { "lines" => [nil, nil, 1] },
+    "#{test_app}/scripts/no_extension/bin_bash_with_args" => { "lines" => [nil, nil, 1] },
+    "#{test_app}/scripts/no_extension/bin_dash" => { "lines" => [nil, nil, 0] },
+    "#{test_app}/scripts/no_extension/usr_bin_env_bash" => { "lines" => [nil, nil, 1] },
+    "#{test_app}/test_suite.sh" => { "lines" => [nil, nil, 1, nil, 1, 1, nil, 2, nil, 56, 27, 6, nil, 1] },
   }
 end
 

@@ -37,7 +37,8 @@ jobs:
 
   cucumber:
     runs-on: ubuntu-latest
-    container: ruby:${{ matrix.ruby-version }}
+    container:
+      image: ruby:${{ matrix.ruby-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -59,11 +60,16 @@ jobs:
           bash-version: ${{ matrix.bash-version }}
       - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }} and Ruby ${{ matrix.ruby-version }}
         id: cucumber-scenarios
-        run: bundle exec rake cucumber
+        run: |
+          # don't run as root: https://github.com/infertux/bashcov/issues/43
+          useradd --create-home ciuser
+          chown -R ciuser:ciuser .
+          su ciuser -c "bundle exec rake cucumber"
 
   rspec:
     runs-on: ubuntu-latest
-    container: ruby:${{ matrix.ruby-version }}
+    container:
+      image: ruby:${{ matrix.ruby-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -85,7 +91,10 @@ jobs:
           bash-version: ${{ matrix.bash-version }}
       - name: Run RSpec tests against Bash ${{ matrix.bash-version }} and Ruby ${{ matrix.ruby-version }}
         run: |
-          bundle exec rake rspec
+          # don't run as root: https://github.com/infertux/bashcov/issues/43
+          useradd --create-home ciuser
+          chown -R ciuser:ciuser .
+          su ciuser -c "bundle exec rake rspec"
 
   rubocop:
     runs-on: ubuntu-latest
@@ -111,8 +120,7 @@ jobs:
 
   nix:
     runs-on: ubuntu-latest
-    # Don't fail the build if this job fails
-    continue-on-error: true
+    continue-on-error: true # don't fail the build if this job fails
     steps:
       - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v22
