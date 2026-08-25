@@ -21,6 +21,7 @@ jobs:
         run: |
           bundle exec rake bundle:audit:update
           bundle exec rake bundle:audit:check
+
   build:
     runs-on: ubuntu-latest
     container: ruby:latest
@@ -33,26 +34,10 @@ jobs:
           bundle exec rake build
           bundle exec rake build:checksum
           cat checksums/*
+
   cucumber:
     runs-on: ubuntu-latest
-    container: ruby:latest
-    strategy:
-      fail-fast: false
-      matrix:
-        bash-version:
-          - "5.3"
-          - "5.2"
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/set-up-bashcov
-        with:
-          bash-version: ${{ matrix.bash-version }}
-      - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }}
-        id: cucumber-scenarios
-        run: bundle exec rake cucumber
-  spec:
-    runs-on: ubuntu-latest
-    container: ruby:bookworm
+    container: ruby:${{ matrix.ruby-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -63,6 +48,38 @@ jobs:
           - "5.0"
           - "4.4"
           - "4.3"
+        ruby-version:
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "4.0"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/set-up-bashcov
+        with:
+          bash-version: ${{ matrix.bash-version }}
+      - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }}
+        id: cucumber-scenarios
+        run: bundle exec rake cucumber
+
+  spec:
+    runs-on: ubuntu-latest
+    container: ruby:${{ matrix.ruby-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        bash-version:
+          - "5.3"
+          - "5.2"
+          - "5.1"
+          - "5.0"
+          - "4.4"
+          - "4.3"
+        ruby-version:
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "4.0"
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
@@ -71,6 +88,7 @@ jobs:
       - name: Run RSpec tests against Bash ${{ matrix.bash-version }}
         run: |
           bundle exec rake spec
+
   rubocop:
     runs-on: ubuntu-latest
     container: ruby:latest
@@ -81,6 +99,7 @@ jobs:
         id: rubocop
         run: |
           bundle exec rake rubocop
+
   yard:
     runs-on: ubuntu-latest
     container: ruby:latest
@@ -91,6 +110,7 @@ jobs:
         id: yard
         run: |
           bundle exec yard stats --list-undoc
+
   nix:
     runs-on: ubuntu-latest
     # Don't fail the build if this job fails
