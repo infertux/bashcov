@@ -44,9 +44,8 @@ def expected_coverage
     "#{test_app}/scripts/exit_non_zero.sh" => { "lines" => [nil, nil, 1] },
     "#{test_app}/scripts/no_extension/bin_bash" => { "lines" => [nil, nil, 1] },
     "#{test_app}/scripts/no_extension/bin_bash_with_args" => { "lines" => [nil, nil, 1] },
-    "#{test_app}/scripts/no_extension/bin_dash" => { "lines" => [nil, nil, 0] },
     "#{test_app}/scripts/no_extension/usr_bin_env_bash" => { "lines" => [nil, nil, 1] },
-    "#{test_app}/test_suite.sh" => { "lines" => [nil, nil, 1, nil, 1, 1, nil, 2, nil, 56, 27, 6, nil, 1] },
+    "#{test_app}/test_suite.sh" => { "lines" => [nil, nil, 1, nil, 1, 1, nil, 2, nil, 54, 32, 1] },
   }
 end
 
@@ -67,9 +66,6 @@ def expected_omitted
       "#{test_app}/multiline.sh",
       "#{test_app}/multiline2.sh",
       "#{test_app}/multiline3.sh",
-    ],
-    "/no_extension/" => [
-      "#{test_app}/scripts/no_extension/bin_dash",
     ],
   }
 end

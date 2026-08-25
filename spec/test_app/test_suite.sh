@@ -8,7 +8,5 @@ echo "PS4=${PS4}" >&2
 cd $(dirname $0)
 
 while IFS= read -r -d '' script; do
-  if ! "${script}" > /dev/null ; then
-    echo "WARNING: ${script} exited with non-zero."
-  fi
+  "${script}" > /dev/null || echo "WARNING: ${script} exited with non-zero."
 done < <(find scripts -type f -perm -111 -print0)
