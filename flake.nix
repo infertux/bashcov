@@ -172,7 +172,7 @@
                 propagatedBuildInputs = [gems'];
 
                 checkPhase = ''
-                  ${config.packages.gems.wrappedRuby}/bin/rake cucumber spec
+                  ${config.packages.gems.wrappedRuby}/bin/rake cucumber rspec
                 '';
 
                 # Replace shebangs like "#!/usr/bin/env bash" with Nix store

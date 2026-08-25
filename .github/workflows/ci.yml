@@ -62,7 +62,7 @@ jobs:
         id: cucumber-scenarios
         run: bundle exec rake cucumber
 
-  spec:
+  rspec:
     runs-on: ubuntu-latest
     container: ruby:${{ matrix.ruby-version }}
     strategy:
@@ -87,7 +87,7 @@ jobs:
           bash-version: ${{ matrix.bash-version }}
       - name: Run RSpec tests against Bash ${{ matrix.bash-version }}
         run: |
-          bundle exec rake spec
+          bundle exec rake rspec
 
   rubocop:
     runs-on: ubuntu-latest
