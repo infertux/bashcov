@@ -47,7 +47,6 @@ jobs:
           - "5.1"
           - "5.0"
           - "4.4"
-          - "4.3"
         ruby-version:
           - "3.2"
           - "3.3"
@@ -58,7 +57,7 @@ jobs:
       - uses: ./.github/actions/set-up-bashcov
         with:
           bash-version: ${{ matrix.bash-version }}
-      - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }}
+      - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }} and Ruby ${{ matrix.ruby-version }}
         id: cucumber-scenarios
         run: bundle exec rake cucumber
 
@@ -74,7 +73,6 @@ jobs:
           - "5.1"
           - "5.0"
           - "4.4"
-          - "4.3"
         ruby-version:
           - "3.2"
           - "3.3"
@@ -85,7 +83,7 @@ jobs:
       - uses: ./.github/actions/set-up-bashcov
         with:
           bash-version: ${{ matrix.bash-version }}
-      - name: Run RSpec tests against Bash ${{ matrix.bash-version }}
+      - name: Run RSpec tests against Bash ${{ matrix.bash-version }} and Ruby ${{ matrix.ruby-version }}
         run: |
           bundle exec rake rspec
 

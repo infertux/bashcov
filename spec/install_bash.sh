@@ -24,7 +24,9 @@ for patch in $(find .. -wholename "$patches" | sort); do
 done
 
 gcc -v
-./configure --exec-prefix /
+
+# TODO: remove CFLAGS override when we drop support for Bash 4.4
+CFLAGS="${CFLAGS:-} -Wno-implicit-function-declaration -Wno-error=implicit-function-declaration" ./configure --exec-prefix=/
 make
 make install
 
