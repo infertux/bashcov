@@ -46,6 +46,8 @@ For more information, including other installation methods, see [`INSTALL.md`](.
 
 It will create a directory named `./coverage/`, you may open `./coverage/index.html` to browse the coverage report.
 
+![Screenshot](screenshot.png)
+
 ### SimpleCov integration
 
 You can leverage the underlying library [SimpleCov](https://github.com/colszowka/simplecov)
