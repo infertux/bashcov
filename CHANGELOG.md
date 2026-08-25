@@ -1,6 +1,29 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v3.3.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.0...master))
 
   * TBD
+
+## v4.0.0, 2026-08-?? ([changes](https://github.com/infertux/bashcov/compare/v3.3.0...v4.0.0))
+
+  * [BUGFIX]  Fix build for Nix
+  * [MISC]    Update Nix lockfile
+  * [MISC]    Ignore .ruby-version file
+  * [FEATURE] Update coverage result to match SimpleCov new API
+  * [BUGFIX]  Fix build for Bash 4.4
+  * [BUGFIX]  Run Cucumber examples in random order
+  * [MISC]    Test against all Ruby versions
+  * [MISC]    Add screenshot to README
+  * [MISC]    Run Cucumber against Bash 5.3
+  * [BUGFIX]  Fix call to `find` command with zsh safeguard
+  * [BUGFIX]  Fix deprecation warnings
+  * [MISC]    Upgrade Ruby image for GitLab CI
+  * [FEATURE]  - Upgrade simplecov dependency
+  * [BUGFIX]  Fix support for Bash 5.3
+  * [MISC]    Enforce consistent commas with Rubocop
+  * [BUGFIX]  Make sure StringScanner is always loaded
+  * [BUGFIX]  Use reliable Bash mirror
+  * [BUGFIX]  Fix GitHub Action
+  * [BUGFIX]  Fix Rubocop violation
+  * [BUGFIX]  Fix deprecation warning for actions/checkout
 
 ## v3.3.0, 2026-02-18 ([changes](https://github.com/infertux/bashcov/compare/v3.2.0...v3.3.0))
 
