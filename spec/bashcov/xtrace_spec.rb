@@ -14,7 +14,7 @@ describe Bashcov::Xtrace do
     let(:case_runner) { Bashcov::Runner.new([Bashcov.bash_path, case_script]) }
 
     def case_result
-      case_runner.tap(&:run).result[case_script].dup
+      case_runner.tap(&:run).result[case_script].dup.fetch("lines")
     end
 
     before do

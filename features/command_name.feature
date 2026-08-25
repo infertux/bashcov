@@ -11,7 +11,7 @@ Feature:
       """
       require "simplecov"
       SimpleCov.configure do
-        use_merging true
+        merging true
       end
       """
 

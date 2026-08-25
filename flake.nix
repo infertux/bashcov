@@ -172,7 +172,7 @@
                 propagatedBuildInputs = [gems'];
 
                 checkPhase = ''
-                  ${config.packages.gems.wrappedRuby}/bin/rake cucumber spec
+                  ${config.packages.gems.wrappedRuby}/bin/rake cucumber rspec
                 '';
 
                 # Replace shebangs like "#!/usr/bin/env bash" with Nix store
@@ -206,7 +206,7 @@
               pname = "bashcov";
               gemdir = self;
               lockfile = ./Gemfile.nix.lock;
-              version = "3.0.2";
+              version = "4.0.0";
               postBuild = ''
                 for gem in $out/${ruby.gemPath}/bundler/gems/*; do
                   ln -sfrT "$gem" $out/${ruby.gemPath}/gems/"''${gem##*/}"

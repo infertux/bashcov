@@ -21,6 +21,7 @@ jobs:
         run: |
           bundle exec rake bundle:audit:update
           bundle exec rake bundle:audit:check
+
   build:
     runs-on: ubuntu-latest
     container: ruby:latest
@@ -33,18 +34,11 @@ jobs:
           bundle exec rake build
           bundle exec rake build:checksum
           cat checksums/*
+
   cucumber:
     runs-on: ubuntu-latest
-    container: ruby:latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: ./.github/actions/set-up-bashcov
-      - name: Run Cucumber scenarios
-        id: cucumber-scenarios
-        run: bundle exec rake cucumber
-  spec:
-    runs-on: ubuntu-latest
-    container: ruby:bookworm
+    container:
+      image: ruby:${{ matrix.ruby-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -54,15 +48,54 @@ jobs:
           - "5.1"
           - "5.0"
           - "4.4"
-          - "4.3"
+        ruby-version:
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "4.0"
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/set-up-bashcov
         with:
           bash-version: ${{ matrix.bash-version }}
-      - name: Run RSpec tests against Bash ${{ matrix.bash-version }}
+      - name: Run Cucumber scenarios against Bash ${{ matrix.bash-version }} and Ruby ${{ matrix.ruby-version }}
+        id: cucumber-scenarios
         run: |
-          bundle exec rake spec
+          # don't run as root: https://github.com/infertux/bashcov/issues/43
+          useradd --create-home ciuser
+          chown -R ciuser:ciuser .
+          su ciuser -c "bundle exec rake cucumber"
+
+  rspec:
+    runs-on: ubuntu-latest
+    container:
+      image: ruby:${{ matrix.ruby-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        bash-version:
+          - "5.3"
+          - "5.2"
+          - "5.1"
+          - "5.0"
+          - "4.4"
+        ruby-version:
+          - "3.2"
+          - "3.3"
+          - "3.4"
+          - "4.0"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/set-up-bashcov
+        with:
+          bash-version: ${{ matrix.bash-version }}
+      - name: Run RSpec tests against Bash ${{ matrix.bash-version }} and Ruby ${{ matrix.ruby-version }}
+        run: |
+          # don't run as root: https://github.com/infertux/bashcov/issues/43
+          useradd --create-home ciuser
+          chown -R ciuser:ciuser .
+          su ciuser -c "bundle exec rake rspec"
+
   rubocop:
     runs-on: ubuntu-latest
     container: ruby:latest
@@ -73,6 +106,7 @@ jobs:
         id: rubocop
         run: |
           bundle exec rake rubocop
+
   yard:
     runs-on: ubuntu-latest
     container: ruby:latest
@@ -83,10 +117,10 @@ jobs:
         id: yard
         run: |
           bundle exec yard stats --list-undoc
+
   nix:
     runs-on: ubuntu-latest
-    # Don't fail the build if this job fails
-    continue-on-error: true
+    continue-on-error: true # don't fail the build if this job fails
     steps:
       - uses: actions/checkout@v6
       - uses: cachix/install-nix-action@v22

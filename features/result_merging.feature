@@ -12,7 +12,7 @@ Feature:
       """
       require "simplecov"
       SimpleCov.configure do
-        use_merging true
+        merging true
       end
       """
 
@@ -22,7 +22,7 @@ Feature:
       tr '[[:lower:]]' '[[:upper:]]' <<<'shhh'
       """
 
-  Scenario: SimpleCov.use_merging == true and SimpleCov.command_name is unique
+  Scenario: SimpleCov.merging == true and SimpleCov.command_name is unique
 
     When I run the following commands with bashcov using `--command-name simple-test-1`:
       """
@@ -42,7 +42,7 @@ Feature:
       | 1 | nil |
       | 2 | 2 |
 
-  Scenario: SimpleCov.use_merging == true and SimpleCov.command_name is not unique
+  Scenario: SimpleCov.merging == true and SimpleCov.command_name is not unique
 
     When I run the following commands with bashcov using `--command-name simple-test`:
       """

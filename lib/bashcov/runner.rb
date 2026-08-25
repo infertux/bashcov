@@ -178,7 +178,7 @@ module Bashcov
     end
 
     def convert_coverage
-      @coverage.transform_keys(&:to_s)
+      @coverage.transform_keys(&:to_s).transform_values { |lines| { "lines" => lines } }
     end
   end
 end
