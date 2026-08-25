@@ -2,7 +2,7 @@
 
   * TBD
 
-## v4.0.0, 2026-08-?? ([changes](https://github.com/infertux/bashcov/compare/v3.3.0...v4.0.0))
+## v4.0.0, 2026-08-25 ([changes](https://github.com/infertux/bashcov/compare/v3.3.0...v4.0.0))
 
   * [BUGFIX]  Fix build for Nix
   * [MISC]    Update Nix lockfile
