@@ -29,69 +29,82 @@ module Bashcov
     # @return [void]
     def complete_coverage
       lines = File.read(@filename).encode("utf-8", invalid: :replace).lines
+      count = lines.size
+      lineno = 0
 
-      lines.each_with_index do |line, lineno|
+      while lineno < count
+        line = lines[lineno]
+        match = false
+
         # multi-line arrays
-        mark_multiline(
+        match ||= mark_multiline(
           lines, lineno,
           /\A[^\n]*\b=\([^()]*\)/,
           forward: false,
         )
 
         # heredoc
-        mark_multiline(
+        match ||= mark_multiline(
           lines, lineno,
           /\A[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m,
         )
 
         # multiline string concatenated with backslashes
-        mark_multiline(
+        match ||= mark_multiline(
           lines, lineno,
           /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/,
         )
 
         # simple line continuations with backslashes
-        mark_multiline(
+        match ||= mark_multiline(
           lines, lineno,
           /\A([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/,
         )
 
         # multiline string concatenated with newlines
-        [false, true].each do |direction|
-          %w[' "].each do |char|
-            mark_multiline(
-              lines, lineno,
-              /\A[^\n]+[\s=]+#{char}[^#{char}]*#{char}/m,
-              forward: direction,
-            )
-          end
+        %w[' "].each do |char|
+          match ||= mark_multiline(
+            lines, lineno,
+            /\A[^\s]+=#{char}[^#{char}]*#{char}/m,
+            forward: false,
+          )
+
+          match ||= mark_multiline(
+            lines, lineno,
+            /\A[^\n]+[\s=]#{char}[^#{char}]*#{char}/m,
+            forward: true,
+          )
         end
 
-        mark_line(line, lineno)
+        if match
+          lineno = match # skip ahead if we match a multiline regexp
+        else
+          mark_line(line, lineno)
+        end
+
+        lineno += 1
       end
     end
 
   private
 
     def mark_multiline(lines, lineno, regexp, forward: true)
-      # skip if we are already inside marked multiline string
-      return unless @coverage[lineno + 1].nil?
-
       seek_forward = lines[lineno..].join
       return unless (multiline_match = seek_forward.match(regexp))
 
       length = multiline_match.to_s.count($/)
+      return if length.zero? # ignore false positive multiline match
+
       first, last = lineno + 1, lineno + length
       range = (forward ? first.upto(last) : (last - 1).downto(first - 1))
       reference_lineno = (forward ? first - 1 : last)
-
-      # don't seek backward if first line is already covered
-      return if !forward && @coverage[first - 1]
 
       range.each do |sub_lineno|
         # mark related lines with the same coverage as the reference line
         @coverage[sub_lineno] ||= @coverage[reference_lineno]
       end
+
+      last
     end
 
     def mark_line(line, lineno)

@@ -34,9 +34,9 @@ def expected_coverage
     "#{test_app}/scripts/multiline.sh" => { "lines" => [nil, nil, nil, 1, nil, 0, nil, 1, nil, 1, nil, 0, nil, nil, 1, 2, 1, 1, 0, nil, nil, 2, nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, nil, 1] },
     "#{test_app}/scripts/multiline2.sh" => { "lines" => (
       if Bashcov::BASH_VERSION >= "5.3" # Bash 5.3+ is actually more accurate and reports lines executed twice as it should
-        [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, nil, nil, 1]
+        [nil, nil, 1, 1, 1, nil, 2, 2, 2, nil, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, nil, nil, 1]
       else
-        [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nil, nil, 1]
+        [nil, nil, 1, 1, 1, nil, 2, 2, 2, nil, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nil, nil, 1]
       end
     ) },
     "#{test_app}/scripts/multiline3.sh" => { "lines" => [nil, nil, 1, 1, 1, 1] },
