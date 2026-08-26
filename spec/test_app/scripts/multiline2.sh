@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
-echo '
-hello
-there
+A="
+AAAAAAHHHHHHH
+"
+
+readonly B='
+BBBBBBHHHHHHH
+'
+
+A2='
 '
 
 echo '
