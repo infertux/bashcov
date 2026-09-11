@@ -1,5 +1,6 @@
 # Bashcov
 
+[![Buy Me a Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg)](https://buymeacoffee.com/infertux)
 [![Funding](https://img.shields.io/liberapay/patrons/infertux.svg?logo=liberapay)](https://liberapay.com/infertux/donate)
 [![Gem Version](https://img.shields.io/gem/v/bashcov.svg)](https://rubygems.org/gems/bashcov)
 [![Build Status](https://github.com/infertux/bashcov/actions/workflows/ci.yml/badge.svg)](https://github.com/infertux/bashcov/actions/workflows/ci.yml)
@@ -59,7 +60,7 @@ For development tips, see [the hacking guide](./HACKING.md).
 
 ## Sponsorship
 
-Bashcov was [created in 2012](https://github.com/infertux/bashcov/commit/f65e65e5aa3377beb334beee9924136a34a913e8) and it needs your help. I have been maintaining the project for over a decade and keeping it working with new releases of Bash and Ruby takes time. If you use Bashcov professionally, please consider supporting it on [Liberapay](https://liberapay.com/infertux) through your employer or directly. Thank you for supporting *Free and Open-Source Software*.
+Bashcov was [created in 2012](https://github.com/infertux/bashcov/commit/f65e65e5aa3377beb334beee9924136a34a913e8) and it needs your help. I have been maintaining the project for over a decade and keeping it working with new releases of Bash and Ruby takes time. If you use Bashcov professionally, please consider supporting it on [Buy Me a Coffee](https://buymeacoffee.com/infertux) or [Liberapay](https://liberapay.com/infertux) through your employer or directly. Thank you for supporting *Free and Open-Source Software*.
 
 ## License
 
