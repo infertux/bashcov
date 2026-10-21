@@ -19,3 +19,11 @@ q'
 echo "a
 b" && echo "c
 d"
+echo "say
+\"hi\"
+there"
+msg="path\\
+c:\\dir"
+x='a\'
+echo "it's" "multi
+line"

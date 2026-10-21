@@ -30,9 +30,10 @@ module Bashcov
       # multiline string concatenated with newlines, possibly opened after a
       # line continuation (but never after an unescaped newline) - this must
       # come before simple line continuations which would claim the opening
-      # line otherwise
-      *[false, true].product(%w[' "]).map do |forward, char|
-        [/\G[^\n]+(?:[ \t=]|\\\n[ \t]*)+#{char}[^#{char}]*#{char}/m, forward]
+      # line otherwise - unlike single quotes, double quotes may contain escaped
+      # characters such as \"
+      *[false, true].product([["'", /[^']*/], ['"', /(?:[^"\\]|\\.)*/m]]).map do |forward, (char, body)|
+        [/\G[^\n]+(?:[ \t=]|\\\n[ \t]*)+#{char}#{body}#{char}/m, forward]
       end,
 
       # simple line continuations with backslashes
