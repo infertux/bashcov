@@ -28,40 +28,42 @@ module Bashcov
     # Process and complete initial coverage.
     # @return [void]
     def complete_coverage
-      lines = File.read(@filename).encode("utf-8", invalid: :replace).lines
+      content = File.read(@filename).encode("utf-8", invalid: :replace)
+      lines = content.lines
+      offsets = lines.each_with_object([0]) { |line, memo| memo << (memo.last + line.size) }
 
       lines.each_with_index do |line, lineno|
         # multi-line arrays
         mark_multiline(
-          lines, lineno,
-          /\A[^\n]*\b=\([^()]*\)/,
+          content, offsets[lineno], lineno,
+          /\G[^\n]*\b=\([^()]*\)/,
           forward: false,
         )
 
         # heredoc
         mark_multiline(
-          lines, lineno,
-          /\A[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m,
+          content, offsets[lineno], lineno,
+          /\G[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m,
         )
 
         # multiline string concatenated with backslashes
         mark_multiline(
-          lines, lineno,
-          /\A[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/,
+          content, offsets[lineno], lineno,
+          /\G[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/,
         )
 
         # simple line continuations with backslashes
         mark_multiline(
-          lines, lineno,
-          /\A([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/,
+          content, offsets[lineno], lineno,
+          /\G([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/,
         )
 
         # multiline string concatenated with newlines
         [false, true].each do |direction|
           %w[' "].each do |char|
             mark_multiline(
-              lines, lineno,
-              /\A[^\n]+[ \t=]+#{char}[^#{char}]*#{char}/m,
+              content, offsets[lineno], lineno,
+              /\G[^\n]+[ \t=]+#{char}[^#{char}]*#{char}/m,
               forward: direction,
             )
           end
@@ -73,9 +75,9 @@ module Bashcov
 
   private
 
-    def mark_multiline(lines, lineno, regexp, forward: true)
-      seek_forward = lines[lineno..].join
-      return unless (multiline_match = seek_forward.match(regexp))
+    def mark_multiline(content, offset, lineno, regexp, forward: true)
+      # +regexp+ is anchored with \G so it only matches from +offset+
+      return unless (multiline_match = content.match(regexp, offset))
 
       length = multiline_match.to_s.count($/)
       first, last = lineno + 1, lineno + length
