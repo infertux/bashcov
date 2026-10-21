@@ -58,10 +58,11 @@ module Bashcov
 
       lineno = 0
       while lineno < lines.size
-        # skip ahead past a multiline construct once its lines are marked
+        # skip ahead past a multiline construct once its lines are marked, but
+        # recheck its last line as it may open another one, e.g. `a'; b='`
         last = mark_multilines(content, offsets[lineno], lineno) || lineno
         lineno.upto(last) { |sub_lineno| mark_line(lines[sub_lineno], sub_lineno) }
-        lineno = last + 1
+        lineno = (last > lineno ? last : last + 1)
       end
     end
 

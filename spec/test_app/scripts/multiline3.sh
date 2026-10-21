@@ -13,3 +13,9 @@ y"
 readonly BAR=\
 '
 '
+A='x
+y'; B='p
+q'
+echo "a
+b" && echo "c
+d"
