@@ -27,13 +27,16 @@ module Bashcov
       # multiline string concatenated with backslashes
       [/\G[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/, true],
 
+      # multiline string concatenated with newlines, possibly opened after a
+      # line continuation (but never after an unescaped newline) - this must
+      # come before simple line continuations which would claim the opening
+      # line otherwise
+      *[false, true].product(%w[' "]).map do |forward, char|
+        [/\G[^\n]+(?:[ \t=]|\\\n[ \t]*)+#{char}[^#{char}]*#{char}/m, forward]
+      end,
+
       # simple line continuations with backslashes
       [/\G([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/, true],
-
-      # multiline string concatenated with newlines
-      *[false, true].product(%w[' "]).map do |forward, char|
-        [/\G[^\n]+[ \t=]+#{char}[^#{char}]*#{char}/m, forward]
-      end,
     ].freeze
 
     # @param [String] filename File to analyze
