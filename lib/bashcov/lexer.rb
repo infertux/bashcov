@@ -15,6 +15,27 @@ module Bashcov
     # Lines containing only one of these keywords are irrelevant for coverage
     IGNORE_IS = %w[esac if then else elif fi while do done { } ;; ( )].freeze
 
+    # Constructs spanning multiple lines, as +[regexp, forward]+ pairs tried in
+    # order. Regexps are anchored with +\G+ to match from a given line offset.
+    MULTILINE_PATTERNS = [
+      # multi-line arrays
+      [/\G[^\n]*\b=\([^()]*\)/, false],
+
+      # heredoc
+      [/\G[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m, true],
+
+      # multiline string concatenated with backslashes
+      [/\G[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/, true],
+
+      # simple line continuations with backslashes
+      [/\G([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/, true],
+
+      # multiline string concatenated with newlines
+      *[false, true].product(%w[' "]).map do |forward, char|
+        [/\G[^\n]+[ \t=]+#{char}[^#{char}]*#{char}/m, forward]
+      end,
+    ].freeze
+
     # @param [String] filename File to analyze
     # @param [Hash] coverage Coverage with executed lines marked
     # @raise [ArgumentError] if the given +filename+ is invalid.
@@ -32,48 +53,27 @@ module Bashcov
       lines = content.lines
       offsets = lines.each_with_object([0]) { |line, memo| memo << (memo.last + line.size) }
 
-      lines.each_with_index do |line, lineno|
-        # multi-line arrays
-        mark_multiline(
-          content, offsets[lineno], lineno,
-          /\G[^\n]*\b=\([^()]*\)/,
-          forward: false,
-        )
-
-        # heredoc
-        mark_multiline(
-          content, offsets[lineno], lineno,
-          /\G[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m,
-        )
-
-        # multiline string concatenated with backslashes
-        mark_multiline(
-          content, offsets[lineno], lineno,
-          /\G[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/,
-        )
-
-        # simple line continuations with backslashes
-        mark_multiline(
-          content, offsets[lineno], lineno,
-          /\G([^\n&|;]*[^\\&|;](\\\\)*\\\n)+[^\n&|;]*[^\n\\&|;](\\\\)*$/,
-        )
-
-        # multiline string concatenated with newlines
-        [false, true].each do |direction|
-          %w[' "].each do |char|
-            mark_multiline(
-              content, offsets[lineno], lineno,
-              /\G[^\n]+[ \t=]+#{char}[^#{char}]*#{char}/m,
-              forward: direction,
-            )
-          end
-        end
-
-        mark_line(line, lineno)
+      lineno = 0
+      while lineno < lines.size
+        # skip ahead past a multiline construct once its lines are marked
+        last = mark_multilines(content, offsets[lineno], lineno) || lineno
+        lineno.upto(last) { |sub_lineno| mark_line(lines[sub_lineno], sub_lineno) }
+        lineno = last + 1
       end
     end
 
   private
+
+    # @return [Integer, nil] last line of the multiline construct starting at
+    #   +lineno+, if any
+    def mark_multilines(content, offset, lineno)
+      MULTILINE_PATTERNS.each do |regexp, forward|
+        last = mark_multiline(content, offset, lineno, regexp, forward: forward)
+        return last if last
+      end
+
+      nil
+    end
 
     def mark_multiline(content, offset, lineno, regexp, forward: true)
       # +regexp+ is anchored with \G so it only matches from +offset+
@@ -98,6 +98,8 @@ module Bashcov
         # mark related lines with the same coverage as the reference line
         @coverage[sub_lineno] ||= @coverage[reference_lineno]
       end
+
+      last if length.positive?
     end
 
     def mark_line(line, lineno)
