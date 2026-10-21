@@ -61,7 +61,7 @@ module Bashcov
           %w[' "].each do |char|
             mark_multiline(
               lines, lineno,
-              /\A[^\n]+[\s=]+#{char}[^#{char}]*#{char}/m,
+              /\A[^\n]+[ \t=]+#{char}[^#{char}]*#{char}/m,
               forward: direction,
             )
           end
@@ -74,14 +74,18 @@ module Bashcov
   private
 
     def mark_multiline(lines, lineno, regexp, forward: true)
-      # skip if we are already inside marked multiline string
-      return unless @coverage[lineno + 1].nil?
-
       seek_forward = lines[lineno..].join
       return unless (multiline_match = seek_forward.match(regexp))
 
       length = multiline_match.to_s.count($/)
       first, last = lineno + 1, lineno + length
+
+      # skip if we are already inside marked multiline string - only inner
+      # lines are checked since Bash may report the hit on the last line
+      # (e.g. `readonly` before Bash 5.3), which is also the next line when
+      # the string spans only two lines
+      return unless first.upto(last - 1).all? { |i| @coverage[i].nil? }
+
       range = (forward ? first.upto(last) : (last - 1).downto(first - 1))
       reference_lineno = (forward ? first - 1 : last)
 
