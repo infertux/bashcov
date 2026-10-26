@@ -27,3 +27,12 @@ c:\\dir"
 x='a\'
 echo "it's" "multi
 line"
+cat <<EOF
+one
+EOF
+if false; then
+  echo "EOF"
+fi
+cat <<EOF
+two
+EOF

@@ -21,8 +21,9 @@ module Bashcov
       # multi-line arrays
       [/\G[^\n]*\b=\([^()]*\)/, false],
 
-      # heredoc
-      [/\G[^\n]+<<-?\s*'?(\w+)'?.*$.*\1/m, true],
+      # heredoc - ends at the first line holding only the delimiter, possibly
+      # indented with tabs for `<<-`
+      [/\G[^\n]+<<-?[ \t]*'?(\w+)'?[^\n]*\n(?:[^\n]*\n)*?\t*\1$/, true],
 
       # multiline string concatenated with backslashes
       [/\G[^\n]+\\$(\s*['"][^'"]*['"]\s*\\$){1,}\s*['"][^'"]*['"]\s*$/, true],
