@@ -206,7 +206,7 @@
               pname = "bashcov";
               gemdir = self;
               lockfile = ./Gemfile.nix.lock;
-              version = "4.0.0";
+              version = "4.0.1";
               postBuild = ''
                 for gem in $out/${ruby.gemPath}/bundler/gems/*; do
                   ln -sfrT "$gem" $out/${ruby.gemPath}/gems/"''${gem##*/}"

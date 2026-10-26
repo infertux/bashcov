@@ -1,6 +1,18 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.0...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.1...master))
 
   * TBD
+
+## v4.0.1, 2026-10-26 ([changes](https://github.com/infertux/bashcov/compare/v4.0.0...v4.0.1))
+
+  * [BUGFIX]  Fix coverage of multiline strings on Bash < 5.3 (fixes #108)
+  * [BUGFIX]  Fix coverage of multiline strings opened after a line continuation
+  * [BUGFIX]  Handle escaped characters in multiline double-quoted strings
+  * [BUGFIX]  Stop heredoc matches at the first closing delimiter
+  * [BUGFIX]  Only allow tab-indented heredoc delimiters after `<<-`
+  * [BUGFIX]  Recognize heredoc delimiters quoted with double quotes or a backslash
+  * [MISC]    Speed up lexer on files with multiline constructs
+  * [MISC]    Make sure we use compatible cucumber and aruba releases
+  * [MISC]    Add link to Buy Me a Coffee
 
 ## v4.0.0, 2026-08-25 ([changes](https://github.com/infertux/bashcov/compare/v3.3.0...v4.0.0))
 
