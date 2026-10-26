@@ -39,7 +39,7 @@ def expected_coverage
         [nil, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, nil, 1, nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nil, nil, 1, nil, 2, 2, 1, 1, 1]
       end
     ) },
-    "#{test_app}/scripts/multiline3.sh" => { "lines" => [nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, nil, 1, 1, 1] },
+    "#{test_app}/scripts/multiline3.sh" => { "lines" => [nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
     "#{test_app}/scripts/executable" => { "lines" => [nil, nil, 1] },
     "#{test_app}/scripts/exit_non_zero.sh" => { "lines" => [nil, nil, 1] },
     "#{test_app}/scripts/no_extension/bin_bash" => { "lines" => [nil, nil, 1] },

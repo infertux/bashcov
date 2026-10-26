@@ -36,3 +36,9 @@ fi
 cat <<EOF
 two
 EOF
+cat <<EOF
+	EOF
+EOF
+cat <<-EOF
+	three
+	EOF
