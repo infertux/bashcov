@@ -42,3 +42,9 @@ EOF
 cat <<-EOF
 	three
 	EOF
+cat <<"EOF"
+four
+EOF
+cat <<\EOF
+five
+EOF
