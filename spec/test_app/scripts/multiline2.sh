@@ -46,3 +46,9 @@ SQL
 }
 
 getTodayQuery
+
+readonly NL='
+'
+newline='
+'
+echo "a${NL}b${newline}c"
