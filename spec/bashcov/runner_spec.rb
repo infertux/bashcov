@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "benchmark"
+require "timeout"
 
 describe Bashcov::Runner do
   let(:runner) { described_class.new([Bashcov.bash_path, test_suite]) }
@@ -114,6 +115,27 @@ describe Bashcov::Runner do
         tmprunner.run
         expect(tmprunner.result[tmpscript].fetch("lines")).to \
           match_array(unset_lineno_coverage)
+      end
+    end
+
+    context "with a script that unsets $LINENO before producing large xtrace output" do
+      include_context "with a temporary script", "unset_lineno_large_xtrace" do
+        let(:script_text) do
+          <<-BASH.gsub(/\A\s+/, "")
+            #!/usr/bin/env bash
+
+            LINENO= echo "What line is this?"
+            for ((i = 0; i < 5000; i++)); do
+              :
+            done
+          BASH
+        end
+      end
+
+      it "drains the remaining xtrace and prints an incomplete coverage warning" do
+        expect do
+          Timeout.timeout(30) { tmprunner.run }
+        end.to output(/coverage report will be incomplete/).to_stderr
       end
     end
 

@@ -83,6 +83,8 @@ module Bashcov
     # Read fields extracted from Bash's debugging output
     # @return [Hash<Pathname, Array<Integer, nil>>] A hash mapping Bash scripts
     #   to Simplecov-style coverage stats
+    # @raise [XtraceError] for malformed xtrace output, only after the pipe has
+    #   been drained to EOF
     def read
       @field_stream.read = @read
 
@@ -99,9 +101,13 @@ module Bashcov
         parse_hit!(*hit)
       end
 
-      @read.close unless @read.closed?
-
       @files
+    rescue XtraceError
+      # Keep draining so Bash's blocking xtrace writes cannot fill the pipe and hang the run.
+      IO.copy_stream(@read, IO::NULL)
+      raise
+    ensure
+      @read.close unless @read.closed?
     end
 
   private

@@ -12,6 +12,7 @@ def uncovered_files
   [test_app("never_called.sh")]
 end
 
+# @return [Hash] Expected line coverage keyed by test script path.
 def expected_coverage
   {
     "#{test_app}/never_called.sh" => { "lines" => [nil, nil, 0] },
