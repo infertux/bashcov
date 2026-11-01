@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "stringio"
 
 describe Bashcov::Xtrace do
+  describe "#file_descriptor" do
+    it "exposes a blocking write end" do
+      xtrace = described_class.new(StringIO.new)
+      writer = IO.for_fd(xtrace.file_descriptor, autoclose: false)
+
+      expect(writer.nonblock?).to be(false)
+    ensure
+      writer&.close
+      xtrace&.close
+      read = xtrace&.instance_variable_get(:@read)
+      read&.close unless read&.closed?
+    end
+  end
+
   describe ".ps4" do
     let!(:subshell_ps4) do
       dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'

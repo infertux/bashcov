@@ -56,6 +56,15 @@ describe Bashcov::Runner do
   end
 
   describe "#run" do
+    it "records every hit from a high-volume no-op loop" do
+      stress_script = test_app("scripts/high_volume.sh")
+      runner = described_class.new([Bashcov.bash_path, stress_script])
+
+      runner.run
+
+      expect(runner.result.fetch(stress_script).fetch("lines").fetch(3)).to eq(200_000)
+    end
+
     it "finds commands in $PATH" do
       expect(described_class.new("ls -l").run).to be_success
     end
