@@ -1,4 +1,8 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.1...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.2...master))
+
+  * TBD
+
+## v4.0.2, 2026-11-04 ([changes](https://github.com/infertux/bashcov/compare/v4.0.1...v4.0.2))
 
   * [BUGFIX]  Keep xtrace writes blocking so coverage records are not dropped (fixes #113)
   * [BUGFIX]  Skip malformed xtrace records instead of aborting coverage (fixes #112)
