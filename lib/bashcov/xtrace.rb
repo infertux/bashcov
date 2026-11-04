@@ -74,15 +74,20 @@ module Bashcov
       @write.fileno
     end
 
-    # Closes the pipe for writing.
+    # Closes the parent's write end after the command exits, also ending any
+    # error-recovery drain without waiting for inherited background writers.
     # @return [void]
     def close
       @write.close
+      @read.close if @draining
     end
 
     # Read fields extracted from Bash's debugging output
     # @return [Hash<Pathname, Array<Integer, nil>>] A hash mapping Bash scripts
     #   to Simplecov-style coverage stats
+    # @raise [XtraceError] for malformed xtrace output. This and any other
+    #   error are raised only after draining until the command exits or the
+    #   pipe reaches EOF.
     def read
       @field_stream.read = @read
 
@@ -99,9 +104,20 @@ module Bashcov
         parse_hit!(*hit)
       end
 
-      @read.close unless @read.closed?
-
       @files
+    rescue StandardError
+      # Keep draining so Bash's blocking xtrace writes cannot fill the pipe and
+      # hang the run, or hit a closed pipe and die of SIGPIPE. #close ends the
+      # drain once the command exits, so background writers are not waited on.
+      @draining = true
+      begin
+        nil while !@write.closed? && @read.read(65_536)
+      rescue IOError
+        raise unless @write.closed? # Only ignore closure after the command exits.
+      end
+      raise
+    ensure
+      @read.close unless @read.closed?
     end
 
   private

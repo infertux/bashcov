@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "stringio"
+require "timeout"
 
 describe Bashcov::Xtrace do
   describe "#file_descriptor" do
@@ -15,6 +16,25 @@ describe Bashcov::Xtrace do
       xtrace&.close
       read = xtrace&.instance_variable_get(:@read)
       read&.close unless read&.closed?
+    end
+  end
+
+  describe "#read" do
+    it "raises a buffered parse error after close even if another writer remains open" do
+      xtrace = described_class.new(Bashcov::FieldStream.new)
+      writer = IO.for_fd(xtrace.file_descriptor, autoclose: false)
+      background_writer = writer.dup
+      record = "#{described_class.make_ps4('invalid', '', '', '')}\n"
+      background_writer.write(record * 2)
+      background_writer.flush
+      xtrace.close
+
+      expect do
+        Timeout.timeout(2) { xtrace.read }
+      end.to raise_error(Bashcov::XtraceError, /expected integer for LINENO/)
+    ensure
+      background_writer&.close
+      writer&.close
     end
   end
 
