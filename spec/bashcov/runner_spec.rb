@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "benchmark"
+require "timeout"
 
 describe Bashcov::Runner do
   let(:runner) { described_class.new([Bashcov.bash_path, test_suite]) }
@@ -114,6 +115,69 @@ describe Bashcov::Runner do
         tmprunner.run
         expect(tmprunner.result[tmpscript].fetch("lines")).to \
           match_array(unset_lineno_coverage)
+      end
+    end
+
+    context "with a script that unsets $LINENO before producing large xtrace output" do
+      include_context "with a temporary script", "unset_lineno_large_xtrace" do
+        let(:script_text) do
+          <<-BASH.gsub(/\A\s+/, "")
+            #!/usr/bin/env bash
+
+            sleep 60 >/dev/null 2>&1 &
+            echo $! > background.pid
+            LINENO= echo "What line is this?"
+            for ((i = 0; i < 5000; i++)); do
+              :
+            done
+          BASH
+        end
+      end
+
+      after do
+        Process.kill("TERM", Integer(File.read("background.pid"))) if File.exist?("background.pid")
+      rescue Errno::ESRCH
+        nil
+      end
+
+      it "drains until the script exits without waiting for background writers" do
+        status = nil
+
+        expect do
+          status = Timeout.timeout(30) { tmprunner.run }
+        end.to output(/coverage report will be incomplete/).to_stderr
+
+        # Without the drain, Bash is killed by SIGPIPE instead of finishing.
+        expect(status).to be_success
+      end
+    end
+
+    context "with an unexpected error while reading xtrace output" do
+      include_context "with a temporary script", "unexpected_xtrace_error" do
+        let(:script_text) do
+          <<-BASH.gsub(/\A\s+/, "")
+            #!/usr/bin/env bash
+
+            for ((i = 0; i < 5000; i++)); do
+              :
+            done
+            touch finished
+          BASH
+        end
+      end
+
+      before do
+        allow(Bashcov::Xtrace).to receive(:new).and_wrap_original do |original, *args|
+          original.call(*args).tap do |xtrace|
+            allow(xtrace).to receive(:find_script).and_raise(Errno::EACCES)
+          end
+        end
+      end
+
+      it "drains the remaining xtrace so the script finishes before raising" do
+        expect { Timeout.timeout(30) { tmprunner.run } }.to raise_error(Errno::EACCES)
+
+        expect(File).to exist("finished")
       end
     end
 
