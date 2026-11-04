@@ -104,33 +104,69 @@ describe Bashcov::Runner do
           BASH
         end
 
-        let(:unset_lineno_coverage) { [nil, nil, 1, 0, 0] }
+        let(:unset_lineno_coverage) { [nil, nil, 1, 1, 1] }
       end
 
       it "prints an error message" do
         expect { tmprunner.run }.to output(/expected integer.*got.*""/).to_stderr
       end
 
-      it "returns an incomplete coverage hash" do
+      it "skips the malformed output and keeps counting later lines" do
         tmprunner.run
         expect(tmprunner.result[tmpscript].fetch("lines")).to \
-          match_array(unset_lineno_coverage)
+          eq(unset_lineno_coverage)
       end
     end
 
-    context "with a script that unsets $LINENO before producing large xtrace output" do
-      include_context "with a temporary script", "unset_lineno_large_xtrace" do
+    context "with a script that traces its own PS4 (#91, #112)" do
+      include_context "with a temporary script", "traced_ps4" do
+        # @note "with a temporary script" context expects +script_text+ to be defined.
+        let(:script_text) do
+          <<~BASH
+            #!/usr/bin/env bash
+
+            echo "before"
+            ps4="$(declare -p PS4)"
+            echo "after"
+            without_prefix="${ps4#*>}"
+            echo "still counted"
+          BASH
+        end
+      end
+
+      it "prints a warning" do
+        expect { tmprunner.run }.to \
+          output(/skipped 1 malformed.*got "\\\\\$\{LINENO-\}"/).to_stderr
+      end
+
+      it "counts the lines after the traced PS4" do
+        tmprunner.run
+        lines = tmprunner.result[tmpscript].fetch("lines")
+        expect(lines.values_at(2, 4, 5, 6)).to all(be_positive)
+      end
+    end
+
+    context "with an error while reading xtrace output and a background writer" do
+      include_context "with a temporary script", "xtrace_error_background_writer" do
         let(:script_text) do
           <<-BASH.gsub(/\A\s+/, "")
             #!/usr/bin/env bash
 
             sleep 60 >/dev/null 2>&1 &
             echo $! > background.pid
-            LINENO= echo "What line is this?"
             for ((i = 0; i < 5000; i++)); do
               :
             done
+            touch finished
           BASH
+        end
+      end
+
+      before do
+        allow(Bashcov::Xtrace).to receive(:new).and_wrap_original do |original, *args|
+          original.call(*args).tap do |xtrace|
+            allow(xtrace).to receive(:find_script).and_raise(Errno::EACCES)
+          end
         end
       end
 
@@ -141,14 +177,10 @@ describe Bashcov::Runner do
       end
 
       it "drains until the script exits without waiting for background writers" do
-        status = nil
+        expect { Timeout.timeout(30) { tmprunner.run } }.to raise_error(Errno::EACCES)
 
-        expect do
-          status = Timeout.timeout(30) { tmprunner.run }
-        end.to output(/coverage report will be incomplete/).to_stderr
-
-        # Without the drain, Bash is killed by SIGPIPE instead of finishing.
-        expect(status).to be_success
+        # Without the drain, Bash blocks on the full pipe or dies of SIGPIPE.
+        expect(File).to exist("finished")
       end
     end
 
