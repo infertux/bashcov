@@ -21,6 +21,7 @@ def expected_coverage
     "#{test_app}/scripts/comments.sh" => { "lines" => [nil, nil, 1, nil, 1, nil, nil, nil, 1, nil, 1] },
     "#{test_app}/scripts/delete.sh" => { "lines" => [nil, nil, 1, 1, 1, 1, nil, 1, 1] },
     "#{test_app}/scripts/function.sh" => { "lines" => [nil, nil, nil, 2, nil, nil, nil, 1, 1, nil, nil, nil, nil, 1, nil, nil, nil, 0, nil, nil, nil, 1, nil, nil, 1, 1, 1, 1] },
+    "#{test_app}/scripts/high_volume.sh" => { "lines" => [nil, nil, 0, 0] },
     "#{test_app}/scripts/long_line.sh" => { "lines" => [nil, nil, 1, 1, 1, 0] },
     "#{test_app}/scripts/nested/simple.sh" => { "lines" => [nil, nil, nil, nil, 1, 1, nil, 0, nil, nil, 1] },
     "#{test_app}/scripts/new\nline.sh" => { "lines" => [nil, nil, 1, nil, 2] },

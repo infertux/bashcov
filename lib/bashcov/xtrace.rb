@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "io/nonblock"
 require "pathname"
 require "securerandom"
 
@@ -57,6 +58,8 @@ module Bashcov
       @field_stream = field_stream
 
       @read, @write = IO.pipe
+      # Keep Bash's xtrace writes blocking so records are not dropped when the pipe fills.
+      @write.nonblock = false
 
       # Tracks coverage for each file under test
       @files ||= {}
