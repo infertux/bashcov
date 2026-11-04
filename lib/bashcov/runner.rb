@@ -57,25 +57,16 @@ module Bashcov
       with_xtrace_flag do
         command_pid = Process.spawn env, *@command, options # spawn the command
 
-        begin
-          # start processing the xtrace output
-          xtrace_thread = Thread.new { @xtrace.read }
+        # start processing the xtrace output
+        xtrace_thread = Thread.new { @xtrace.read }
 
-          Process.wait command_pid
+        Process.wait command_pid
 
-          @xtrace.close
+        @xtrace.close
 
-          @coverage = xtrace_thread.value # wait for the thread to return
-        rescue XtraceError => e
-          write_warning <<-WARNING
-            encountered an error parsing Bash's output (error was:
-            #{e.message}). This can occur if your script or its path contains
-            the sequence #{Xtrace.delimiter.inspect}, or if your script unsets
-            LINENO. Aborting early; coverage report will be incomplete.
-          WARNING
+        @coverage = xtrace_thread.value # wait for the thread to return
 
-          @coverage = e.files
-        end
+        warn_skipped_records
       end
 
       temp_file&.unlink
@@ -96,6 +87,19 @@ module Bashcov
     end
 
   private
+
+    def warn_skipped_records
+      return if @xtrace.skipped_count.zero?
+
+      write_warning <<-WARNING
+        skipped #{@xtrace.skipped_count} malformed line(s) in Bash's output
+        (first error was: #{@xtrace.first_skip_reason}). This can occur if your
+        script prints its own PS4 (e.g. with `declare -p` or `set`), if your
+        script or its path contains the sequence #{Xtrace.delimiter.inspect},
+        or if your script unsets LINENO. Coverage of the affected lines may be
+        incomplete.
+      WARNING
+    end
 
     def write_warning(message)
       warn [

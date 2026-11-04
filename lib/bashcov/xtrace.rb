@@ -67,7 +67,15 @@ module Bashcov
       # Stacks for updating working directory changes
       @pwd_stack ||= []
       @oldpwd_stack ||= []
+
+      @skipped_count = 0
     end
+
+    # [Integer] Number of malformed +PS4+ records skipped by {#read}
+    attr_reader :skipped_count
+
+    # [String, nil] Why the first malformed +PS4+ record was skipped
+    attr_reader :first_skip_reason
 
     # @return [Fixnum] File descriptor of the write end of the pipe
     def file_descriptor
@@ -85,9 +93,9 @@ module Bashcov
     # Read fields extracted from Bash's debugging output
     # @return [Hash<Pathname, Array<Integer, nil>>] A hash mapping Bash scripts
     #   to Simplecov-style coverage stats
-    # @raise [XtraceError] for malformed xtrace output. This and any other
-    #   error are raised only after draining until the command exits or the
-    #   pipe reaches EOF.
+    # @raise [StandardError] any error while parsing, raised only after
+    #   draining until the command exits or the pipe reaches EOF. Malformed
+    #   records are skipped (see {#skipped_count}) rather than raised.
     def read
       @field_stream.read = @read
 
@@ -123,28 +131,25 @@ module Bashcov
   private
 
     # Parses the expanded {ps4} fields and updates the coverage-tracking
-    # {@files} hash
+    # {@files} hash. A record whose +LINENO+ is not composed solely of digits
+    # is skipped: it is usually text that merely looks like the start of a
+    # {ps4}, such as the output of +declare -p+ or +set+ being traced, and
+    # {FieldStream#each} resynchronizes on the next start of a {ps4}.
     # @overload parse_hit!(lineno, bash_source, pwd, oldpwd)
     #   @param [String]  lineno       expanded +LINENO+
     #   @param [Pathname] bash_source expanded +BASH_SOURCE+
     #   @param [Pathname] pwd         expanded +PWD+
     #   @param [Pathname] oldpwd      expanded +OLDPWD+
     # @return [void]
-    # @raise [XtraceError] when +lineno+ is not composed solely of digits,
-    #   indicating that something has gone wrong with parsing the +PS4+ fields
     def parse_hit!(lineno, *paths)
-      # if +LINENO+ isn't a series of digits, add +@files+ to the exception in
-      # order to propagate the existing coverage data back to the
-      # {Bashcov::Runner} instance
       if /\A\d+\z/.match?(lineno)
         lineno = lineno.to_i
       elsif lineno == "${LINENO-}"
         # the variable doesn't expand on line misses so we can safely ignore it
         return
       else
-        raise XtraceError.new(
-          "expected integer for LINENO, got #{lineno.inspect}", @files,
-        )
+        skip_record!("expected integer for LINENO, got #{lineno.inspect}")
+        return
       end
 
       bash_source, pwd, oldpwd = paths.map { |p| Pathname.new(p) }
@@ -160,6 +165,14 @@ module Bashcov
       @files[script] ||= []
       @files[script][index] ||= 0
       @files[script][index] += 1
+    end
+
+    # Records that a malformed record was skipped
+    # @param [String] reason why the record was skipped
+    # @return [void]
+    def skip_record!(reason)
+      @skipped_count += 1
+      @first_skip_reason = reason if @skipped_count == 1
     end
 
     # Scans entries in the +PWD+ stack, checking whether +entry/$BASH_SOURCE+

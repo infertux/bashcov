@@ -29,17 +29,19 @@ module Bashcov
     # @param [Regexp]      start_match a +Regexp+ that, when matched against the
     #   input stream, signifies the beginning of the next series of fields to
     #   yield
-    # @yieldparam [String] field each field extracted from the stream. If
-    #   +start_match+ is matched with fewer than +field_count+ fields yielded
-    #   since the last match, yields empty strings until +field_count+ is
-    #   reached.
+    # @yieldparam [String] field each field extracted from the stream. Exactly
+    #   +field_count+ fields are yielded for each +start_match+ match: if fewer
+    #   fields follow the match, yields empty strings until +field_count+ is
+    #   reached; if more follow (e.g. a traced command that contains the
+    #   delimiter), the extra fields are dropped so the next series of fields
+    #   stays aligned.
     def each(delimiter, field_count, start_match, &block)
       return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
 
       chunked = each_field(delimiter).chunk(&chunk_matches(start_match))
 
       yield_fields = lambda do |(_, chunk)|
-        chunk.each(&block)
+        chunk.first(field_count).each(&block)
         (field_count - chunk.size).times { yield "" }
       end
 

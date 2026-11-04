@@ -22,18 +22,36 @@ describe Bashcov::Xtrace do
   describe "#read" do
     it "raises a buffered parse error after close even if another writer remains open" do
       xtrace = described_class.new(Bashcov::FieldStream.new)
+      allow(xtrace).to receive(:find_script).and_raise(Errno::EACCES)
       writer = IO.for_fd(xtrace.file_descriptor, autoclose: false)
       background_writer = writer.dup
-      record = "#{described_class.make_ps4('invalid', '', '', '')}\n"
+      record = "#{described_class.make_ps4('1', 'script.sh', '/', '')}\n"
       background_writer.write(record * 2)
       background_writer.flush
       xtrace.close
 
       expect do
         Timeout.timeout(2) { xtrace.read }
-      end.to raise_error(Bashcov::XtraceError, /expected integer for LINENO/)
+      end.to raise_error(Errno::EACCES)
     ensure
       background_writer&.close
+      writer&.close
+    end
+
+    it "skips malformed records and keeps parsing" do
+      xtrace = described_class.new(Bashcov::FieldStream.new)
+      writer = IO.for_fd(xtrace.file_descriptor, autoclose: false)
+      bad = "#{described_class.make_ps4('\\${LINENO-}', '', '', '')}\n"
+      good = "#{described_class.make_ps4('3', '/script.sh', '/', '')}\n"
+      writer.write(good + bad + good)
+      writer.flush
+      xtrace.close
+
+      files = Timeout.timeout(2) { xtrace.read }
+
+      expect(files.values).to eq([[nil, nil, 2]])
+      expect(xtrace.skipped_count).to eq(1)
+    ensure
       writer&.close
     end
   end

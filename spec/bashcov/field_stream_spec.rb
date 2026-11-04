@@ -52,6 +52,16 @@ describe Bashcov::FieldStream do
       end
     end
 
+    context "with more than expected fields between start-of-fields matches" do
+      let(:field_count) { 2 }
+      let(:input) { [start, "a", "b", "extra", "junk", start, "c", "d"].join(delimiter) }
+
+      it "drops the extra fields so later fields stay aligned" do
+        expect { |e| stream.each(delimiter, field_count, start_match, &e) }.to \
+          yield_successive_args("a", "b", "c", "d")
+      end
+    end
+
     context "when the stream is empty or already fully consumed" do
       let(:read) { StringIO.new }
 
