@@ -34,9 +34,27 @@ module Bashcov
       # line continuation (but never after an unescaped newline) - this must
       # come before simple line continuations which would claim the opening
       # line otherwise - unlike single quotes, double quotes may contain escaped
-      # characters such as \"
-      *[false, true].product([["'", /[^']*/], ['"', /(?:[^"\\]|\\.)*/m]]).map do |forward, (char, body)|
-        [/\G[^\n]+(?:[ \t=]|\\\n[ \t]*)+#{char}#{body}#{char}/m, forward]
+      # characters such as \" - the opening quote must not close a string
+      # already open on its line (e.g. `printf '%s: ' "$1"`), so the text
+      # before it may only hold complete strings, plus lone quotes of the other
+      # kind which may nest in command substitutions, e.g. "$(a 'b')" - this
+      # text may only be empty right after the closing quote of another string
+      *[false, true].product(["'", '"']).map do |forward, char|
+        # complete double-quoted string on one line, command substitutions
+        # being free to hold other strings, e.g. "$(a "b")"
+        dq = /(?<dq>"(?>(?:[^"\\\n$]|\\[^\n]|\$(?!\()|\$(?<sub>\((?>(?:[^()'"\\\n]|\\[^\n]|'[^'\n]*'|\g<dq>|\g<sub>)*)\)))*)")/
+        other = (char == "'" ? '(?!\g<dq>)"' : %q{(?!'[^'\n]*')'})
+        prefix = /(?:[^\n'"\\]|\\[^\n]|'[^'\n]*'|#{dq}|#{other})+|(?<=['"])/
+        body =
+          if char == "'"
+            /[^']*/
+          else
+            # same as above over several lines, or failing that anything up
+            # to the next unescaped quote
+            /(?<mdq>(?>(?:[^"\\$]|\\.|\$(?!\()|\$(?<msub>\((?>(?:[^()'"\\]|\\.|'[^']*'|"\g<mdq>"|\g<msub>)*)\)))*))|(?>(?:[^"\\]|\\.)*)/m
+          end
+
+        [/\G(?:#{prefix})(?:[ \t=]|\\\n[ \t]*)+#{char}(?:#{body})#{char}/m, forward]
       end,
 
       # simple line continuations with backslashes
@@ -61,23 +79,28 @@ module Bashcov
       offsets = lines.each_with_object([0]) { |line, memo| memo << (memo.last + line.size) }
 
       lineno = 0
+      resume = nil
       while lineno < lines.size
         # skip ahead past a multiline construct once its lines are marked, but
-        # recheck its last line as it may open another one, e.g. `a'; b='`
-        last = mark_multilines(content, offsets[lineno], lineno) || lineno
+        # recheck its last line as it may open another one, e.g. `a'; b='` -
+        # look right after a construct ending mid-line first, so that its
+        # closing quote is not read as an opener, then recheck the whole line
+        last, stop = (resume && mark_multilines(content, resume, lineno)) || mark_multilines(content, offsets[lineno], lineno)
+        last ||= lineno
         lineno.upto(last) { |sub_lineno| mark_line(lines[sub_lineno], sub_lineno) }
+        resume = (stop if last > lineno && stop < content.size && content[stop] != $/)
         lineno = (last > lineno ? last : last + 1)
       end
     end
 
   private
 
-    # @return [Integer, nil] last line of the multiline construct starting at
-    #   +lineno+, if any
+    # @return [Array<Integer>, nil] last line and end offset of the multiline
+    #   construct starting at +offset+ on +lineno+, if any
     def mark_multilines(content, offset, lineno)
       MULTILINE_PATTERNS.each do |regexp, forward|
-        last = mark_multiline(content, offset, lineno, regexp, forward: forward)
-        return last if last
+        result = mark_multiline(content, offset, lineno, regexp, forward: forward)
+        return result if result
       end
 
       nil
@@ -107,7 +130,7 @@ module Bashcov
         @coverage[sub_lineno] ||= @coverage[reference_lineno]
       end
 
-      last if length.positive?
+      [last, multiline_match.end(0)] if length.positive?
     end
 
     def mark_line(line, lineno)

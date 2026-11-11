@@ -1,6 +1,6 @@
 ## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.2...master))
 
-  * TBD
+  * [BUGFIX]  Do not read a closing quote after a space as a multiline string opener (fixes #118)
 
 ## v4.0.2, 2026-11-04 ([changes](https://github.com/infertux/bashcov/compare/v4.0.1...v4.0.2))
 
