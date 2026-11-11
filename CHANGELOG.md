@@ -1,4 +1,8 @@
-## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.2...master))
+## Unreleased ([changes](https://github.com/infertux/bashcov/compare/v4.0.3...master))
+
+  * TBD
+
+## v4.0.3, 2026-11-11 ([changes](https://github.com/infertux/bashcov/compare/v4.0.2...v4.0.3))
 
   * [BUGFIX]  Do not read a closing quote after a space as a multiline string opener (fixes #118)
 
