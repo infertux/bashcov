@@ -1,7 +1,10 @@
 name: Run Bashcov CI
 
 on:
+  # Run on pushes to master only; PR commits are covered by pull_request,
+  # so this avoids running the whole matrix twice for every PR push.
   push:
+    branches: ["master"]
   pull_request:
   schedule:
     - cron: "0 0 * * 0" # run weekly on Sundays
