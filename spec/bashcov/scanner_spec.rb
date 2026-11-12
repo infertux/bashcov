@@ -5,14 +5,35 @@ require "spec_helper"
 describe Bashcov::Scanner do
   # @return [Array<Range>] groups spanning several lines, 1-based
   def multiline_groups(script)
-    described_class.new(script).groups.reject(&:one?).map { |group| (group.first + 1)..(group.last + 1) }
+    described_class.new(script).groups.map(&:lines).reject(&:one?).map { |lines| one_based(lines) }
+  end
+
+  # @return [Array] groups spanning several lines, 1-based. A group holding
+  #   substitutions is a hash giving the groups of each of them.
+  def multiline_commands(script)
+    outline(described_class.new(script).groups.reject { |group| group.lines.one? })
+  end
+
+  def outline(groups)
+    groups.map do |group|
+      next one_based(group.lines) if group.substitutions.empty?
+
+      substitutions = group.substitutions.to_h do |substitution|
+        [one_based(substitution.lines), outline(substitution.groups)]
+      end
+      { one_based(group.lines) => substitutions }
+    end
+  end
+
+  def one_based(lines)
+    (lines.first + 1)..(lines.last + 1)
   end
 
   it "covers every line in order" do
     script = File.read(File.expand_path("../scanner_corpus/constructs.sh", __dir__))
     groups = described_class.new(script).groups
 
-    expect(groups.flat_map(&:to_a)).to eq (0...script.lines.size).to_a
+    expect(groups.flat_map { |group| group.lines.to_a }).to eq (0...script.lines.size).to_a
   end
 
   it "groups the lines of multiline constructs" do
@@ -20,7 +41,7 @@ describe Bashcov::Scanner do
 
     expect(multiline_groups(script)).to eq [
       5..6, 7..9, 10..11, 12..13, 14..15, 16..20, 21..22, 25..27, 28..30, 31..33, 34..36,
-      37..39, 41..45, 48..50, 65..66, 72..73, 75..77,
+      37..40, 41..45, 48..50, 59..64, 65..66, 72..73, 75..78,
     ]
   end
 
@@ -29,7 +50,7 @@ describe Bashcov::Scanner do
   end
 
   it "handles a script without a final newline" do
-    expect(described_class.new("echo 'a\nb'").groups).to eq [0..1]
+    expect(described_class.new("echo 'a\nb'").groups.map(&:lines)).to eq [0..1]
   end
 
   it "keeps quotes in comments from opening strings" do
@@ -44,7 +65,7 @@ describe Bashcov::Scanner do
       esac)
     BASH
 
-    expect(multiline_groups(script)).to eq [2..3]
+    expect(multiline_commands(script)).to eq [{ 1..4 => { 1..4 => [1..1, 2..3, 4..4] } }]
   end
 
   it "recognizes case right at the start of a quoted command substitution" do
@@ -171,22 +192,117 @@ describe Bashcov::Scanner do
     "single quotes in a parameter expansion in double quotes" => %q[echo "${x%'"c"'}" "${x//'}'/}" "$(echo ${x%'}'})"],
     "an extended glob in an array" => %q[arr=( !(*.txt|"it's") )],
     "an escaped backslash before a separator" => %q(echo \\\; echo "it's"),
+    "an escaped backtick in a comment in backticks" => %q(y=`echo a # it's \` here`),
   }.each do |name, script|
     it "keeps track after #{name}" do
       expect(multiline_groups("#{script}\necho 'a\nb'\n")).to eq [2..3]
     end
   end
 
+  it "reads a heredoc delimiter which follows a line continuation" do
+    script = <<~'BASH'
+      cat <<\
+      EOF
+      it's
+      EOF
+      echo 'a
+      b'
+    BASH
+
+    expect(multiline_groups(script)).to eq [1..4, 5..6]
+  end
+
+  it "splits a line continuation after a separator which follows an escaped backslash" do
+    script = <<~'BASH'
+      exit \\; \
+      echo 'never
+      never'
+    BASH
+
+    expect(multiline_groups(script)).to eq [2..3]
+  end
+
+  context "with a command substitution spanning several lines" do
+    it "keeps its commands apart, in the group of the command which holds it" do
+      script = <<~BASH
+        echo before
+        x="$(
+          if false; then
+            echo never
+          fi
+          echo yes
+        )"
+        echo after
+      BASH
+
+      expect(multiline_commands(script)).to eq [{ 2..7 => { 2..7 => [2..2, 3..3, 4..4, 5..5, 6..6, 7..7] } }]
+    end
+
+    it "groups the lines of each of its commands" do
+      script = <<~BASH
+        x=$(cat <<EOF
+        text
+        EOF
+          echo 'a
+        b'
+          echo c)
+      BASH
+
+      expect(multiline_commands(script)).to eq [{ 1..6 => { 1..6 => [1..3, 4..5, 6..6] } }]
+    end
+
+    it "finds the substitutions of its commands" do
+      script = <<~BASH
+        x=$(echo "$(
+          echo a
+        )" b
+          echo c)
+      BASH
+
+      inner = { 1..3 => { 1..3 => [1..1, 2..2, 3..3] } }
+      expect(multiline_commands(script)).to eq [{ 1..4 => { 1..4 => [inner, 4..4] } }]
+    end
+
+    it "tells apart two substitutions of the same command" do
+      script = <<~BASH
+        x=`echo a
+          echo b
+        ` y=$(echo c
+          echo d
+        )
+      BASH
+
+      expect(multiline_commands(script)).to eq [{ 1..5 => { 1..3 => [1..1, 2..2, 3..3], 3..5 => [3..3, 4..4, 5..5] } }]
+    end
+
+    it "keeps the string which holds it in one group" do
+      script = <<~BASH
+        echo "a $(
+          echo b
+        ) c
+        d"
+      BASH
+
+      expect(multiline_commands(script)).to eq [{ 1..4 => { 1..3 => [1..1, 2..2, 3..3] } }]
+    end
+
+    it "leaves the remaining lines on their own if the script ends inside it" do
+      script = "echo a\nx=$(\necho b\necho c\n"
+
+      expect(multiline_commands(script)).to eq []
+    end
+  end
+
   it "leaves the remaining lines on their own if the script ends inside a construct" do
     script = "echo a\necho 'b\nc\nd\n"
 
-    expect(described_class.new(script).groups).to eq [0..0, 1..1, 2..2, 3..3]
+    expect(described_class.new(script).groups.map(&:lines)).to eq [0..0, 1..1, 2..2, 3..3]
   end
 
   it "leaves the remaining lines on their own if a heredoc is not terminated" do
     script = "cat <<EOF\na\nb\n"
 
-    expect(described_class.new(script).groups).to eq [0..0, 1..1, 2..2]
+    expect(described_class.new(script).groups.map(&:lines)).to eq [0..0, 1..1, 2..2]
   end
 
   context "with shfmt as a reference", :shfmt do

@@ -32,36 +32,43 @@ module Bashcov
     # Process and complete initial coverage.
     # @return [void]
     def complete_coverage
-      lines = File.read(@filename).encode("utf-8", invalid: :replace).lines
+      content = File.read(@filename).encode("utf-8", invalid: :replace)
+      lines = content.lines
 
-      Bashcov::Scanner.new(lines.join).groups.each do |group|
-        group = group.first..[group.last, lines.size - 1].min
-        next if group.none?
-
-        if group.one?
-          mark_line(lines[group.first], group.first)
-        else
-          mark_group(lines, group)
-        end
-      end
+      Bashcov::Scanner.new(content).groups.each { |group| mark_group(lines, group) }
     end
 
   private
 
-    # Marks the lines of a command spanning several lines (e.g. a multiline
-    # string or a heredoc) with the same coverage, since Bash reports the hit
-    # on one of them only: the first one, or the last one for some commands
-    # such as `readonly` before Bash 5.3.
-    def mark_group(lines, group)
-      hit = group.map { |lineno| @coverage[lineno] }.compact.first
-      hit ||= Bashcov::Line::UNCOVERED if relevant?(lines[group.first])
+    # Marks the lines of a command with the same coverage, since Bash reports
+    # the hit of a command spanning several lines (e.g. a multiline string or
+    # a heredoc) on one of them only: the first one, or the last one for some
+    # commands such as `readonly` before Bash 5.3.
+    #
+    # The commands of a substitution spanning several lines are marked like
+    # the command which holds it when that command ran: Bash does not report
+    # them on their own lines, but from the last line of that command on, so
+    # there is no telling which of them ran.
+    # @param [Array<String>] lines Lines of the file
+    # @param [Scanner::Group] group Lines of the command
+    # @param [Integer, nil] inherited Hit of the command which holds this
+    #   one in a substitution, if it ran
+    def mark_group(lines, group, inherited = nil)
+      own_lines = group.own_lines
+      hit = own_lines.filter_map { |lineno| @coverage[lineno] }.first
+      hit ||= inherited || Bashcov::Line::UNCOVERED if relevant?(lines[group.lines.first])
 
       if hit
-        group.each { |lineno| @coverage[lineno] ||= hit }
+        own_lines.each { |lineno| @coverage[lineno] ||= hit }
       else
         # the command starts on a line which is not relevant itself, e.g.
         # `function f() { echo "a` - judge each line on its own
-        group.each { |lineno| mark_line(lines[lineno], lineno) }
+        own_lines.each { |lineno| mark_line(lines[lineno], lineno) }
+      end
+
+      inherited = hit if hit&.positive?
+      group.substitutions.each do |substitution|
+        substitution.groups.each { |nested| mark_group(lines, nested, inherited) }
       end
     end
 

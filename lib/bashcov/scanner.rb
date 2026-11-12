@@ -8,14 +8,54 @@ module Bashcov
   # Bash reports a hit for one line of such a group only (e.g. the first line
   # of a multiline string), so {Lexer} copies that hit onto the other lines.
   #
+  # A command substitution spanning several lines belongs to the group of the
+  # command which holds it, and the commands inside it form groups of their
+  # own: Bash runs them separately, so some of them may never be executed.
+  #
   # This is not a full Bash parser: it only knows enough of the syntax to tell
   # where a string, a heredoc or a substitution starts and ends.
   class Scanner
-    # Constructs which keep the following line in the same group: a newline
-    # inside one of these is part of the command, unlike a newline inside a
-    # command substitution, after which Bash reports the next command on its
-    # own line.
+    # Lines forming a single command.
+    # @!attribute lines
+    #   @return [Range] indexes (0-based) of the lines of the command
+    # @!attribute substitutions
+    #   @return [Array<Substitution>] command substitutions of the command
+    #     which span several lines
+    Group = Struct.new(:lines, :substitutions) do
+      # @return [Array<Integer>] lines of the command, except those lying
+      #   entirely inside one of its substitutions
+      def own_lines
+        return lines.to_a if substitutions.empty?
+
+        lines.to_a - substitutions.flat_map { |substitution| substitution.inner_lines.to_a }
+      end
+    end
+
+    # Command substitution spanning several lines.
+    # @!attribute lines
+    #   @return [Range] indexes (0-based) of the lines of the substitution,
+    #     from the line it opens on to the line it closes on
+    # @!attribute groups
+    #   @return [Array<Group>] commands of the substitution, covering each of
+    #     its lines in order. The first and the last ones share a line with
+    #     the command which holds the substitution.
+    Substitution = Struct.new(:lines, :groups) do
+      # @return [Range] lines lying entirely inside the substitution
+      def inner_lines
+        (lines.first + 1)...lines.last
+      end
+    end
+
+    # Constructs which keep the following line in the same command: a newline
+    # inside one of these is part of the command
     JOINING = %i[single double ansi param array arith].freeze
+
+    # Constructs which hold commands of their own: a newline inside one of
+    # these ends such a command, but not the command which holds the construct
+    SUBSTITUTIONS = %i[command backtick].freeze
+
+    # How many levels of substitutions spanning several lines are told apart
+    MAX_DEPTH = 16
 
     # Constructs whose content is quoted, i.e. where heredocs do not start and
     # comments are not recognized
@@ -53,7 +93,7 @@ module Bashcov
       @content = content.dup.force_encoding(Encoding::BINARY)
     end
 
-    # @return [Array<Range>] groups of line indexes (0-based), covering every
+    # @return [Array<Group>] commands found at the top level, covering every
     #   line of the script in order
     def groups
       @groups ||= scan
@@ -62,10 +102,14 @@ module Bashcov
   private
 
     def scan
-      @groups = []
       @stack = []
       @heredocs = []
-      @group_start = 0
+      @depth = 0 # number of substitutions the scanner is in
+      @lowest_depth = 0 # lowest depth reached on the current line
+      @lowest_depths = [] # for each line, the lowest depth reached on it
+      @final_depths = [] # for each line, the depth at its end
+      @ends = [] # for each line, whether a command ends with it
+      @balanced_line = 0 # last line reached outside of any construct
       @lineno = 0
       @pos = 0
       @word_start = true
@@ -77,19 +121,60 @@ module Bashcov
     end
 
     def finish
-      last_line = @content.end_with?("\n") ? @lineno - 1 : @lineno
-      return @groups if @content.empty?
+      return [] if @content.empty?
 
-      if @stack.empty? && @heredocs.empty?
-        @groups << (@group_start..last_line) if @group_start <= last_line
-      else
-        # the script ends inside a construct, which means the scanner got
-        # lost somewhere: rather than gluing all lines up to the end together,
-        # leave them on their own
-        @group_start.upto(last_line) { |lineno| @groups << (lineno..lineno) }
+      newline unless @content.end_with?("\n")
+      give_up unless @stack.empty? && @heredocs.empty?
+
+      build(0, @lineno - 1, 0)
+    end
+
+    # The script ends inside a construct, which means the scanner got lost
+    # somewhere after the last line it reached outside of any construct:
+    # rather than trusting what it found from there on, leave these lines on
+    # their own.
+    def give_up
+      @ends[@balanced_line - 1] = true if @balanced_line.positive?
+
+      @balanced_line.upto(@lineno - 1) do |lineno|
+        @lowest_depths[lineno] = 0
+        @final_depths[lineno] = 0
+        @ends[lineno] = true
+      end
+    end
+
+    # @return [Array<Group>] commands found at +depth+ from line +first+ to
+    #   line +last+
+    def build(first, last, depth)
+      groups = []
+      start = first
+
+      first.upto(last) do |lineno|
+        next unless lineno == last || (@ends[lineno] && @final_depths[lineno] == depth)
+
+        groups << Group.new(start..lineno, build_substitutions(start, lineno, depth))
+        start = lineno + 1
       end
 
-      @groups
+      groups
+    end
+
+    # @return [Array<Substitution>] substitutions spanning several lines in
+    #   the command found at +depth+ from line +first+ to line +last+
+    def build_substitutions(first, last, depth)
+      substitutions = []
+      opening = nil
+
+      first.upto(last) do |lineno|
+        if opening && @lowest_depths[lineno] <= depth
+          substitutions << Substitution.new(opening..lineno, build(opening, lineno, depth + 1))
+          opening = nil
+        end
+
+        opening ||= lineno if lineno < last && @final_depths[lineno] > depth
+      end
+
+      substitutions
     end
 
     def step
@@ -181,6 +266,7 @@ module Bashcov
 
     def push(construct)
       @stack.push(construct)
+      @depth += 1 if SUBSTITUTIONS.include?(construct)
       return unless COMMANDS.include?(construct)
 
       # e.g. `case` right after `"$(`
@@ -205,7 +291,7 @@ module Bashcov
       case char
       when "'" then @stack.push(:single)
       when '"' then @stack.push(:double)
-      when "`" then top == :backtick ? @stack.pop : push(:backtick)
+      when "`" then top == :backtick ? leave : push(:backtick)
       when "(" then return scan_open_paren(top, word_start)
       when ")" then return scan_close_paren(top)
       when "=" then return enter(:array, 2) if at?("=(") && !ARITHMETIC.include?(top)
@@ -248,8 +334,13 @@ module Bashcov
     # A comment ends with its line. Bash also ends a backtick substitution at
     # the first backtick, even in a comment.
     def skip_comment
-      ending = @stack.include?(:backtick) ? /[`\n]/n : "\n"
-      @pos = @content.index(ending, @pos) || @content.size
+      unless @stack.include?(:backtick)
+        @pos = @content.index("\n", @pos) || @content.size
+        return
+      end
+
+      # in backticks, a comment ends at the first backtick unless it is escaped
+      @pos = @content.match(/\G(?:[^`\\\n]|\\[^\n])*/n, @pos).end(0)
     end
 
     # Recognizes +case+ inside a substitution, so that the +)+ closing a
@@ -282,9 +373,17 @@ module Bashcov
         @stack.pop
         return advance(2) if at?("))")
       when :paren, :command, :subshell, :array
-        @stack.pop
+        leave
       end
       advance
+    end
+
+    # Leaves the innermost construct.
+    def leave
+      return unless SUBSTITUTIONS.include?(@stack.pop)
+
+      @depth -= 1
+      @lowest_depth = @depth if @depth < @lowest_depth
     end
 
     def scan_redirection(top)
@@ -304,7 +403,9 @@ module Bashcov
       while (part = @content.match(DELIMITER_PART, @pos))
         ansi, single, double, escaped, plain = part.captures
         delimiter ||= +""
-        delimiter << (ansi&.gsub(/\\(.)/mn, '\\1') || single || double&.gsub(/\\([\\"$`])/n, '\\1') || escaped || plain)
+        # a line continuation is not part of the delimiter
+        delimiter << (ansi&.gsub(/\\(.)/mn, '\\1') || single || double&.gsub(/\\([\\"$`])/n, '\\1') ||
+                      escaped&.delete("\n") || plain)
         advance(part[0].size)
       end
       delimiter
@@ -312,7 +413,12 @@ module Bashcov
 
     def scan_newline
       advance
-      skip_heredoc(*@heredocs.shift) until @heredocs.empty?
+
+      until @heredocs.empty?
+        skip_heredoc(*@heredocs.first)
+        @heredocs.shift
+      end
+
       end_group unless joined? || @stack.include?(:heredoc)
     end
 
@@ -331,17 +437,29 @@ module Bashcov
       @stack.push(:heredoc)
     end
 
+    # Called at the end of each line.
     def newline
+      @lowest_depths << [@lowest_depth, MAX_DEPTH].min
+      @final_depths << [@depth, MAX_DEPTH].min
+      @ends << false
       @lineno += 1
+      @lowest_depth = @depth
+      @balanced_line = @lineno if @stack.empty? && @heredocs.empty?
     end
 
+    # @return [Boolean] whether a newline here is part of the innermost command
     def joined?
-      @stack.any? { |construct| JOINING.include?(construct) }
+      @stack.reverse_each do |construct|
+        return true if JOINING.include?(construct)
+        return false if SUBSTITUTIONS.include?(construct)
+      end
+
+      false
     end
 
+    # Ends the innermost command with the line which was just read.
     def end_group
-      @groups << (@group_start..(@lineno - 1))
-      @group_start = @lineno
+      @ends[-1] = true
     end
   end
 end
