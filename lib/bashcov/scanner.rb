@@ -361,7 +361,7 @@ module Bashcov
         @stack.push(:paren)
       elsif word_start && at?("((")
         return enter(:arith, 2)
-      elsif %i[command backtick].include?(top)
+      elsif %i[command backtick subshell].include?(top)
         push(:subshell)
       end
       advance
@@ -391,24 +391,26 @@ module Bashcov
       return advance(at?("<<<") ? 3 : 1) unless match
 
       advance(match[0].size)
-      delimiter = scan_delimiter
-      @heredocs << [delimiter, match[1] == "-"] if delimiter
+      delimiter, quoted = scan_delimiter
+      @heredocs << [delimiter, match[1] == "-", quoted] if delimiter
     end
 
     # Reads the delimiter word of a heredoc and removes its quotes.
-    # @return [String, nil] the delimiter, which is empty for +<<''+, or +nil+
-    #   if there is none
+    # @return [Array(String, Boolean), nil] the delimiter, which is empty for
+    #   +<<''+, and whether any part of it is quoted, or +nil+ if there is none
     def scan_delimiter
       delimiter = nil
+      quoted = false
       while (part = @content.match(DELIMITER_PART, @pos))
         ansi, single, double, escaped, plain = part.captures
         delimiter ||= +""
-        # a line continuation is not part of the delimiter
+        # a line continuation is not part of the delimiter, nor does it quote it
+        quoted ||= plain.nil? && escaped != "\n"
         delimiter << (ansi&.gsub(/\\(.)/mn, '\\1') || single || double&.gsub(/\\([\\"$`])/n, '\\1') ||
                       escaped&.delete("\n") || plain)
         advance(part[0].size)
       end
-      delimiter
+      delimiter && [delimiter, quoted]
     end
 
     def scan_newline
@@ -423,18 +425,35 @@ module Bashcov
     end
 
     # Skips the body of a heredoc, up to and including its closing delimiter.
-    def skip_heredoc(delimiter, strip_tabs)
+    def skip_heredoc(delimiter, strip_tabs, quoted)
       while @pos < @content.size
-        eol = @content.index("\n", @pos) || @content.size
-        body = @content[@pos...eol]
+        body = heredoc_line(quoted)
         body = body.sub(/\A\t+/n, "") if strip_tabs
-        @pos = eol
-        advance if @pos < @content.size
         return if body == delimiter
       end
 
       # unterminated heredoc: let #finish know the scanner got lost
       @stack.push(:heredoc)
+    end
+
+    # Reads a line of the body of a heredoc. Unless the delimiter is quoted, a
+    # line continuation joins a line to the next one, be it the closing
+    # delimiter.
+    def heredoc_line(quoted)
+      body = read_line
+      until quoted || @pos >= @content.size || !body.end_with?("\\") || body[/\\+\z/n].size.even?
+        body = body.chop << read_line
+      end
+      body
+    end
+
+    # @return [String] the rest of the current line, which is skipped
+    def read_line
+      eol = @content.index("\n", @pos) || @content.size
+      line = @content[@pos...eol]
+      @pos = eol
+      advance if @pos < @content.size
+      line
     end
 
     # Called at the end of each line.
