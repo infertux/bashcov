@@ -199,6 +199,14 @@ describe Bashcov::Scanner do
     end
   end
 
+  it "keeps track on a line too long to be skipped in one go" do
+    words = Array.new(500) { |index| %(word#{index}#word "string #{index}" 'it"s' ) }.join
+    script = "echo #{words}'a\nb' # don't\necho 'c\nd'\n"
+
+    expect(script.lines.first.size).to be > described_class::LONG_LINE
+    expect(multiline_groups(script)).to eq [1..2, 3..4]
+  end
+
   it "reads a heredoc delimiter which follows a line continuation" do
     script = <<~'BASH'
       cat <<\

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "strscan"
+
 module Bashcov
   # Reads a Bash script once, from the top, keeping track of quoting, heredocs,
   # command substitutions and line continuations, in order to find the groups
@@ -68,8 +70,54 @@ module Bashcov
     # only group
     ARITHMETIC = %i[arith paren].freeze
 
+    # Characters of the script by byte, which saves creating a string for
+    # each character read
+    CHARS = Array.new(256) { |byte| byte.chr.freeze }.freeze
+
     # Characters after which a word starts
-    WORD_BOUNDARY = /[\s;&|()<>]/n
+    WORD_BOUNDARIES = " \t\n\v\f\r;&|()<>"
+
+    # Character which changes nothing in the middle of a word: neither a
+    # boundary, nor a quote, nor the start of a substitution or of an array
+    PLAIN_CHAR = /[^\s;&|()<>'"`\\$=]|=(?!\()|\$(?![$({'])/n
+
+    # Text which changes nothing in the middle of a word: a plain character,
+    # or a string on a single line without any substitution
+    PLAIN = /#{PLAIN_CHAR}|'[^'\n]*'|"(?:[^"\\$`\n]|\$(?![$({]))*"/n
+
+    # Rest of a word, which can be skipped
+    WORD = /#{PLAIN}*/n
+
+    # Words which can be skipped once the first word of a command was read,
+    # unless they start a comment
+    ARGUMENTS = /(?:[ \t]+|(?!\#)#{PLAIN}+)*/n
+
+    # Length from which a line is skipped a piece at a time: the regular
+    # expression engine keeps track of each character it matches in a
+    # repetition, which takes many times the memory of the text itself
+    LONG_LINE = 4096
+
+    # Piece of the rest of a word, on a long line
+    WORD_PIECE = /(?:#{PLAIN_CHAR}){0,1024}/n
+
+    # Piece of the words which can be skipped, on a long line
+    ARGUMENTS_PIECE = /(?:[ \t]{1,32}|(?!\#)(?:#{PLAIN_CHAR}){1,32}){0,32}/n
+
+    # Characters which end a run of text in a quoted construct
+    QUOTED_END = { single: /'/n, ansi: /['\\]/n, double: /["\\$`]/n, param: /[}"'\\$]/n }.freeze
+
+    # Blanks found between words
+    BLANKS = " \t"
+
+    # Character which ends a run of blanks
+    NON_BLANK = /[^ \t]/n
+
+    # Piece of a comment in backticks, which ends at the first backtick unless
+    # it is escaped
+    BACKTICK_COMMENT = /(?:[^`\\\n]|\\[^\n]){0,1024}/n
+
+    # Shared by the groups which hold no substitution
+    NO_SUBSTITUTIONS = [].freeze
 
     # Heredoc operator, followed by its delimiter, see the "Here Documents"
     # section of bash(1)
@@ -105,6 +153,7 @@ module Bashcov
       @stack = []
       @heredocs = []
       @depth = 0 # number of substitutions the scanner is in
+      @backticks = 0 # number of these which are in backticks
       @lowest_depth = 0 # lowest depth reached on the current line
       @lowest_depths = [] # for each line, the lowest depth reached on it
       @final_depths = [] # for each line, the depth at its end
@@ -112,6 +161,9 @@ module Bashcov
       @balanced_line = 0 # last line reached outside of any construct
       @lineno = 0
       @pos = 0
+      @eol = @content.index("\n") || @content.size # end of the current line
+      @long_line = @eol >= LONG_LINE
+      @runs = StringScanner.new(@content) # skips runs of characters without creating objects
       @word_start = true
       @command_start = true
 
@@ -152,7 +204,8 @@ module Bashcov
       first.upto(last) do |lineno|
         next unless lineno == last || (@ends[lineno] && @final_depths[lineno] == depth)
 
-        groups << Group.new(start..lineno, build_substitutions(start, lineno, depth))
+        substitutions = start == lineno ? NO_SUBSTITUTIONS : build_substitutions(start, lineno, depth)
+        groups << Group.new(start..lineno, substitutions)
         start = lineno + 1
       end
 
@@ -178,28 +231,64 @@ module Bashcov
     end
 
     def step
-      char = @content[@pos]
+      top = @stack.last
+      ending = QUOTED_END[top]
+      return scan_unquoted(top) unless ending
 
-      case @stack.last
+      skip_to(position_of(ending))
+      char = char_at(@pos)
+      return unless char
+
+      case top
       when :single then scan_single(char)
       when :ansi then scan_ansi(char)
       when :double then scan_double(char)
       when :param then scan_param(char)
-      else scan_unquoted(char)
       end
+    end
+
+    # @return [String, nil] the character at +position+, if any
+    def char_at(position)
+      byte = @content.getbyte(position)
+      CHARS[byte] if byte
+    end
+
+    # @return [Integer] the position after the characters matching +pattern+
+    #   from the current position on
+    def run_end(pattern)
+      @runs.pos = @pos
+      @runs.skip(pattern)
+      @runs.pos
+    end
+
+    # Searching for the end of a run, rather than matching the run, takes no
+    # memory however long it is, e.g. for a string which holds a whole file.
+    # @return [Integer] the position of the first character matching
+    #   +pattern+ from the current position on, or the end of the script
+    def position_of(pattern)
+      @runs.pos = @pos
+      @runs.skip_until(pattern) ? @runs.pos - 1 : @content.size
     end
 
     def advance(count = 1)
-      count.times do
-        newline if @content[@pos] == "\n"
-        @pos += 1
-      end
+      position = @pos + count
+      return @pos = position if position <= @eol # still on the current line
+
+      skip_to(position)
     end
 
-    # @return [Boolean] whether the text at the current position starts with
-    #   +string+
-    def at?(string)
-      @content[@pos, string.size] == string
+    # Moves to +position+, taking note of the lines which end before it.
+    def skip_to(position)
+      position = @content.size if position > @content.size
+
+      while @eol < position
+        @pos = @eol + 1
+        newline
+        @eol = @content.index("\n", @pos) || @content.size
+        @long_line = @eol - @pos >= LONG_LINE
+      end
+
+      @pos = position
     end
 
     def scan_single(char)
@@ -216,7 +305,7 @@ module Bashcov
 
     def scan_double(char)
       return advance(2) if char == "\\"
-      return if scan_dollar
+      return if char == "$" && scan_dollar
 
       case char
       when '"' then @stack.pop
@@ -227,7 +316,7 @@ module Bashcov
 
     def scan_param(char)
       return advance(2) if char == "\\"
-      return if scan_dollar
+      return if char == "$" && scan_dollar
 
       case char
       when "}" then @stack.pop
@@ -237,22 +326,16 @@ module Bashcov
       advance
     end
 
-    # Handles a +$+ which opens a construct.
+    # Handles a +$+ at the current position which opens a construct.
     # @return [Symbol, nil] the construct entered or skipped, if any
     def scan_dollar
-      return unless @content[@pos] == "$"
-
-      if at?("$$")
+      case char_at(@pos + 1)
+      when "$"
         advance(2)
         :pid
-      elsif at?("$((")
-        enter(:arith, 3)
-      elsif at?("$(")
-        enter(:command, 2)
-      elsif at?("${")
-        enter(:param, 2)
-      elsif at?("$'") && !QUOTED.include?(@stack.last)
-        enter(:ansi, 2)
+      when "(" then char_at(@pos + 2) == "(" ? enter(:arith, 3) : enter(:command, 2)
+      when "{" then enter(:param, 2)
+      when "'" then enter(:ansi, 2) unless QUOTED.include?(@stack.last)
       end
     end
 
@@ -267,6 +350,7 @@ module Bashcov
     def push(construct)
       @stack.push(construct)
       @depth += 1 if SUBSTITUTIONS.include?(construct)
+      @backticks += 1 if construct == :backtick
       return unless COMMANDS.include?(construct)
 
       # e.g. `case` right after `"$(`
@@ -276,15 +360,20 @@ module Bashcov
 
     # Scans outside of quotes: at the top level, or inside a command
     # substitution, backticks, an array or an arithmetic expression.
-    def scan_unquoted(char)
-      top = @stack.last
+    def scan_unquoted(top)
+      @pos = run_end(@long_line ? WORD_PIECE : WORD) unless @word_start
+      skip_arguments unless @command_start
+      char = char_at(@pos)
+      char = skip_blanks if char && BLANKS.include?(char)
+      return unless char
+
       word_start = @word_start
       command_start = @command_start
-      @word_start = WORD_BOUNDARY.match?(char)
+      @word_start = WORD_BOUNDARIES.include?(char)
       @command_start = command_start_after(char, top, word_start, command_start)
 
       return scan_backslash(command_start) if char == "\\"
-      return if scan_dollar
+      return if char == "$" && scan_dollar
       return skip_comment if char == "#" && word_start && !ARITHMETIC.include?(top)
       return if command_start && word_start && scan_keyword(top)
 
@@ -294,11 +383,29 @@ module Bashcov
       when "`" then top == :backtick ? leave : push(:backtick)
       when "(" then return scan_open_paren(top, word_start)
       when ")" then return scan_close_paren(top)
-      when "=" then return enter(:array, 2) if at?("=(") && !ARITHMETIC.include?(top)
+      when "=" then return enter(:array, 2) if char_at(@pos + 1) == "(" && !ARITHMETIC.include?(top)
       when "<" then return scan_redirection(top)
       when "\n" then return scan_newline
       end
       advance
+    end
+
+    # Words and blanks change nothing after the first word of a command,
+    # except that a word starts after a blank.
+    def skip_arguments
+      position = run_end(@long_line ? ARGUMENTS_PIECE : ARGUMENTS)
+      return if position == @pos
+
+      @pos = position
+      @word_start = BLANKS.include?(char_at(@pos - 1))
+    end
+
+    # Blanks start a word, and a command if one could start before them.
+    # @return [String, nil] the character after the blanks, if any
+    def skip_blanks
+      @word_start = true
+      @pos = position_of(NON_BLANK)
+      char_at(@pos)
     end
 
     # @return [Boolean] whether a command starts at the next word, i.e.
@@ -306,10 +413,10 @@ module Bashcov
     def command_start_after(char, top, word_start, command_start)
       case char
       when ";", "|", "(", "\n" then true
-      when "&" then !@content[[@pos - 1, 0].max].match?(/[<>]/n) # not a redirection such as 2>&1
+      when "&" then @pos.zero? || !"<>".include?(char_at(@pos - 1)) # not a redirection such as 2>&1
       when ")" then %i[case subshell].include?(top) # after a case pattern or the parentheses of a function
       when " ", "\t" then command_start
-      when "\\" then at?("\\\n") ? command_start : false
+      when "\\" then char_at(@pos + 1) == "\n" ? command_start : false
       else
         # a word keeps the state it got from its first character
         word_start ? command_start && @content.match?(RESERVED, @pos) : command_start
@@ -319,7 +426,7 @@ module Bashcov
     # @param [Boolean] command_start whether a command would start here
     def scan_backslash(command_start)
       @word_start = false
-      return advance(2) unless at?("\\\n")
+      return advance(2) unless char_at(@pos + 1) == "\n"
 
       # a line continuation keeps the next line in the same group when it is
       # in the middle of a command, but not when it sits between two commands
@@ -334,13 +441,14 @@ module Bashcov
     # A comment ends with its line. Bash also ends a backtick substitution at
     # the first backtick, even in a comment.
     def skip_comment
-      unless @stack.include?(:backtick)
-        @pos = @content.index("\n", @pos) || @content.size
-        return
-      end
+      return @pos = @eol unless @backticks.positive?
 
-      # in backticks, a comment ends at the first backtick unless it is escaped
-      @pos = @content.match(/\G(?:[^`\\\n]|\\[^\n])*/n, @pos).end(0)
+      loop do
+        position = run_end(BACKTICK_COMMENT)
+        break if position == @pos
+
+        @pos = position
+      end
     end
 
     # Recognizes +case+ inside a substitution, so that the +)+ closing a
@@ -359,7 +467,7 @@ module Bashcov
     def scan_open_paren(top, word_start)
       if ARITHMETIC.include?(top) || top == :array
         @stack.push(:paren)
-      elsif word_start && at?("((")
+      elsif word_start && char_at(@pos + 1) == "("
         return enter(:arith, 2)
       elsif %i[command backtick subshell].include?(top)
         push(:subshell)
@@ -371,7 +479,7 @@ module Bashcov
       case top
       when :arith
         @stack.pop
-        return advance(2) if at?("))")
+        return advance(2) if char_at(@pos + 1) == ")"
       when :paren, :command, :subshell, :array
         leave
       end
@@ -380,15 +488,18 @@ module Bashcov
 
     # Leaves the innermost construct.
     def leave
-      return unless SUBSTITUTIONS.include?(@stack.pop)
+      construct = @stack.pop
+      return unless SUBSTITUTIONS.include?(construct)
 
+      @backticks -= 1 if construct == :backtick
       @depth -= 1
       @lowest_depth = @depth if @depth < @lowest_depth
     end
 
     def scan_redirection(top)
-      match = @content.match(HEREDOC, @pos) unless ARITHMETIC.include?(top) || at?("<<<")
-      return advance(at?("<<<") ? 3 : 1) unless match
+      here_string = @content.match?(/\G<<</n, @pos)
+      match = @content.match(HEREDOC, @pos) unless ARITHMETIC.include?(top) || here_string
+      return advance(here_string ? 3 : 1) unless match
 
       advance(match[0].size)
       delimiter, quoted = scan_delimiter
@@ -421,7 +532,7 @@ module Bashcov
         @heredocs.shift
       end
 
-      end_group unless joined? || @stack.include?(:heredoc)
+      end_group unless joined? || @stack.last == :heredoc
     end
 
     # Skips the body of a heredoc, up to and including its closing delimiter.
@@ -440,20 +551,13 @@ module Bashcov
     # line continuation joins a line to the next one, be it the closing
     # delimiter.
     def heredoc_line(quoted)
-      body = read_line
+      body = @content.byteslice(@pos, @eol - @pos)
+      skip_to(@eol + 1)
       until quoted || @pos >= @content.size || !body.end_with?("\\") || body[/\\+\z/n].size.even?
-        body = body.chop << read_line
+        body = body.chop << @content.byteslice(@pos, @eol - @pos)
+        skip_to(@eol + 1)
       end
       body
-    end
-
-    # @return [String] the rest of the current line, which is skipped
-    def read_line
-      eol = @content.index("\n", @pos) || @content.size
-      line = @content[@pos...eol]
-      @pos = eol
-      advance if @pos < @content.size
-      line
     end
 
     # Called at the end of each line.
