@@ -73,6 +73,110 @@ describe Bashcov::Scanner do
     expect(multiline_groups(script)).to eq [4..5]
   end
 
+  it "splits line continuations after a semicolon or a background operator" do
+    script = <<~'BASH'
+      true; \
+        echo 1
+      sleep 1 & \
+        echo 2
+      echo 3 2>& \
+        1
+      find . -exec rm {} \; \
+        -print
+    BASH
+
+    expect(multiline_groups(script)).to eq [5..6, 7..8]
+  end
+
+  it "reads heredoc delimiters which are partly quoted" do
+    script = <<~'BASH'
+      cat <<E"OF"
+      OF
+      EOF
+      cat <<"a b"
+      x
+      a b
+      cat <<\E'O'F
+      y
+      EOF
+      cat <<'a"b'
+      z
+      a"b
+    BASH
+
+    expect(multiline_groups(script)).to eq [1..3, 4..6, 7..9, 10..12]
+  end
+
+  it "recognizes case only where a command starts" do
+    script = <<~BASH
+      x="$(echo case foo)"
+      echo 'a
+      b'
+      y=$(if true; then case a in a) echo ;; esac; fi)
+      echo 'c
+      d'
+    BASH
+
+    expect(multiline_groups(script)).to eq [2..3, 5..6]
+  end
+
+  it "splits line continuations after a reserved word such as then" do
+    script = <<~'BASH'
+      if false; then \
+        echo never; \
+      fi
+      for i in 1 2; do \
+        echo "$i" \
+          "$i"; \
+      done
+      exit;                                        \
+      echo never
+    BASH
+
+    expect(multiline_groups(script)).to eq [5..6]
+  end
+
+  it "keeps line continuations together in a substitution" do
+    script = <<~'BASH'
+      check=$(echo "$check" | \
+        sed -e 's/a/b/g' && \
+        echo done)
+    BASH
+
+    expect(multiline_groups(script)).to eq [1..3]
+  end
+
+  it "reads heredoc delimiters which are empty or in ANSI-C quotes" do
+    script = <<~BASH
+      cat <<''
+      text
+
+      cat <<$'EOF'
+      text
+      EOF
+    BASH
+
+    expect(multiline_groups(script)).to eq [1..3, 4..6]
+  end
+
+  # each of these is valid Bash, after which the scanner must be back at the
+  # top level to find the string which follows
+  {
+    "a shift in arithmetic parentheses" => "(( z = (1 << 2) ))",
+    "double parentheses in arithmetic" => %q[x="$(echo $(( ((1 + 2)) * 2 )) "it's")"],
+    "a comment in backticks" => "y=`echo a # it's`",
+    "case in backticks" => "y=`case a in yes) echo no;; *) echo yes;; esac`",
+    "case in a subshell of a substitution" => %q[y="$( (case a in a) echo "it's" ;; esac) )"],
+    "case in a function of a substitution" => %q[y="$(f() { case a in a) echo "it's" ;; esac; }; f)"],
+    "single quotes in a parameter expansion in double quotes" => %q[echo "${x%'"c"'}" "${x//'}'/}" "$(echo ${x%'}'})"],
+    "an extended glob in an array" => %q[arr=( !(*.txt|"it's") )],
+    "an escaped backslash before a separator" => %q(echo \\\; echo "it's"),
+  }.each do |name, script|
+    it "keeps track after #{name}" do
+      expect(multiline_groups("#{script}\necho 'a\nb'\n")).to eq [2..3]
+    end
+  end
+
   it "leaves the remaining lines on their own if the script ends inside a construct" do
     script = "echo a\necho 'b\nc\nd\n"
 
@@ -89,6 +193,9 @@ describe Bashcov::Scanner do
     before { skip "shfmt is not installed (only needed in CI)" unless ShfmtOracle.available? }
 
     it "groups lines like shfmt's parser" do
+      corpus = File.expand_path("../scanner_corpus/constructs.sh", __dir__)
+      expect(ShfmtOracle.mismatches(corpus)).not_to be_nil, "shfmt could not parse #{corpus}"
+
       scripts = Dir[File.expand_path("../{scanner_corpus,test_app}/**/*", __dir__)].select do |file|
         File.file?(file) && Bashcov::Detective.new(Bashcov.bash_path).shellscript?(file)
       end

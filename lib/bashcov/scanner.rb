@@ -24,15 +24,28 @@ module Bashcov
     # Constructs whose first word starts a new command
     COMMANDS = %i[command backtick subshell case].freeze
 
+    # Constructs where +<<+ is a shift, +#+ is not a comment and parentheses
+    # only group
+    ARITHMETIC = %i[arith paren].freeze
+
     # Characters after which a word starts
     WORD_BOUNDARY = /[\s;&|()<>]/n
 
-    # How far back to look for a list operator before a line continuation
-    LOOKBEHIND = 32
+    # Heredoc operator, followed by its delimiter, see the "Here Documents"
+    # section of bash(1)
+    HEREDOC = /\G<<(-?)[ \t]*/n
 
-    # Heredoc operator, with its delimiter possibly quoted (e.g. 'EOF', "EOF"
-    # or \EOF), see the "Here Documents" section of bash(1)
-    HEREDOC = /\G<<(-?)[ \t]*(?:\\?([^\s;&|()<>'"\\]+)|'([^'\n]*)'|"([^"\n]*)")/n
+    # Parts of a heredoc delimiter, which can be quoted in whole or in part
+    # (e.g. 'EOF', "EOF", $'EOF', \EOF or E"OF")
+    DELIMITER_PART = /\G(?:\$'((?:\\.|[^'\\])*)'|'([^']*)'|"((?:\\.|[^"\\])*)"|\\(.)|
+                         ((?:[^\s;&|()<>'"\\$]|\$(?!'))+))/mnx
+
+    # Reserved words after which a command starts, see the "Compound Commands"
+    # section of bash(1)
+    RESERVED = /\G(?:then|do|else|elif|if|while|until|time|!|\{)(?=[\s;&|()<>]|\z)/n
+
+    # Line continuation followed by a pipe or a list operator
+    CONTINUATION_BEFORE_OPERATOR = /\G\\\n[ \t]*(?:&&|\|)/n
 
     # @param [String] content Script to scan
     def initialize(content)
@@ -56,6 +69,7 @@ module Bashcov
       @lineno = 0
       @pos = 0
       @word_start = true
+      @command_start = true
 
       step while @pos < @content.size
 
@@ -133,10 +147,7 @@ module Bashcov
       case char
       when "}" then @stack.pop
       when '"' then @stack.push(:double)
-      when "'"
-        # single quotes are literal in a parameter expansion inside double
-        # quotes, e.g. "${a-'}"
-        @stack.push(:single) unless @stack.include?(:double)
+      when "'" then @stack.push(:single) # even inside double quotes, e.g. "${a%'}'}"
       end
       advance
     end
@@ -170,8 +181,11 @@ module Bashcov
 
     def push(construct)
       @stack.push(construct)
+      return unless COMMANDS.include?(construct)
+
       # e.g. `case` right after `"$(`
-      @word_start = true if COMMANDS.include?(construct)
+      @word_start = true
+      @command_start = true
     end
 
     # Scans outside of quotes: at the top level, or inside a command
@@ -179,12 +193,14 @@ module Bashcov
     def scan_unquoted(char)
       top = @stack.last
       word_start = @word_start
+      command_start = @command_start
       @word_start = WORD_BOUNDARY.match?(char)
+      @command_start = command_start_after(char, top, word_start, command_start)
 
-      return scan_backslash if char == "\\"
+      return scan_backslash(command_start) if char == "\\"
       return if scan_dollar
-      return skip_comment if char == "#" && word_start && top != :arith
-      return if word_start && scan_keyword(top)
+      return skip_comment if char == "#" && word_start && !ARITHMETIC.include?(top)
+      return if command_start && word_start && scan_keyword(top)
 
       case char
       when "'" then @stack.push(:single)
@@ -192,38 +208,57 @@ module Bashcov
       when "`" then top == :backtick ? @stack.pop : push(:backtick)
       when "(" then return scan_open_paren(top, word_start)
       when ")" then return scan_close_paren(top)
-      when "=" then return enter(:array, 2) if at?("=(") && top != :arith
+      when "=" then return enter(:array, 2) if at?("=(") && !ARITHMETIC.include?(top)
       when "<" then return scan_redirection(top)
       when "\n" then return scan_newline
       end
       advance
     end
 
-    def scan_backslash
+    # @return [Boolean] whether a command starts at the next word, i.e.
+    #   whether a reserved word such as +case+ would be recognized there
+    def command_start_after(char, top, word_start, command_start)
+      case char
+      when ";", "|", "(", "\n" then true
+      when "&" then !@content[[@pos - 1, 0].max].match?(/[<>]/n) # not a redirection such as 2>&1
+      when ")" then %i[case subshell].include?(top) # after a case pattern or the parentheses of a function
+      when " ", "\t" then command_start
+      when "\\" then at?("\\\n") ? command_start : false
+      else
+        # a word keeps the state it got from its first character
+        word_start ? command_start && @content.match?(RESERVED, @pos) : command_start
+      end
+    end
+
+    # @param [Boolean] command_start whether a command would start here
+    def scan_backslash(command_start)
       @word_start = false
       return advance(2) unless at?("\\\n")
 
-      # a line continuation keeps the next line in the same group, unless a
-      # pipe or a list operator sits on either side of it: Bash then reports
-      # the commands on each side separately
-      split = !joined? && (@content[[@pos - LOOKBEHIND, 0].max...@pos].match?(/(?:&&|\|)[ \t]*\z/n) ||
-                           @content.match?(/\G\\\n[ \t]*(?:&&|\|)/n, @pos))
+      # a line continuation keeps the next line in the same group when it is
+      # in the middle of a command, but not when it sits between two commands
+      # (e.g. after +&&+, +;+ or +then+, or before +||+): Bash reports each of
+      # them on its own line - except in a substitution, where it does not
+      # tell the lines joined by continuations apart
+      split = @stack.empty? && (command_start || @content.match?(CONTINUATION_BEFORE_OPERATOR, @pos))
       advance(2)
       end_group if split
     end
 
+    # A comment ends with its line. Bash also ends a backtick substitution at
+    # the first backtick, even in a comment.
     def skip_comment
-      eol = @content.index("\n", @pos) || @content.size
-      @pos = eol
+      ending = @stack.include?(:backtick) ? /[`\n]/n : "\n"
+      @pos = @content.index(ending, @pos) || @content.size
     end
 
     # Recognizes +case+ inside a substitution, so that the +)+ closing a
     # pattern does not end the substitution.
     # @return [Symbol, nil] the keyword found, if any
     def scan_keyword(top)
-      if %i[command backtick case].include?(top) && @content.match?(/\Gcase\s/n, @pos)
+      if COMMANDS.include?(top) && @content.match?(/\Gcase\s/n, @pos)
         enter(:case, 4)
-      elsif top == :case && @content.match?(/\Gesac(?=[\s;&|)]|\z)/n, @pos)
+      elsif top == :case && @content.match?(/\Gesac(?=[\s;&|)`]|\z)/n, @pos)
         @stack.pop
         advance(4)
         :esac
@@ -231,7 +266,7 @@ module Bashcov
     end
 
     def scan_open_paren(top, word_start)
-      if top == :arith
+      if ARITHMETIC.include?(top) || top == :array
         @stack.push(:paren)
       elsif word_start && at?("((")
         return enter(:arith, 2)
@@ -253,11 +288,26 @@ module Bashcov
     end
 
     def scan_redirection(top)
-      match = @content.match(HEREDOC, @pos) unless top == :arith || at?("<<<")
+      match = @content.match(HEREDOC, @pos) unless ARITHMETIC.include?(top) || at?("<<<")
       return advance(at?("<<<") ? 3 : 1) unless match
 
-      @heredocs << [match[2] || match[3] || match[4], match[1] == "-"]
       advance(match[0].size)
+      delimiter = scan_delimiter
+      @heredocs << [delimiter, match[1] == "-"] if delimiter
+    end
+
+    # Reads the delimiter word of a heredoc and removes its quotes.
+    # @return [String, nil] the delimiter, which is empty for +<<''+, or +nil+
+    #   if there is none
+    def scan_delimiter
+      delimiter = nil
+      while (part = @content.match(DELIMITER_PART, @pos))
+        ansi, single, double, escaped, plain = part.captures
+        delimiter ||= +""
+        delimiter << (ansi&.gsub(/\\(.)/mn, '\\1') || single || double&.gsub(/\\([\\"$`])/n, '\\1') || escaped || plain)
+        advance(part[0].size)
+      end
+      delimiter
     end
 
     def scan_newline

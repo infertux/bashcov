@@ -11,6 +11,9 @@ module ShfmtOracle
   # +Bashcov::Scanner::JOINING+ does
   JOINING_TYPES = %w[SglQuoted DblQuoted ParamExp ArithmExp ArithmCmd].freeze
 
+  # Redirection operators which start a heredoc, as shfmt names them
+  HEREDOC_OPERATORS = %w[<< <<-].freeze
+
 module_function
 
   # @return [String] path to the shfmt executable
@@ -86,36 +89,46 @@ module_function
   # @return [Array(Integer, Integer), nil] first and last lines (0-based) of
   #   +node+ if it joins lines together
   def span(node, source)
-    if JOINING_TYPES.include?(node["Type"]) || (node.key?("Elems") && node.key?("Lparen"))
+    if JOINING_TYPES.include?(node["Type"])
       [line(node["Pos"]), line(node["End"])]
-    elsif node.key?("Hdoc") && %w[<< <<-].include?(operator(node, source))
+    elsif node["Array"].is_a?(Hash)
+      # an array is joined from its opening to its closing parenthesis, even
+      # when it is empty and has no elements
+      array = node["Array"]
+      [line(array["Lparen"]), line(array["Rparen"])]
+    elsif HEREDOC_OPERATORS.include?(node["Op"]) && node["Word"]
       heredoc_span(node, source)
     end
   end
 
-  # @return [String] operator of a redirection, read from the source since
-  #   shfmt encodes it as a number before v3.14.0
-  def operator(node, source)
-    position = node["OpPos"] || node["Pos"]
-    source.byteslice(position["Offset"], 3).to_s[/\A<<(?:<|-)?/].to_s
-  end
-
   # A heredoc goes from its operator to its closing delimiter, which shfmt
-  # does not include in the body.
+  # does not include in the body. An empty heredoc has no body at all.
   def heredoc_span(node, source)
-    first = line(node["OpPos"] || node["Pos"])
-    word = node["Word"]
-    return unless first && word
+    first = line(node["OpPos"])
+    return unless first
 
-    delimiter = source.byteslice(word["Pos"]["Offset"]...word["End"]["Offset"]).delete("'\"\\")
+    word = node["Word"]
+    delimiter = unquote(source.byteslice(word["Pos"]["Offset"]...word["End"]["Offset"]))
     lines = source.lines
     start = [first + 1, node["Hdoc"] ? line(node["Hdoc"]["End"]).to_i : 0].max
     last = start.upto(lines.size - 1).find do |lineno|
       body = lines[lineno].chomp
-      body = body.sub(/\A\t+/, "") if operator(node, source) == "<<-"
+      body = body.sub(/\A\t+/, "") if node["Op"] == "<<-"
       body == delimiter
     end
     [first, last || (lines.size - 1)]
+  end
+
+  # Parts of a heredoc delimiter: $'…', '…', "…", an escaped character or
+  # plain text
+  DELIMITER_PART = /\$'((?:\\.|[^'\\])*)'|'([^']*)'|"((?:\\.|[^"\\])*)"|\\(.)|((?:[^'"\\$]|\$(?!'))+)/m
+
+  # Removes quotes from a heredoc delimiter, e.g. +'a"b'+ gives +a"b+ and
+  # +E"OF"+ gives +EOF+.
+  def unquote(word)
+    word.scan(DELIMITER_PART).map do |ansi, single, double, escaped, plain|
+      ansi&.gsub(/\\(.)/m, '\\1') || single || double&.gsub(/\\([\\"$`])/, '\\1') || escaped || plain
+    end.join
   end
 
   def line(pos)
