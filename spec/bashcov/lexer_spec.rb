@@ -120,7 +120,46 @@ describe Bashcov::Lexer do
         )
       BASH
 
-      expect(complete(script, Array.new(4))).to eq [0, 0, 0, nil]
+      expect(complete(script, Array.new(4))).to eq [0, 0, 0, 0]
+    end
+
+    context "with a command substitution spanning several lines" do
+      let(:script) do
+        <<~BASH
+          x="$(
+            if false; then
+              echo never
+            fi
+            echo yes
+          )"
+        BASH
+      end
+
+      it "marks its commands like the command which holds it" do
+        expect(complete(script, [nil, nil, nil, nil, nil, 2])).to eq [2, 2, 2, nil, 2, 2]
+      end
+
+      it "keeps the hits which Bash reports inside it" do
+        expect(complete(script, [nil, 3, nil, nil, nil, 2])).to eq [2, 3, 2, nil, 2, 2]
+      end
+
+      it "marks its commands as uncovered when the command which holds it never ran" do
+        # the first line is not relevant by itself, as it ends with a parenthesis
+        expect(complete(script, Array.new(6))).to eq [nil, 0, 0, nil, 0, 0]
+      end
+
+      it "copies the hit of a command starting on its first line or ending on its last line" do
+        script = <<~BASH
+          x=$(cat <<EOF
+          text
+          EOF
+            false
+            echo 'a
+          b')
+        BASH
+
+        expect(complete(script, [nil, nil, nil, 1, nil, 3])).to eq [3, 3, 3, 1, 3, 3]
+      end
     end
 
     it "copies the hit of a multiline command onto all of its lines" do

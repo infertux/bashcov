@@ -2,6 +2,7 @@
 
   * [FEATURE] Find multiline commands with a scanner which tracks quotes, heredocs and substitutions from the top of the file, instead of regular expressions (#25)
   * [BUGFIX]  Do not read variables starting with `function` (e.g. `functions=`) as function declarations
+  * [BUGFIX]  Mark the commands of a command substitution spanning several lines as covered when the command which holds it ran, whether it is quoted or not, since Bash does not report them on their own lines
   * [MISC]    Check the scanner against shfmt's parser in CI
 
 ## v4.0.3, 2026-11-11 ([changes](https://github.com/infertux/bashcov/compare/v4.0.2...v4.0.3))
