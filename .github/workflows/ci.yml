@@ -99,6 +99,33 @@ jobs:
           chown -R ciuser:ciuser .
           su ciuser -c "bundle exec rake rspec"
 
+  # Check where Bashcov::Scanner groups lines against shfmt's parser. shfmt
+  # is only used here, Bashcov itself does not need it.
+  shfmt:
+    runs-on: ubuntu-latest
+    container: ruby:latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/set-up-bashcov
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - name: Install shfmt
+        run: |
+          go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Compare the scanner with shfmt on the test scripts
+        run: |
+          shfmt --version
+          bundle exec rspec spec/bashcov/scanner_spec.rb --tag shfmt
+      - name: Compare the scanner with shfmt on the scripts of the CI image
+        continue-on-error: true # report only, as the image changes over time
+        run: |
+          bundle exec rspec spec/bashcov/scanner_spec.rb --tag shfmt
+        env:
+          SHFMT_CORPUS: "/usr/bin/* /usr/sbin/* /usr/lib/**/*.sh /usr/share/**/*.sh /usr/local/bundle/**/*.sh"
+
   rubocop:
     runs-on: ubuntu-latest
     container: ruby:latest

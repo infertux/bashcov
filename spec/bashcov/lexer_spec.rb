@@ -111,6 +111,41 @@ describe Bashcov::Lexer do
 
       expect(complete(script, [nil, nil, 2, nil, 2, nil, nil, nil, nil])).to eq [2, 2, 2, nil, 2, nil, 0, 0, nil]
     end
+
+    it "does not read a variable starting with `function` as a function declaration" do
+      script = <<~'BASH'
+        functions=$(cat <<\EOF
+        f() { :; }
+        EOF
+        )
+      BASH
+
+      expect(complete(script, Array.new(4))).to eq [0, 0, 0, nil]
+    end
+
+    it "copies the hit of a multiline command onto all of its lines" do
+      script = <<~BASH
+        readonly A='x
+        y'
+        cat <<EOF
+
+        text
+        EOF
+      BASH
+
+      expect(complete(script, [nil, 1, 2, nil, nil, nil])).to eq [1, 1, 2, 2, 2, 2]
+    end
+
+    it "judges each line of a multiline command which starts on an irrelevant line" do
+      script = <<~BASH
+        eval 'f ()
+          {
+            echo a
+          }'
+      BASH
+
+      expect(complete(script, Array.new(4))).to eq [nil, nil, 0, 0]
+    end
   end
 
   def complete(script, coverage)
