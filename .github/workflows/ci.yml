@@ -113,7 +113,7 @@ jobs:
           cache: false
       - name: Install shfmt
         run: |
-          go install mvdan.cc/sh/v3/cmd/shfmt@v3.14.1
+          go install mvdan.cc/sh/v3/cmd/shfmt@latest
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
       - name: Compare the scanner with shfmt on the test scripts
         run: |
