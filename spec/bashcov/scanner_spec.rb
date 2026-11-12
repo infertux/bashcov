@@ -212,6 +212,27 @@ describe Bashcov::Scanner do
     expect(multiline_groups(script)).to eq [1..4, 5..6]
   end
 
+  it "joins the lines of a heredoc which end with a line continuation, unless its delimiter is quoted" do
+    script = <<~'BASH'
+      cat <<EOF
+      text \
+      EOF
+      echo "still in the heredoc"
+      EO\
+      F
+      cat <<'EOF'
+      text \
+      EOF
+      cat <<EOF
+      text \\
+      EOF
+      echo 'a
+      b'
+    BASH
+
+    expect(multiline_groups(script)).to eq [1..6, 7..9, 10..12, 13..14]
+  end
+
   it "splits a line continuation after a separator which follows an escaped backslash" do
     script = <<~'BASH'
       exit \\; \
@@ -273,6 +294,20 @@ describe Bashcov::Scanner do
       BASH
 
       expect(multiline_commands(script)).to eq [{ 1..5 => { 1..3 => [1..1, 2..2, 3..3], 3..5 => [3..3, 4..4, 5..5] } }]
+    end
+
+    it "ends at its closing parenthesis after nested subshells" do
+      script = <<~BASH
+        x=$(
+          (echo 1) |
+            ( (echo 2) |
+            cat)
+        )
+        echo 'a
+        b'
+      BASH
+
+      expect(multiline_commands(script)).to eq [{ 1..5 => { 1..5 => [1..1, 2..2, 3..3, 4..4, 5..5] } }, 6..7]
     end
 
     it "keeps the string which holds it in one group" do
