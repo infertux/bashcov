@@ -176,7 +176,7 @@ module Bashcov
     # @return [void]
     def mark_relevant_lines!
       @coverage.each_pair do |filename, coverage|
-        lexer = Lexer.new(filename, coverage)
+        lexer = Lexer.new(filename, coverage, @xtrace.subshell_hits.fetch(filename, {}))
         lexer.complete_coverage
       end
     end

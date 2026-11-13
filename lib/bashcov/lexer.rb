@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "bashcov/hit_relocator"
 require "bashcov/line"
 require "bashcov/scanner"
 
@@ -20,11 +21,14 @@ module Bashcov
     IGNORE_IS = %w[esac if then else elif fi while do done { } ;; ( )].freeze
 
     # @param [String] filename File to analyze
-    # @param [Hash] coverage Coverage with executed lines marked
+    # @param [Array<Integer, nil>] coverage Coverage with executed lines marked
+    # @param [Hash{Array(Integer, String, Boolean) => Integer}] subshell_hits hits
+    #   traced in a subshell, see {Xtrace#subshell_hits}
     # @raise [ArgumentError] if the given +filename+ is invalid.
-    def initialize(filename, coverage)
+    def initialize(filename, coverage, subshell_hits = {})
       @filename = filename
       @coverage = coverage
+      @subshell_hits = subshell_hits
 
       raise ArgumentError, "#{@filename} is not a file" unless File.file?(@filename)
     end
@@ -35,7 +39,13 @@ module Bashcov
       content = File.read(@filename).encode("utf-8", invalid: :replace)
       lines = content.lines
 
-      Bashcov::Scanner.new(content).groups.each { |group| mark_group(lines, group) }
+      groups = Bashcov::Scanner.new(content).groups
+
+      relocated, @reached = Bashcov::HitRelocator.new(lines, groups).relocate(@coverage, @subshell_hits)
+      # hits which Bash traced past the end of the file have no line to go to
+      @coverage.replace(relocated.first(lines.size))
+
+      groups.each { |group| mark_group(lines, group) }
     end
 
   private
@@ -45,10 +55,10 @@ module Bashcov
     # a heredoc) on one of them only: the first one, or the last one for some
     # commands such as `readonly` before Bash 5.3.
     #
-    # The commands of a substitution spanning several lines are marked like
-    # the command which holds it when that command ran: Bash does not report
-    # them on their own lines, but from the last line of that command on, so
-    # there is no telling which of them ran.
+    # The commands of a substitution spanning several lines get the hits
+    # which {HitRelocator} moved back to them. If none of them got any, they
+    # are marked like the command which holds the substitution when that
+    # command ran, since there is then no telling which of them ran.
     # @param [Array<String>] lines Lines of the file
     # @param [Scanner::Group] group Lines of the command
     # @param [Integer, nil] inherited Hit of the command which holds this
@@ -68,8 +78,15 @@ module Bashcov
 
       inherited = hit if hit&.positive?
       group.substitutions.each do |substitution|
-        substitution.groups.each { |nested| mark_group(lines, nested, inherited) }
+        fallback = inherited unless reached?(substitution)
+        substitution.groups.each { |nested| mark_group(lines, nested, fallback) }
       end
+    end
+
+    # @return [Boolean] whether a command of +substitution+ got a hit from the
+    #   trace
+    def reached?(substitution)
+      @reached.any? { |lineno| substitution.lines.cover?(lineno) }
     end
 
     def mark_line(line, lineno)
