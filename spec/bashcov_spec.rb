@@ -78,7 +78,12 @@ describe Bashcov do
 
       context "with the --bash-path option" do
         context "with an existing path" do
-          before { @args += ["--bash-path", "/bin/bash"] }
+          before do
+            @args += ["--bash-path", "/bin/bash"]
+            # the option redefines `BASH_VERSION`: restore it for the examples
+            # which follow, run against another Bash with `BASHCOV_BASH_PATH`
+            stub_const("Bashcov::BASH_VERSION", described_class::BASH_VERSION)
+          end
 
           it "sets it properly" do
             skip("/bin/bash does not exist") unless File.executable?("/bin/bash")
