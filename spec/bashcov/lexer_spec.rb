@@ -14,14 +14,13 @@ describe Bashcov::Lexer do
   describe "#complete_coverage" do
     it "marks relevant lines" do
       file = "#{test_app}/scripts/nested/simple.sh"
-      coverage = {}
-      expected = expected_coverage.fetch(file).fetch("lines").each_with_index.map do |line, index|
-        index unless line.nil?
-      end.compact
+      coverage = []
+      expected_lines = expected_coverage.fetch(file).fetch("lines")
+      expected = expected_lines.each_index.reject { |index| expected_lines[index].nil? }
 
       described_class.new(file, coverage).complete_coverage
 
-      expect(coverage.keys).to match_array expected
+      expect(coverage.each_index.reject { |index| coverage[index].nil? }).to match_array expected
     end
 
     context "with a string closed after a space" do
@@ -135,7 +134,16 @@ describe Bashcov::Lexer do
         BASH
       end
 
-      it "marks its commands like the command which holds it" do
+      it "marks each of its commands with the hits which Bash traced for it" do
+        # as Bash 5.2 traces them: from the line of the command holding the
+        # substitution, as if it were written one command per line
+        subshell_hits = { [5, "false", false] => 2, [8, "echo yes", false] => 2 }
+
+        expect(complete(script, [nil, nil, nil, nil, nil, 4, nil, nil, 2], subshell_hits)).to \
+          eq [2, 2, 0, nil, 2, 2]
+      end
+
+      it "marks its commands like the command which holds it when the trace does not tell" do
         expect(complete(script, [nil, nil, nil, nil, nil, 2])).to eq [2, 2, 2, nil, 2, 2]
       end
 
@@ -187,11 +195,11 @@ describe Bashcov::Lexer do
     end
   end
 
-  def complete(script, coverage)
+  def complete(script, coverage, subshell_hits = {})
     Tempfile.create(%w[lexer .sh]) do |file|
       file.write(script)
       file.close
-      described_class.new(file.path, coverage).complete_coverage
+      described_class.new(file.path, coverage, subshell_hits).complete_coverage
     end
 
     coverage
