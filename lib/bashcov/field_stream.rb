@@ -29,57 +29,50 @@ module Bashcov
     # @param [Regexp]      start_match a +Regexp+ that, when matched against the
     #   input stream, signifies the beginning of the next series of fields to
     #   yield
+    # @param [Boolean] following whether to also yield, after the fields of
+    #   each series, the first line of the text which follows them, up to the
+    #   next delimiter or +start_match+ match ("" if there is none)
     # @yieldparam [String] field each field extracted from the stream. Exactly
-    #   +field_count+ fields are yielded for each +start_match+ match: if fewer
-    #   fields follow the match, yields empty strings until +field_count+ is
-    #   reached; if more follow (e.g. a traced command that contains the
-    #   delimiter), the extra fields are dropped so the next series of fields
-    #   stays aligned.
-    def each(delimiter, field_count, start_match, &block)
-      return enum_for(__method__, delimiter, field_count, start_match) unless block_given?
+    #   +field_count+ fields (plus one with +following+) are yielded for each
+    #   +start_match+ match followed by fields: if fewer fields follow the
+    #   match, yields empty strings until +field_count+ is reached; if more
+    #   follow (e.g. a traced command that contains the delimiter), the extra
+    #   fields are dropped so the next series of fields stays aligned.
+    def each(delimiter, field_count, start_match, following: false, &block)
+      return enum_for(__method__, delimiter, field_count, start_match, following:) unless block_given?
 
-      chunked = each_field(delimiter).chunk(&chunk_matches(start_match))
-
-      yield_fields = lambda do |(_, chunk)|
-        chunk.first(field_count).each(&block)
-        (field_count - chunk.size).times { yield "" }
+      # Keep one extra field for the trace text, which can also be part of
+      # the next marker. Discard further delimiter-separated junk as it arrives.
+      limit = [field_count + 1, 1].max
+      each_series(delimiter, start_match, limit) do |series, next_start|
+        fields = series.first(field_count)
+        fields.fill("", fields.size...field_count).each(&block)
+        block.call(first_line(series.fetch(field_count, next_start), start_match)) if following
       end
-
-      # skip junk that might appear before the first start-of-fields match
-      begin
-        n, chunk = chunked.next
-        yield_fields.call([n, chunk]) unless n.zero?
-      rescue StopIteration
-        return
-      end
-
-      chunked.each(&yield_fields)
     end
 
   private
 
-    # @param [Regexp] start_match a +Regexp+ that, when matched against the
-    #   input stream, signifies the beginning of the next series of fields to
-    #   yield
-    # @return [Proc] a unary +Proc+ that returns +nil+ if the argument mathes
-    #   the +start_match+ +Regexp+, and otherwise returns the number of
-    #   start-of-fields signifiers so far encountered.
-    # @example
-    #   chunker = chunk_matches /<=>/
-    #   chunked = %w[foo fighters <=> bar none <=> baz luhrmann].chunk(&chunker)
-    #   chunked.to_a
-    #     #=> [[0, ["foo", "fighters"]], [1, ["bar", "none"]], [2, ["baz", "luhrmann"]]]
-    def chunk_matches(start_match)
-      i = 0
-
-      lambda do |e|
-        if e.match?(start_match)
-          i += 1
-          nil
-        else
-          i
+    # A marker closes the preceding series and starts another. At EOF there
+    # is no closing marker, so the following text defaults to an empty string.
+    def each_series(delimiter, start_match, limit)
+      series = nil
+      each_field(delimiter) do |field|
+        if field.match?(start_match)
+          yield series, field if series && !series.empty?
+          series = []
+        elsif series && series.size < limit
+          series << field
         end
       end
+      yield series, "" if series && !series.empty?
+    end
+
+    # @return [String] the first line of +field+, without the
+    #   +start_match+ match which ends it
+    def first_line(field, start_match)
+      newline = field.index("\n")
+      newline ? field[0, newline] : field.sub(start_match, "")
     end
   end
 end

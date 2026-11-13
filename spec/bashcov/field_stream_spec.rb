@@ -62,6 +62,19 @@ describe Bashcov::FieldStream do
       end
     end
 
+    context "with the text which follows the fields of each series" do
+      let(:field_count) { 2 }
+      let(:input) do
+        ["junk #{start}", "a", "b", "traced\nmore #{start}", "c", "d", "with #{delimiter} delimiter\n#{start}", "e", "f", "last\n"]
+          .join(delimiter)
+      end
+
+      it "yields its first line after the fields, up to the next delimiter, until the end of the stream" do
+        expect { |e| stream.each(delimiter, field_count, start_match, following: true, &e) }.to \
+          yield_successive_args("a", "b", "traced", "c", "d", "with ", "e", "f", "last")
+      end
+    end
+
     context "when the stream is empty or already fully consumed" do
       let(:read) { StringIO.new }
 
