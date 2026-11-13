@@ -42,14 +42,14 @@ def expected_coverage
       end
     ) },
     "#{test_app}/scripts/multiline3.sh" => { "lines" => [nil, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, nil, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
-    "#{test_app}/scripts/substitution.sh" => { "lines" => (
-      # Bash reports the commands of the second substitution one line further before 5.2
-      if Bashcov::BASH_VERSION >= "5.2"
-        [nil, nil, 2, 2, 2, 2, 1, nil, 2, 2, 2, nil, 2, 2, nil, nil, 2, 1]
-      else
-        [nil, nil, 2, 2, 2, 2, 1, nil, 1, 1, 1, nil, 1, 1, 1, nil, 1, 2]
-      end
-    ) },
+    "#{test_app}/scripts/substitution.sh" => {
+      "lines" => [
+        nil, nil, 1, 1, 1, 1, 1, nil, 1, 1, 0, nil, 1, 1, nil, nil, 1, 1, nil, 1, 2, 2, nil, 1, 0, 1, nil, 1, 1,
+        nil, 1, nil, 1, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, 1, 1, nil, 1, 4, 1, nil, 1, 1,
+        nil, 1, 1, nil, nil, 1, 1, 1, 1, 1, nil, 1, 1, 1, 1, 1, 1, nil, 1, 1, 1, 0, 1, nil, 1, 1, 2, 1, 1, nil, 1, 1,
+        1, 1, nil, nil, nil, 1, nil, 0, nil, 1, nil, 2, 1, 1, 0, nil, 1, 1, nil, 1, nil, nil, 1,
+      ],
+    },
     "#{test_app}/scripts/executable" => { "lines" => [nil, nil, 1] },
     "#{test_app}/scripts/exit_non_zero.sh" => { "lines" => [nil, nil, 1] },
     "#{test_app}/scripts/no_extension/bin_bash" => { "lines" => [nil, nil, 1] },
