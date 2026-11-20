@@ -50,7 +50,7 @@ module Bashcov
 
     # Constructs which keep the following line in the same command: a newline
     # inside one of these is part of the command
-    JOINING = %i[single double ansi param array arith].freeze
+    JOINING = %i[single double ansi param array arith arithmetic_expansion].freeze
 
     # Constructs which hold commands of their own: a newline inside one of
     # these ends such a command, but not the command which holds the construct
@@ -68,7 +68,7 @@ module Bashcov
 
     # Constructs where +<<+ is a shift, +#+ is not a comment and parentheses
     # only group
-    ARITHMETIC = %i[arith paren].freeze
+    ARITHMETIC = %i[arith arithmetic_expansion paren].freeze
 
     # Characters of the script by byte, which saves creating a string for
     # each character read
@@ -79,7 +79,7 @@ module Bashcov
 
     # Character which changes nothing in the middle of a word: neither a
     # boundary, nor a quote, nor the start of a substitution or of an array
-    PLAIN_CHAR = /[^\s;&|()<>'"`\\$=]|=(?!\()|\$(?![$({'])/n
+    PLAIN_CHAR = /[^\s;&|()<>'"`\\$=]|=(?!\()|\$(?![$({'"])/n
 
     # Text which changes nothing in the middle of a word: a plain character,
     # or a string on a single line without any substitution
@@ -138,6 +138,7 @@ module Bashcov
     # @param [String] content Script to scan
     def initialize(content)
       # work on bytes, as indexing characters of a multibyte string is slow
+      @encoding = content.encoding
       @content = content.dup.force_encoding(Encoding::BINARY)
     end
 
@@ -145,6 +146,31 @@ module Bashcov
     #   line of the script in order
     def groups
       @groups ||= scan
+    end
+
+    # Classifies source text with the same syntax rules as #groups, using a
+    # fresh scan. Quoted runs include closing quotes; opening quotes belong to
+    # code. ANSI-C strings are returned whole so callers can decode them.
+    # @return [Array<Array(Symbol, String)>] runs of :code, :quoted, :comment,
+    #   :continuation, :heredoc (a body and its delimiter), :ansi or :locale
+    #   (the dollar prefix of a locale string)
+    def self.spans(content)
+      new(content).spans
+    end
+
+    def spans
+      @span_ends = []
+      scan
+      # The scanner advances by byte. Slice only at final span boundaries
+      # so that a multibyte character is always returned as one string.
+      first = 0
+      @span_ends.map do |kind, last|
+        text = @content.byteslice(first...last).force_encoding(@encoding)
+        first = last
+        [kind, text]
+      end
+    ensure
+      @span_ends = nil
     end
 
   private
@@ -167,9 +193,37 @@ module Bashcov
       @word_start = true
       @command_start = true
 
-      step while @pos < @content.size
+      if @span_ends
+        scan_span while @pos < @content.size
+      else
+        step while @pos < @content.size
+      end
 
-      finish
+      finish unless @span_ends
+    end
+
+    def scan_span
+      @span_kind = QUOTED.include?(@stack.last) ? :quoted : :code
+      step
+      end_span(@span_kind, @pos)
+    end
+
+    def end_span(kind, position)
+      previous = @span_ends.last
+      return if position == (previous ? previous.last : 0)
+
+      if previous && previous.first == kind && %i[code quoted].include?(kind)
+        previous[1] = position
+      else
+        @span_ends << [kind, position]
+      end
+    end
+
+    def special_span(kind, first, last)
+      return unless @span_ends
+
+      end_span(@span_kind, first)
+      end_span(kind, last)
     end
 
     def finish
@@ -304,7 +358,7 @@ module Bashcov
     end
 
     def scan_double(char)
-      return advance(2) if char == "\\"
+      return scan_escape if char == "\\"
       return if char == "$" && scan_dollar
 
       case char
@@ -315,7 +369,7 @@ module Bashcov
     end
 
     def scan_param(char)
-      return advance(2) if char == "\\"
+      return scan_escape if char == "\\"
       return if char == "$" && scan_dollar
 
       case char
@@ -333,10 +387,23 @@ module Bashcov
       when "$"
         advance(2)
         :pid
-      when "(" then char_at(@pos + 2) == "(" ? enter(:arith, 3) : enter(:command, 2)
+      when "(" then char_at(@pos + 2) == "(" ? enter(:arithmetic_expansion, 3) : enter(:command, 2)
       when "{" then enter(:param, 2)
-      when "'" then enter(:ansi, 2) unless QUOTED.include?(@stack.last)
+      when "'" then scan_ansi_string unless QUOTED.include?(@stack.last)
+      when '"'
+        unless QUOTED.include?(@stack.last)
+          special_span(:locale, @pos, @pos + 1)
+          enter(:double, 2)
+        end
       end
+    end
+
+    def scan_ansi_string
+      first = @pos
+      enter(:ansi, 2)
+      step while @pos < @content.size && @stack.last == :ansi
+      special_span(:ansi, first, @pos)
+      :ansi
     end
 
     # Enters +construct+, whose opening token is +length+ characters long.
@@ -361,7 +428,7 @@ module Bashcov
     # Scans outside of quotes: at the top level, or inside a command
     # substitution, backticks, an array or an arithmetic expression.
     def scan_unquoted(top)
-      @pos = run_end(@long_line ? WORD_PIECE : WORD) unless @word_start
+      @pos = run_end(@long_line || @span_ends ? WORD_PIECE : WORD) unless @word_start
       skip_arguments unless @command_start
       char = char_at(@pos)
       char = skip_blanks if char && BLANKS.include?(char)
@@ -393,7 +460,7 @@ module Bashcov
     # Words and blanks change nothing after the first word of a command,
     # except that a word starts after a blank.
     def skip_arguments
-      position = run_end(@long_line ? ARGUMENTS_PIECE : ARGUMENTS)
+      position = run_end(@long_line || @span_ends ? ARGUMENTS_PIECE : ARGUMENTS)
       return if position == @pos
 
       @pos = position
@@ -434,14 +501,23 @@ module Bashcov
       # them on its own line - except in a substitution, where it does not
       # tell the lines joined by continuations apart
       split = @stack.empty? && (command_start || @content.match?(CONTINUATION_BEFORE_OPERATOR, @pos))
-      advance(2)
+      scan_escape
       end_group if split
+    end
+
+    def scan_escape
+      special_span(:continuation, @pos, @pos + 2) if char_at(@pos + 1) == "\n"
+      advance(2)
     end
 
     # A comment ends with its line. Bash also ends a backtick substitution at
     # the first backtick, even in a comment.
     def skip_comment
-      return @pos = @eol unless @backticks.positive?
+      first = @pos
+      unless @backticks.positive?
+        @pos = @eol
+        return special_span(:comment, first, @pos)
+      end
 
       loop do
         position = run_end(BACKTICK_COMMENT)
@@ -449,6 +525,7 @@ module Bashcov
 
         @pos = position
       end
+      special_span(:comment, first, @pos)
     end
 
     # Recognizes +case+ inside a substitution, so that the +)+ closing a
@@ -477,10 +554,14 @@ module Bashcov
 
     def scan_close_paren(top)
       case top
-      when :arith
+      when :arith, :arithmetic_expansion
         @stack.pop
+        @word_start = false if top == :arithmetic_expansion
         return advance(2) if char_at(@pos + 1) == ")"
-      when :paren, :command, :subshell, :array
+      when :command
+        leave
+        @word_start = false
+      when :paren, :subshell, :array
         leave
       end
       advance
@@ -528,7 +609,9 @@ module Bashcov
       advance
 
       until @heredocs.empty?
+        first = @pos
         skip_heredoc(*@heredocs.first)
+        special_span(:heredoc, first, @pos)
         @heredocs.shift
       end
 
@@ -562,6 +645,8 @@ module Bashcov
 
     # Called at the end of each line.
     def newline
+      return if @span_ends
+
       @lowest_depths << [@lowest_depth, MAX_DEPTH].min
       @final_depths << [@depth, MAX_DEPTH].min
       @ends << false
@@ -582,7 +667,7 @@ module Bashcov
 
     # Ends the innermost command with the line which was just read.
     def end_group
-      @ends[-1] = true
+      @ends[-1] = true unless @span_ends
     end
   end
 end
