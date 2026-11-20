@@ -19,10 +19,11 @@ module Bashcov
     PREFIX = "BASHCOV>"
 
     # [Array<String>] A collection of Bash internal variables to expand in the
-    #   {PS4}: also the subshell level, the depth of calls and the first line
-    #   of the command, see {#subshell_hits}
+    #   {PS4}: also the subshell level, the depth of calls, the process and
+    #   the first line of the command, see {#subshell_hits}
     FIELDS = %w[
-      ${LINENO-} ${BASH_SOURCE-} ${PWD-} ${OLDPWD-} ${BASH_SUBSHELL-} ${#BASH_SOURCE[@]} ${BASH_COMMAND%%[[:cntrl:]]*}
+      ${LINENO-} ${BASH_SOURCE-} ${PWD-} ${OLDPWD-}
+      ${BASH_SUBSHELL-} ${#BASH_SOURCE[@]} ${BASHPID-} ${BASH_COMMAND%%[[:cntrl:]]*}
     ].freeze
 
     class << self
@@ -74,8 +75,8 @@ module Bashcov
       @skipped_count = 0
 
       # For each script, the hits traced in a subshell waiting for the
-      # command which holds them, counted by line, depth of calls and text,
-      # and these hits once it is known
+      # command which holds them, counted by line, depth of calls, text and
+      # process, and these hits once it is known
       @pending = Hash.new { |hash, script| hash[script] = Hash.new(0) }
       @subshell_hits = Hash.new { |hash, script| hash[script] = Hash.new(0) }
     end
@@ -85,11 +86,14 @@ module Bashcov
     # the command which holds the substitution right after them, in the
     # shell: the first command traced next out of any subshell. The hits of
     # functions called from the substitution are left out: Bash traces them
-    # on their own lines.
-    # @return [Hash{Pathname => Hash{Array(Integer, String, Integer) => Integer}}]
+    # on their own lines. The process of a hit traced in a subshell of the
+    # first level tells a substitution of the holder from a background job.
+    # @return [Hash{Pathname => Hash{Array(Integer, String, Integer, Integer) => Integer}}]
     #   for each script, how many times a command was traced in a subshell,
-    #   by the line it was traced on, its text and the line of the command
-    #   which held it (all 0-based)
+    #   by the line it was traced on, its text, the line of the command which
+    #   held it (both 0-based) and which process of the first level of
+    #   subshells traced it in that run of the holder, counted from 0 in the
+    #   order of their first hits (nil in deeper levels)
     attr_reader :subshell_hits
 
     # [Integer] Number of malformed +PS4+ records skipped by {#read}
@@ -156,16 +160,17 @@ module Bashcov
     # is skipped: it is usually text that merely looks like the start of a
     # {ps4}, such as the output of +declare -p+ or +set+ being traced, and
     # {FieldStream#each} resynchronizes on the next start of a {ps4}.
-    # @overload parse_hit!(lineno, bash_source, pwd, oldpwd, subshell, calls, command)
+    # @overload parse_hit!(lineno, bash_source, pwd, oldpwd, subshell, calls, process, command)
     #   @param [String]  lineno       expanded +LINENO+
     #   @param [Pathname] bash_source expanded +BASH_SOURCE+
     #   @param [Pathname] pwd         expanded +PWD+
     #   @param [Pathname] oldpwd      expanded +OLDPWD+
     #   @param [String] subshell      expanded +BASH_SUBSHELL+
     #   @param [String] calls         number of +BASH_SOURCE+ entries
+    #   @param [String] process       expanded +BASHPID+
     #   @param [String] command       first line of +BASH_COMMAND+
     # @return [void]
-    def parse_hit!(lineno, *paths, subshell, calls, command)
+    def parse_hit!(lineno, *paths, subshell, calls, process, command)
       if /\A\d+\z/.match?(lineno)
         lineno = lineno.to_i
       elsif lineno == "${LINENO-}"
@@ -190,23 +195,27 @@ module Bashcov
       @files[script][index] ||= 0
       @files[script][index] += 1
 
-      track_subshell_hit!(script, index, subshell, calls, command)
+      track_subshell_hit!(script, index, subshell, calls, process, command)
     end
 
     # Keeps a hit traced in a subshell until the command holding it is
     # traced, see {#subshell_hits}
     # @param [Pathname] script the script the hit is in
     # @param [Integer] index line of the hit (0-based)
-    # @param [String] subshell, calls, command see {#parse_hit!}
+    # @param [String] subshell, calls, process, command see {#parse_hit!}
     # @return [void]
-    def track_subshell_hit!(script, index, subshell, calls, command)
+    def track_subshell_hit!(script, index, subshell, calls, process, command)
       if subshell.to_i.positive?
-        @pending[script][[index, calls, command]] += 1
+        @pending[script][[index, calls, command, (process if subshell == "1")]] += 1
         return
       end
 
-      @pending.delete(script)&.each do |(lineno, hit_calls, hit_command), count|
-        @subshell_hits[script][[lineno, hit_command, index]] += count if hit_calls == calls
+      pending = @pending.delete(script) || {}
+      processes = pending.keys.filter_map { |*, hit_process| hit_process }.uniq
+      pending.each do |(lineno, hit_calls, hit_command, hit_process), count|
+        next unless hit_calls == calls
+
+        @subshell_hits[script][[lineno, hit_command, index, processes.index(hit_process)]] += count
       end
     end
 

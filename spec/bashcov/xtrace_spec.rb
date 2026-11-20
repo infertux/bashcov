@@ -58,12 +58,12 @@ describe Bashcov::Xtrace do
 
   describe "#subshell_hits" do
     # @param [Array<Array<String>>] records fields of each record: line,
-    #   script, subshell level, depth of calls and command
+    #   script, subshell level, depth of calls, process and command
     def subshell_hits(records)
       xtrace = described_class.new(Bashcov::FieldStream.new)
       writer = IO.for_fd(xtrace.file_descriptor, autoclose: false)
-      records.each do |lineno, script, subshell, calls, command|
-        writer.write("#{described_class.make_ps4(lineno, script, '/', '', subshell, calls, command)}\n")
+      records.each do |lineno, script, subshell, calls, process, command|
+        writer.write("#{described_class.make_ps4(lineno, script, '/', '', subshell, calls, process, command)}\n")
       end
       writer.flush
       xtrace.close
@@ -76,16 +76,27 @@ describe Bashcov::Xtrace do
 
     it "keeps the hits traced in a subshell with the next command of their script traced out of any" do
       records = [
-        %w[7 /a.sh 1 1 true], %w[8 /a.sh 2 1 date], %w[2 /b.sh 0 1 other], %w[7 /a.sh 1 1 true], %w[5 /a.sh 0 1 x=],
+        %w[7 /a.sh 1 1 11 true], %w[8 /a.sh 2 1 12 date], %w[2 /b.sh 0 1 10 other], %w[7 /a.sh 1 1 11 true],
+        %w[5 /a.sh 0 1 10 x=],
       ]
 
-      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4] => 2, [7, "date", 4] => 1 })
+      # with the process of the hits of the first level of subshells only
+      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4, 0] => 2, [7, "date", 4, nil] => 1 })
+    end
+
+    it "numbers the processes of each run of the holder in the order of their first hits" do
+      records = [
+        %w[7 /a.sh 1 1 11 true], %w[9 /a.sh 1 1 13 job], %w[5 /a.sh 0 1 10 x=], %w[7 /a.sh 1 1 12 true],
+        %w[5 /a.sh 0 1 10 x=],
+      ]
+
+      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4, 0] => 2, [8, "job", 4, 1] => 1 })
     end
 
     it "leaves out the hits of functions called from the subshell" do
-      records = [%w[2 /a.sh 1 2 helper], %w[7 /a.sh 1 1 true], %w[5 /a.sh 0 1 x=]]
+      records = [%w[2 /a.sh 1 2 11 helper], %w[7 /a.sh 1 1 11 true], %w[5 /a.sh 0 1 10 x=]]
 
-      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4] => 1 })
+      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4, 0] => 1 })
     end
   end
 
