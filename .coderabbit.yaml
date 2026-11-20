@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# Only review when asked with "@coderabbitai review", and stay silent otherwise.
+reviews:
+  review_status: false
+  auto_review:
+    enabled: false
