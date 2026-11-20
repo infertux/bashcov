@@ -6,19 +6,20 @@ describe Bashcov::HitRelocator do
   # Relocates the hits of +traced+ in +script+, in the coverage Bash reports
   # for it: each traced hit on the line it was traced on, and one hit for
   # each command holding them.
-  # @param [Hash{Array(Integer, String, Integer) => Integer}] traced number
-  #   of hits traced in a subshell by line, command and line of the command
-  #   holding them, see {Bashcov::Xtrace#subshell_hits}, lines 1-based
+  # @param [Hash{Array(Integer, String, Integer, Integer) => Integer}] traced
+  #   number of hits traced in a subshell by line, command, line of the
+  #   command holding them and process, see {Bashcov::Xtrace#subshell_hits},
+  #   lines 1-based
   # @return [Array(Hash{Integer => Integer}, Array<Integer>)] hits by line,
   #   and the lines hits were moved to, 1-based
   def relocate(script, traced)
     reported = Hash.new(0)
     traced.each { |(lineno, *), count| reported[lineno] += count }
-    traced.keys.map(&:last).uniq.each { |holder| reported[holder] += 1 }
+    traced.keys.map { |_, _, holder| holder }.uniq.each { |holder| reported[holder] += 1 }
     coverage = Array.new(reported.keys.max) { |index| reported[index + 1] if reported.key?(index + 1) }
 
     relocator = described_class.new(script.lines, Bashcov::Scanner.new(script).groups)
-    zero_based = traced.transform_keys { |lineno, command, holder| [lineno - 1, command, holder - 1] }
+    zero_based = traced.transform_keys { |lineno, command, holder, process| [lineno - 1, command, holder - 1, process] }
     relocated, reached = relocator.relocate(coverage, zero_based)
 
     [relocated.each_with_index.filter_map { |hit, index| [index + 1, hit] if hit }.to_h, reached.map(&:succ).sort]
@@ -49,10 +50,16 @@ describe Bashcov::HitRelocator do
     end
   end
 
-  it "leaves a hit traced before the substitution on its line" do
-    traced = { [1, "echo before", 9] => 1, [1, "cat", 9] => 1, [10, "echo set", 9] => 1 }
+  it "leaves a hit traced before the substitution on its line, whatever its process" do
+    traced = { [1, "echo before", 9, 0] => 1, [1, "cat", 9, 1] => 1, [10, "echo set", 9, 2] => 1 }
 
     expect(relocate(script, traced)).to eq [{ 1 => 2, 4 => 1, 9 => 1 }, [4]]
+  end
+
+  it "moves no hit of a substitution when another process, such as a background job, traced in it" do
+    traced = { [9, '[ -n "$HOME" ]', 9, 0] => 1, [10, "echo set", 9, 0] => 1, [13, "echo last 1>&2", 9, 1] => 1 }
+
+    expect(relocate(script, traced).last).to eq []
   end
 
   {
@@ -72,8 +79,13 @@ describe Bashcov::HitRelocator do
     "a function" => "greet() {\n    echo hi\n  }\n  greet",
     "a process substitution" => "cat <(\n    echo hi\n  )",
     "an ANSI-C quoted string" => "echo $'\\t'\n  echo hi",
+    # where no command starts
+    "the text in a quoted argument" => "printf '%s\\n' 'before echo hi after'",
+    "the text in a double-quoted argument" => "printf '%s\\n' \"before; echo hi after\"",
+    "the text in a comment" => "true # before; echo hi",
+    "the text in a heredoc body" => "cat <<EOF\nbefore; echo hi\nEOF",
   }.each do |construct, commands|
-    it "moves no hit of a substitution holding #{construct}, which Bash traces out of order or rewritten" do
+    it "moves no hit of a substitution holding #{construct}, which Bash traces out of order, rewritten or not at all" do
       script = "x=$(\n  #{commands}\n)\n"
       holder = script.lines.size
 

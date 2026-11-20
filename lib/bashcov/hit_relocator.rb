@@ -18,6 +18,35 @@ module Bashcov
     # in normalized text, see {.normalize}
     UNTRACEABLE = /(?:\A|[;&|(] )(?:for|case|select|function) |(?:\A|[;&|] )[\w.:-]+ \( \)|[<>] \(|\$['"]/
 
+    # Quoted text, or an escaped character
+    QUOTED = /\\.|'[^']*'|"(?:\\.|[^"\\])*"/m
+
+    # A command substitution on one line, which runs even in double quotes,
+    # in normalized text
+    SUBSTITUTION = /\$ \( [^()]* \)|` [^`]* `/
+
+    # Text before a command which Bash traces: an operator, or reserved words
+    # which start a compound command, in normalized text
+    COMMAND_START = /(?:\A|[;&|()`] )(?:(?:if|then|else|elif|while|until|do|time|!|\{) )*\z/
+
+    # @param [String] source normalized text of commands, see {.normalize}
+    # @param [String] text normalized text of a command
+    # @return [Boolean] whether +text+ is in +source+ as whole words where a
+    #   command starts, out of quotes
+    def self.names?(source, text)
+      # quoted text blanked out, so that the operators it holds start nothing
+      unquoted = source.gsub(QUOTED) do |quoted|
+        case quoted[0]
+        when "\\" then quoted
+        when '"' then quoted.gsub(/#{SUBSTITUTION}|[^"]/) { |part| part.size > 1 ? part : "\0" }
+        else quoted.tr("^'", "\0")
+        end
+      end
+      !text.empty? && source.enum_for(:scan, /(?<!\S)#{Regexp.escape(text)}(?!\S)/).any? do
+        unquoted[0...Regexp.last_match.begin(0)].match?(COMMAND_START)
+      end
+    end
+
     # @param [String] text text of a command, as written or as Bash traces it
     # @return [String] +text+ with line continuations joined, operators
     #   apart and single blanks, as Bash 5.2 rebuilds it, and without the
@@ -67,11 +96,14 @@ module Bashcov
 
     # @return [Array<Array(Integer, String)>] the line and text of the
     #   commands of +substitutions+, nested ones included, leaving out blank
-    #   lines and comments
+    #   lines, comments and heredoc bodies
     def commands(lines, substitutions)
       substitutions.flat_map(&:groups).flat_map do |group|
-        text = self.class.normalize(lines.values_at(*group.own_lines).join)
-        own = text.empty? || text.start_with?("#") ? [] : [[group.lines.first, text]]
+        own_lines = lines.values_at(*group.own_lines)
+        heredoc = own_lines.index { |line| line.match?(/<<(?!<)/) }
+        written = (heredoc ? own_lines.first(heredoc + 1) : own_lines).join
+        text = self.class.normalize(written.gsub(/#{QUOTED}|(?<!\S)#.*/) { |match| match.start_with?("#") ? "" : match })
+        own = text.empty? ? [] : [[group.lines.first, text]]
         own + commands(lines, group.substitutions)
       end
     end
@@ -84,6 +116,8 @@ module Bashcov
     def placements(holder, hits)
       lines, commands = holder
       return if lines.nil? || commands.any? { |_, text| text.match?(UNTRACEABLE) }
+      # hits of another process, such as a background job, may be on any line
+      return if hits.filter_map { |(lineno, _, _, process), _| process unless lineno < lines.first }.uniq.size > 1
 
       placed = hits.filter_map do |(lineno, command, _), count|
         # a hit traced before the substitution, e.g. of a pipeline, is on its
@@ -108,11 +142,11 @@ module Bashcov
     end
 
     # @return [Integer, nil] the line of the one command of +commands+ which
-    #   Bash traces as +command+, as whole words
+    #   Bash traces as +command+, see {.names?}
     def command_line(commands, command)
       text = self.class.normalize(command)
-      targets = commands.select { |_, source| source.match?(/(?<!\S)#{Regexp.escape(text)}(?!\S)/) }
-      targets.first.first if targets.one? && !text.empty?
+      targets = commands.select { |_, source| self.class.names?(source, text) }
+      targets.first.first if targets.one?
     end
   end
 end
