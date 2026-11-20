@@ -56,6 +56,39 @@ describe Bashcov::Xtrace do
     end
   end
 
+  describe "#subshell_hits" do
+    # @param [Array<Array<String>>] records fields of each record: line,
+    #   script, subshell level, depth of calls and command
+    def subshell_hits(records)
+      xtrace = described_class.new(Bashcov::FieldStream.new)
+      writer = IO.for_fd(xtrace.file_descriptor, autoclose: false)
+      records.each do |lineno, script, subshell, calls, command|
+        writer.write("#{described_class.make_ps4(lineno, script, '/', '', subshell, calls, command)}\n")
+      end
+      writer.flush
+      xtrace.close
+      Timeout.timeout(2) { xtrace.read }
+
+      xtrace.subshell_hits.transform_keys(&:to_s)
+    ensure
+      writer&.close
+    end
+
+    it "keeps the hits traced in a subshell with the next command of their script traced out of any" do
+      records = [
+        %w[7 /a.sh 1 1 true], %w[8 /a.sh 2 1 date], %w[2 /b.sh 0 1 other], %w[7 /a.sh 1 1 true], %w[5 /a.sh 0 1 x=],
+      ]
+
+      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4] => 2, [7, "date", 4] => 1 })
+    end
+
+    it "leaves out the hits of functions called from the subshell" do
+      records = [%w[2 /a.sh 1 2 helper], %w[7 /a.sh 1 1 true], %w[5 /a.sh 0 1 x=]]
+
+      expect(subshell_hits(records)).to eq("/a.sh" => { [6, "true", 4] => 1 })
+    end
+  end
+
   describe ".ps4" do
     let!(:subshell_ps4) do
       dirname = '$(cd $(dirname "$BASH_SOURCE"); pwd -P)'

@@ -19,8 +19,11 @@ module Bashcov
     PREFIX = "BASHCOV>"
 
     # [Array<String>] A collection of Bash internal variables to expand in the
-    #   {PS4}
-    FIELDS = %w[${LINENO-} ${BASH_SOURCE-} ${PWD-} ${OLDPWD-}].freeze
+    #   {PS4}: also the subshell level, the depth of calls and the first line
+    #   of the command, see {#subshell_hits}
+    FIELDS = %w[
+      ${LINENO-} ${BASH_SOURCE-} ${PWD-} ${OLDPWD-} ${BASH_SUBSHELL-} ${#BASH_SOURCE[@]} ${BASH_COMMAND%%[[:cntrl:]]*}
+    ].freeze
 
     class << self
       attr_writer :delimiter, :ps4
@@ -69,7 +72,25 @@ module Bashcov
       @oldpwd_stack ||= []
 
       @skipped_count = 0
+
+      # For each script, the hits traced in a subshell waiting for the
+      # command which holds them, counted by line, depth of calls and text,
+      # and these hits once it is known
+      @pending = Hash.new { |hash, script| hash[script] = Hash.new(0) }
+      @subshell_hits = Hash.new { |hash, script| hash[script] = Hash.new(0) }
     end
+
+    # Bash reports the commands of a command substitution spanning several
+    # lines on shifted lines, not their own (see {HitRelocator}), but traces
+    # the command which holds the substitution right after them, in the
+    # shell: the first command traced next out of any subshell. The hits of
+    # functions called from the substitution are left out: Bash traces them
+    # on their own lines.
+    # @return [Hash{Pathname => Hash{Array(Integer, String, Integer) => Integer}}]
+    #   for each script, how many times a command was traced in a subshell,
+    #   by the line it was traced on, its text and the line of the command
+    #   which held it (all 0-based)
+    attr_reader :subshell_hits
 
     # [Integer] Number of malformed +PS4+ records skipped by {#read}
     attr_reader :skipped_count
@@ -135,13 +156,16 @@ module Bashcov
     # is skipped: it is usually text that merely looks like the start of a
     # {ps4}, such as the output of +declare -p+ or +set+ being traced, and
     # {FieldStream#each} resynchronizes on the next start of a {ps4}.
-    # @overload parse_hit!(lineno, bash_source, pwd, oldpwd)
+    # @overload parse_hit!(lineno, bash_source, pwd, oldpwd, subshell, calls, command)
     #   @param [String]  lineno       expanded +LINENO+
     #   @param [Pathname] bash_source expanded +BASH_SOURCE+
     #   @param [Pathname] pwd         expanded +PWD+
     #   @param [Pathname] oldpwd      expanded +OLDPWD+
+    #   @param [String] subshell      expanded +BASH_SUBSHELL+
+    #   @param [String] calls         number of +BASH_SOURCE+ entries
+    #   @param [String] command       first line of +BASH_COMMAND+
     # @return [void]
-    def parse_hit!(lineno, *paths)
+    def parse_hit!(lineno, *paths, subshell, calls, command)
       if /\A\d+\z/.match?(lineno)
         lineno = lineno.to_i
       elsif lineno == "${LINENO-}"
@@ -165,6 +189,25 @@ module Bashcov
       @files[script] ||= []
       @files[script][index] ||= 0
       @files[script][index] += 1
+
+      track_subshell_hit!(script, index, subshell, calls, command)
+    end
+
+    # Keeps a hit traced in a subshell until the command holding it is
+    # traced, see {#subshell_hits}
+    # @param [Pathname] script the script the hit is in
+    # @param [Integer] index line of the hit (0-based)
+    # @param [String] subshell, calls, command see {#parse_hit!}
+    # @return [void]
+    def track_subshell_hit!(script, index, subshell, calls, command)
+      if subshell.to_i.positive?
+        @pending[script][[index, calls, command]] += 1
+        return
+      end
+
+      @pending.delete(script)&.each do |(lineno, hit_calls, hit_command), count|
+        @subshell_hits[script][[lineno, hit_command, index]] += count if hit_calls == calls
+      end
     end
 
     # Records that a malformed record was skipped
